@@ -135,7 +135,7 @@
   // Also observe metric items specifically for count-up
   document.querySelectorAll(".metrics li").forEach((li) => observer.observe(li));
 
-  // Magnetic pull on primary CTAs — subtle
+  // Magnetic pull on primary CTAs: subtle
   if (!reduceMotion) {
     document.querySelectorAll(".btn").forEach((btn) => {
       btn.addEventListener("pointermove", (event) => {

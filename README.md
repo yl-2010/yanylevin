@@ -1,6 +1,6 @@
 # Yan Levin
 
-Personal site for [Yan Levin](https://github.com/yl-2010) — Eastside Prep junior in Kirkland.
+Personal site for [Yan Levin](https://github.com/yl-2010), Eastside Prep junior in Kirkland.
 
 **Live site:** [https://yl-2010.github.io/yanylevin/](https://yl-2010.github.io/yanylevin/)
 

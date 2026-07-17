@@ -52,7 +52,7 @@ body::before {
   z-index: 0;
 }
 
-/* Soft pointer glow that follows the cursor — lowkey atmosphere */
+/* Soft pointer glow that follows the cursor: lowkey atmosphere */
 body::after {
   content: "";
   position: fixed;
@@ -178,7 +178,7 @@ main {
   z-index: 1;
 }
 
-/* ——— Hero ——— */
+/* --- Hero --- */
 .hero {
   min-height: 100vh;
   min-height: 100svh;
@@ -454,7 +454,7 @@ main {
   background: rgba(20, 28, 26, 0.04);
 }
 
-/* ——— Sections ——— */
+/* --- Sections --- */
 .section {
   padding: clamp(4.5rem, 10vh, 7.5rem) 0;
 }
@@ -512,7 +512,7 @@ main {
   font-size: 1.08rem;
 }
 
-/* Academics — large type, not a dashboard of cards */
+/* Academics: large type, not a dashboard of cards */
 .academics {
   border-block: 1px solid var(--line);
   background: linear-gradient(
