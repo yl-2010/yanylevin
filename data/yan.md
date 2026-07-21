@@ -10,13 +10,11 @@ Knowledge base for answering questions about Yan Levin. Prefer facts from this f
 - **Email:** yl-2010@outlook.com
 - **GitHub:** https://github.com/yl-2010
 - **Personal website:** https://yanylevin.com
-- **Heritage:** Mixed-race, partly South Asian
+- **Heritage:** Half Indian, half Russian
 
 ## Short bio
 
 Yan Levin is a junior at Eastside Prep in Kirkland, WA. He works at the intersection of competitive math, software research, debate, teaching, and product building. He is a research intern with Professor Milos Gligoric’s Engineering Software Lab at UT Austin, a math olympiad competitor, and co-founder & CTO of SocketHR.
-
-He often frames his work around making complex ideas clear enough to share — whether that is a proof, a research artifact, or a product for recruiters.
 
 ## Academics
 
@@ -102,7 +100,7 @@ On Eastside Prep’s team in the National Speech & Debate Association.
 ### South Asian Affinity Group Co-Lead
 
 - Eastside Prep, grades 9–10
-- As someone with mixed-race, partly South Asian heritage, helped shape a more inclusive club agenda and led weekly meetings
+- As someone who is half Indian and half Russian, helped shape a more inclusive club agenda and led weekly meetings
 
 ### Volunteering
 
@@ -121,14 +119,13 @@ On Eastside Prep’s team in the National Speech & Debate Association.
 - Math Kangaroo every year grades 1–8 (top 20 nationally; best year 3rd nationally / 2nd in Washington)
 - AMC 8 Honor Roll
 - MathCounts regional qualifier
-- Columbia Athletics Club swim team (1st in backstroke)
+- Columbia Athletics Club swim team
 - Battle of the Books, 1st in school all three years
 
 ## Interests & themes
 
 - Hard problems across proofs, programs, and products people actually use
 - Competitive math, software research, debate, and teaching younger students math beyond worksheets
-- Making complex ideas clear enough to share
 - Open to research, building, and interesting problems
 
 ## Website / presence
