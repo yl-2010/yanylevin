@@ -1,63 +1,65 @@
 /**
- * Apple Liquid Glass — visible backdrop refraction.
+ * Apple Liquid Glass orbs — faithful port of archisvaze/liquid-glass (SVG engine).
+ * Source: https://github.com/archisvaze/liquid-glass (index.html)
  *
- * Chromium: backdrop-filter: blur() url(#svg-displacement)
- * Everywhere else: backdrop blur + filter:url() on the frosted layer
- * (warps the captured backdrop; weaker but still visible).
- *
- * Physics bevel maps (archis-style) when Chromium supports SVG backdrop filters;
- * feTurbulence displacement as a guaranteed visible warp fallback.
+ * Chromium: physics displacement via backdrop-filter: url(#filter)
+ * Other browsers: lucasromerodb turbulence displacement fallback (filter:url)
  */
 (() => {
-  const SIZE = 112;
-
-  // Aggressive enough that edge bend is obvious over text/photo
-  const CONFIG = {
-    glassThickness: 90,
-    bezelWidth: 52,
-    ior: 2.2,
-    scaleRatio: 1.35,
-    blurAmt: 0.35,
+  // Defaults from archisvaze/liquid-glass control panel (index.html sliders).
+  // Circle uses the same engine with milder refraction — a full-disk lens at
+  // IOR 3 / scale 1 reads as a chrome marble; Apple circular glass is subtler.
+  const ARCHIS = {
+    glassThickness: 80,
+    bezelWidth: 60,
+    ior: 3.0,
+    scaleRatio: 1.0,
+    blurAmt: 0.3,
     specOpacity: 0.5,
     specSat: 4,
-    tintOpacity: 0.08,
-    turbulenceScale: 72,
+    tintOpacity: 0.06,
+    shadowBlur: 20,
+    shadowSpread: -5,
+    shadowColor: "rgba(255, 255, 255, 0.45)",
+    outerShadowBlur: 24,
   };
 
-  const SURFACE = {
-    convexSquircle: (x) => Math.pow(1 - Math.pow(1 - x, 4), 0.25),
-    convexCircle: (x) => Math.sqrt(1 - (1 - x) * (1 - x)),
+  const SHAPE_TUNE = {
+    squircle: { ior: 3.0, scaleRatio: 1.0, bezelFrac: 0.52, specOpacity: 0.5 },
+    circle: { ior: 1.85, scaleRatio: 0.55, bezelFrac: 0.38, specOpacity: 0.38 },
   };
 
-  function supportsSvgBackdropFilter() {
-    // Safari accepts the CSSOM string but does not render SVG reference filters
-    // on backdrop-filter. Detect Chromium-ish engines only.
+  const SURFACE_FNS = {
+    // verbatim from archisvaze/liquid-glass
+    convex_squircle: (x) => Math.pow(1 - Math.pow(1 - x, 4), 0.25),
+    convex_circle: (x) => Math.sqrt(1 - (1 - x) * (1 - x)),
+  };
+
+  function isChromiumSvgBackdrop() {
     const ua = navigator.userAgent;
-    const isSafari =
-      /Safari/i.test(ua) && !/Chrome|Chromium|Edg|OPR|Firefox/i.test(ua);
-    if (isSafari) return false;
-
+    // SVG backdrop-filter:url(#…) only renders in Chromium today
+    const isChromium = /Chrome|Chromium|Edg|OPR/i.test(ua);
+    if (!isChromium) return false;
     const el = document.createElement("div");
     el.style.cssText = "backdrop-filter: url(#test)";
-    const accepted =
+    return (
       el.style.backdropFilter === "url(#test)" ||
-      el.style.backdropFilter === 'url("#test")';
-    return accepted && !isSafari;
+      el.style.backdropFilter === 'url("#test")'
+    );
   }
 
+  // --- archisvaze refraction math (verbatim) ---
   function calculateRefractionProfile(glassThickness, bezelWidth, heightFn, ior, samples) {
     samples = samples || 128;
     const eta = 1 / ior;
-    const profile = new Float64Array(samples);
-
-    const refract = (nx, ny) => {
+    function refract(nx, ny) {
       const dot = ny;
       const k = 1 - eta * eta * (1 - dot * dot);
       if (k < 0) return null;
       const sq = Math.sqrt(k);
       return [-(eta * dot + sq) * nx, eta - (eta * dot + sq) * ny];
-    };
-
+    }
+    const profile = new Float64Array(samples);
     for (let i = 0; i < samples; i++) {
       const x = i / samples;
       const y = heightFn(x);
@@ -75,7 +77,7 @@
     return profile;
   }
 
-  function generateRoundDisplacementMap(w, h, radius, bezelWidth, profile, maxDisp) {
+  function generateDisplacementMap(w, h, radius, bezelWidth, profile, maxDisp) {
     const c = document.createElement("canvas");
     c.width = w;
     c.height = h;
@@ -125,63 +127,7 @@
     return c.toDataURL();
   }
 
-  function generateSquircleDisplacementMap(w, h, bezelWidth, profile, maxDisp, n) {
-    n = n || 5;
-    const c = document.createElement("canvas");
-    c.width = w;
-    c.height = h;
-    const ctx = c.getContext("2d");
-    const img = ctx.createImageData(w, h);
-    const d = img.data;
-    for (let i = 0; i < d.length; i += 4) {
-      d[i] = 128;
-      d[i + 1] = 128;
-      d[i + 2] = 0;
-      d[i + 3] = 255;
-    }
-
-    const cx = (w - 1) / 2;
-    const cy = (h - 1) / 2;
-    const ax = w / 2;
-    const ay = h / 2;
-    const S = profile.length;
-    const eps = 1e-6;
-
-    for (let y1 = 0; y1 < h; y1++) {
-      for (let x1 = 0; x1 < w; x1++) {
-        const nx = (x1 - cx) / ax;
-        const ny = (y1 - cy) / ay;
-        const rho = Math.pow(Math.abs(nx), n) + Math.pow(Math.abs(ny), n);
-        if (rho < eps) continue;
-
-        const r = Math.pow(rho, 1 / n);
-        const distFromEdge = (1 - r) * Math.min(ax, ay);
-        if (distFromEdge < 0 || distFromEdge > bezelWidth) continue;
-
-        const gx =
-          (n * Math.pow(Math.abs(nx) + eps, n - 1) * Math.sign(nx || 1)) / ax;
-        const gy =
-          (n * Math.pow(Math.abs(ny) + eps, n - 1) * Math.sign(ny || 1)) / ay;
-        const gMag = Math.sqrt(gx * gx + gy * gy) || 1;
-        const cos = gx / gMag;
-        const sin = gy / gMag;
-
-        const t = distFromEdge / bezelWidth;
-        const fade = Math.min(1, Math.max(0, t < 0.08 ? t / 0.08 : 1));
-        const bi = Math.min((t * S) | 0, S - 1);
-        const disp = profile[bi] || 0;
-        const dX = (-cos * disp) / maxDisp;
-        const dY = (-sin * disp) / maxDisp;
-        const idx = (y1 * w + x1) * 4;
-        d[idx] = (128 + dX * 127 * fade + 0.5) | 0;
-        d[idx + 1] = (128 + dY * 127 * fade + 0.5) | 0;
-      }
-    }
-    ctx.putImageData(img, 0, 0);
-    return c.toDataURL();
-  }
-
-  function generateRoundSpecularMap(w, h, radius, bezelWidth, angle) {
+  function generateSpecularMap(w, h, radius, bezelWidth, angle) {
     angle = angle != null ? angle : Math.PI / 3;
     const c = document.createElement("canvas");
     c.width = w;
@@ -215,9 +161,8 @@
         const cos = x / dist;
         const sin = -y / dist;
         const dot = Math.abs(cos * sv[0] + sin * sv[1]);
-        const edge = Math.sqrt(
-          Math.max(0, 1 - (1 - fromSide / Math.max(bezelWidth, 1)) ** 2)
-        );
+        // archis: edge = sqrt(max(0, 1 - (1 - fromSide)^2))  — note: not /bezelWidth
+        const edge = Math.sqrt(Math.max(0, 1 - (1 - fromSide) ** 2));
         const coeff = dot * edge;
         const col = (255 * coeff) | 0;
         const alpha = (col * coeff * op) | 0;
@@ -232,79 +177,34 @@
     return c.toDataURL();
   }
 
-  function generateSquircleSpecularMap(w, h, bezelWidth, angle, n) {
-    angle = angle != null ? angle : Math.PI / 3;
-    n = n || 5;
-    const c = document.createElement("canvas");
-    c.width = w;
-    c.height = h;
-    const ctx = c.getContext("2d");
-    const img = ctx.createImageData(w, h);
-    const d = img.data;
-    d.fill(0);
-
-    const cx = (w - 1) / 2;
-    const cy = (h - 1) / 2;
-    const ax = w / 2;
-    const ay = h / 2;
-    const sv = [Math.cos(angle), Math.sin(angle)];
-    const eps = 1e-6;
-
-    for (let y1 = 0; y1 < h; y1++) {
-      for (let x1 = 0; x1 < w; x1++) {
-        const nx = (x1 - cx) / ax;
-        const ny = (y1 - cy) / ay;
-        const rho = Math.pow(Math.abs(nx), n) + Math.pow(Math.abs(ny), n);
-        if (rho < eps) continue;
-        const r = Math.pow(rho, 1 / n);
-        const distFromEdge = (1 - r) * Math.min(ax, ay);
-        if (distFromEdge < 0 || distFromEdge > bezelWidth) continue;
-
-        const gx =
-          (n * Math.pow(Math.abs(nx) + eps, n - 1) * Math.sign(nx || 1)) / ax;
-        const gy =
-          (n * Math.pow(Math.abs(ny) + eps, n - 1) * Math.sign(ny || 1)) / ay;
-        const gMag = Math.sqrt(gx * gx + gy * gy) || 1;
-        const cos = gx / gMag;
-        const sin = -gy / gMag;
-        const fromSide = distFromEdge;
-        const op = Math.min(1, fromSide / 2);
-        const dot = Math.abs(cos * sv[0] + sin * sv[1]);
-        const edge = Math.sqrt(
-          Math.max(0, 1 - (1 - fromSide / bezelWidth) ** 2)
-        );
-        const coeff = dot * edge;
-        const col = (255 * coeff) | 0;
-        const alpha = (col * coeff * op) | 0;
-        const idx = (y1 * w + x1) * 4;
-        d[idx] = col;
-        d[idx + 1] = col;
-        d[idx + 2] = col;
-        d[idx + 3] = alpha;
-      }
-    }
-    ctx.putImageData(img, 0, 0);
-    return c.toDataURL();
-  }
-
-  function ensureBaseFilters(defs) {
-    if (document.getElementById("lg-turbulence-distort")) return;
-
+  function ensureLucasFallbackFilter(defs) {
+    // From lucasromerodb/liquid-glass-effect-macos
+    if (document.getElementById("lg-lucas-distort")) return;
     const svgNS = "http://www.w3.org/2000/svg";
     const filter = document.createElementNS(svgNS, "filter");
-    filter.setAttribute("id", "lg-turbulence-distort");
-    filter.setAttribute("x", "-20%");
-    filter.setAttribute("y", "-20%");
-    filter.setAttribute("width", "140%");
-    filter.setAttribute("height", "140%");
-    filter.setAttribute("color-interpolation-filters", "sRGB");
+    filter.setAttribute("id", "lg-lucas-distort");
+    filter.setAttribute("x", "0%");
+    filter.setAttribute("y", "0%");
+    filter.setAttribute("width", "100%");
+    filter.setAttribute("height", "100%");
+    filter.setAttribute("filterUnits", "objectBoundingBox");
     filter.innerHTML = `
-      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03"
-        numOctaves="2" seed="7" result="noise" />
-      <feGaussianBlur in="noise" stdDeviation="1.2" result="soft" />
-      <feDisplacementMap in="SourceGraphic" in2="soft"
-        scale="${CONFIG.turbulenceScale}"
-        xChannelSelector="R" yChannelSelector="G" />
+      <feTurbulence type="fractalNoise" baseFrequency="0.01 0.01"
+        numOctaves="1" seed="5" result="turbulence" />
+      <feComponentTransfer in="turbulence" result="mapped">
+        <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5" />
+        <feFuncG type="gamma" amplitude="0" exponent="1" offset="0" />
+        <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5" />
+      </feComponentTransfer>
+      <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap" />
+      <feSpecularLighting in="softMap" surfaceScale="5" specularConstant="1"
+        specularExponent="100" lighting-color="white" result="specLight">
+        <fePointLight x="-200" y="-200" z="300" />
+      </feSpecularLighting>
+      <feComposite in="specLight" operator="arithmetic"
+        k1="0" k2="1" k3="1" k4="0" result="litImage" />
+      <feDisplacementMap in="SourceGraphic" in2="softMap"
+        scale="150" xChannelSelector="R" yChannelSelector="G" />
     `;
     defs.appendChild(filter);
   }
@@ -312,28 +212,28 @@
   function setFilterMarkup(defs, id, markup) {
     const existing = document.getElementById(id);
     if (existing) existing.remove();
-
-    // Parse in an SVG context so filter primitives are real SVG nodes
+    // Parse inside an SVG document so primitives are SVG-namespaced
+    // (same end result as archis inserting into an xmlns SVG <defs>)
     const svgNS = "http://www.w3.org/2000/svg";
     const holder = document.createElementNS(svgNS, "svg");
+    holder.setAttribute("xmlns", svgNS);
     holder.innerHTML = markup;
     const node = holder.querySelector("filter");
     if (node) defs.appendChild(node);
   }
 
-  function buildPhysicsFilter(id, w, h, dispUrl, specUrl, blurAmt, scale, specOpacity, specSat) {
+  function buildArchisFilter(id, w, h, dispUrl, specUrl, blurAmt, scale, specOpacity, specSat) {
+    // Filter graph verbatim from archisvaze/liquid-glass rebuildFilter()
     return `
-      <filter id="${id}" x="-15%" y="-15%" width="130%" height="130%"
+      <filter id="${id}" x="0%" y="0%" width="100%" height="100%"
         color-interpolation-filters="sRGB">
         <feGaussianBlur in="SourceGraphic" stdDeviation="${blurAmt}" result="blurred_source" />
-        <feImage href="${dispUrl}" x="0" y="0" width="${w}" height="${h}"
-          result="disp_map" preserveAspectRatio="none" />
+        <feImage href="${dispUrl}" x="0" y="0" width="${w}" height="${h}" result="disp_map" />
         <feDisplacementMap in="blurred_source" in2="disp_map"
           scale="${scale}" xChannelSelector="R" yChannelSelector="G"
           result="displaced" />
         <feColorMatrix in="displaced" type="saturate" values="${specSat}" result="displaced_sat" />
-        <feImage href="${specUrl}" x="0" y="0" width="${w}" height="${h}"
-          result="spec_layer" preserveAspectRatio="none" />
+        <feImage href="${specUrl}" x="0" y="0" width="${w}" height="${h}" result="spec_layer" />
         <feComposite in="displaced_sat" in2="spec_layer" operator="in" result="spec_masked" />
         <feComponentTransfer in="spec_layer" result="spec_faded">
           <feFuncA type="linear" slope="${specOpacity}" />
@@ -343,109 +243,111 @@
       </filter>`;
   }
 
-  function initOrb(el, opts) {
-    const filterId = opts.filterId;
-    const shape = opts.shape;
-    const useSvgBackdrop = opts.useSvgBackdrop;
-    const w = Math.max(2, Math.round(el.offsetWidth || SIZE));
-    const h = Math.max(2, Math.round(el.offsetHeight || SIZE));
-    const radius =
-      shape === "circle" ? Math.min(w, h) / 2 : Math.min(w, h) * 0.34;
+  function initOrb(el, useSvgBackdrop) {
+    const shape = el.getAttribute("data-liquid-glass") || "circle";
+    const filterId =
+      el.getAttribute("data-filter-id") ||
+      `lg-filter-${shape}-${Math.random().toString(36).slice(2, 7)}`;
+    el.setAttribute("data-filter-id", filterId);
 
+    const w = Math.max(2, Math.round(el.offsetWidth));
+    const h = Math.max(2, Math.round(el.offsetHeight));
+
+    // Circle: full radius. Squircle: ~35% of min side (Apple continuous-corner feel)
+    // while still using archis rounded-rect displacement generator.
+    const radius =
+      shape === "circle"
+        ? Math.min(w, h) / 2
+        : Math.min(w, h) * 0.35;
+
+    el.style.setProperty("--lg-radius", `${radius}px`);
+
+    const defs = document.getElementById("liquid-glass-defs");
+    if (!defs) return;
+
+    if (!useSvgBackdrop) {
+      el.classList.add("lg-fallback");
+      el.classList.remove("lg-refraction");
+      ensureLucasFallbackFilter(defs);
+      return;
+    }
+
+    const tune = SHAPE_TUNE[shape] || SHAPE_TUNE.circle;
     const heightFn =
-      shape === "circle" ? SURFACE.convexCircle : SURFACE.convexSquircle;
-    const bezel = Math.min(
-      CONFIG.bezelWidth,
+      shape === "circle" ? SURFACE_FNS.convex_circle : SURFACE_FNS.convex_squircle;
+    // Archis defaults use bezel≈radius on large panes. On small orbs that would
+    // erase the flat glass center — keep a fraction of radius so the rim lens reads.
+    const targetBezel = Math.max(12, Math.round(radius * tune.bezelFrac));
+    const clampedBezel = Math.min(
+      targetBezel,
+      ARCHIS.bezelWidth,
       Math.max(2, radius - 1),
       Math.min(w, h) / 2 - 1
     );
 
+    // Render maps at 2× so rim refraction stays sharp on retina / small orbs
+    const mapScale = 2;
+    const mw = w * mapScale;
+    const mh = h * mapScale;
+    const mRadius = radius * mapScale;
+    const mBezel = clampedBezel * mapScale;
+
     const profile = calculateRefractionProfile(
-      CONFIG.glassThickness,
-      bezel,
+      ARCHIS.glassThickness * mapScale,
+      mBezel,
       heightFn,
-      CONFIG.ior,
+      tune.ior,
       128
     );
     const maxDisp = Math.max(...Array.from(profile).map(Math.abs)) || 1;
-    const scale = Math.max(28, maxDisp * CONFIG.scaleRatio);
-
-    let dispUrl;
-    let specUrl;
-    if (shape === "squircle") {
-      dispUrl = generateSquircleDisplacementMap(w, h, bezel, profile, maxDisp, 5);
-      specUrl = generateSquircleSpecularMap(w, h, bezel * 2.5, Math.PI / 3, 5);
-    } else {
-      dispUrl = generateRoundDisplacementMap(w, h, radius, bezel, profile, maxDisp);
-      specUrl = generateRoundSpecularMap(w, h, radius, bezel * 2.5);
-    }
-
-    const defs = document.getElementById("liquid-glass-defs");
-    if (!defs) return;
-    ensureBaseFilters(defs);
+    const dispUrl = generateDisplacementMap(
+      mw,
+      mh,
+      mRadius,
+      mBezel,
+      profile,
+      maxDisp
+    );
+    const specUrl = generateSpecularMap(mw, mh, mRadius, mBezel * 2.5);
+    // feDisplacementMap scale is in filter primitive units (= element CSS px)
+    const scale = (maxDisp / mapScale) * tune.scaleRatio;
 
     setFilterMarkup(
       defs,
       filterId,
-      buildPhysicsFilter(
+      buildArchisFilter(
         filterId,
         w,
         h,
         dispUrl,
         specUrl,
-        CONFIG.blurAmt,
+        ARCHIS.blurAmt,
         scale,
-        CONFIG.specOpacity,
-        CONFIG.specSat
+        tune.specOpacity,
+        ARCHIS.specSat
       )
     );
 
-    const effect = el.querySelector(".lg-effect");
-    if (!effect) return;
-
-    // Reset previous inline filters
-    effect.style.backdropFilter = "";
-    effect.style.webkitBackdropFilter = "";
-    effect.style.filter = "";
-
-    if (useSvgBackdrop) {
-      el.classList.add("lg-refraction");
-      el.classList.remove("lg-fallback");
-      // Chromium: warp the real page backdrop
-      const bf = `blur(1.5px) url(#${filterId}) saturate(1.35) brightness(1.06)`;
-      effect.style.backdropFilter = bf;
-      effect.style.webkitBackdropFilter = bf;
-    } else {
-      el.classList.add("lg-fallback");
-      el.classList.remove("lg-refraction");
-      // Capture backdrop, then displace that bitmap with filter:url
-      // (works in Safari/Firefox — warping is of the frosted snapshot)
-      const bf = "blur(14px) saturate(170%) brightness(1.08)";
-      effect.style.backdropFilter = bf;
-      effect.style.webkitBackdropFilter = bf;
-      effect.style.filter = "url(#lg-turbulence-distort)";
-    }
+    el.classList.add("lg-refraction");
+    el.classList.remove("lg-fallback");
+    // Archis applies ONLY url(#filter) — blur lives inside the SVG graph
+    el.style.setProperty("--lg-filter", `url(#${filterId})`);
   }
 
   function initAll() {
     const orbs = document.querySelectorAll("[data-liquid-glass]");
     if (!orbs.length) return;
 
-    const useSvgBackdrop = supportsSvgBackdropFilter();
-    document.documentElement.style.setProperty(
-      "--lg-tint-opacity",
-      String(CONFIG.tintOpacity)
-    );
+    const useSvgBackdrop = isChromiumSvgBackdrop();
+    const root = document.documentElement.style;
+    root.setProperty("--lg-tint-opacity", String(ARCHIS.tintOpacity));
+    root.setProperty("--lg-shadow-blur", `${ARCHIS.shadowBlur}px`);
+    root.setProperty("--lg-shadow-spread", `${ARCHIS.shadowSpread}px`);
+    root.setProperty("--lg-shadow-color", ARCHIS.shadowColor);
+    root.setProperty("--lg-outer-shadow-blur", `${ARCHIS.outerShadowBlur}px`);
     document.documentElement.classList.toggle("lg-chrome", useSvgBackdrop);
 
-    orbs.forEach((el) => {
-      const shape = el.getAttribute("data-liquid-glass") || "circle";
-      const filterId =
-        el.getAttribute("data-filter-id") ||
-        `lg-filter-${shape}-${Math.random().toString(36).slice(2, 7)}`;
-      el.setAttribute("data-filter-id", filterId);
-      initOrb(el, { shape, filterId, useSvgBackdrop });
-    });
+    orbs.forEach((el) => initOrb(el, useSvgBackdrop));
   }
 
   if (document.readyState === "loading") {
@@ -462,7 +364,7 @@
       let t;
       return () => {
         clearTimeout(t);
-        t = setTimeout(initAll, 180);
+        t = setTimeout(initAll, 150);
       };
     })()
   );

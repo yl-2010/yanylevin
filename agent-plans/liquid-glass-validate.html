@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liquid Glass validation</title>
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    body {
+      min-height: 200vh;
+      margin: 0;
+      background:
+        url("https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=2000&auto=format&fit=crop")
+        center/cover fixed no-repeat;
+      color: #fff;
+      font: 600 42px/1.35 Georgia, serif;
+    }
+    .probe {
+      max-width: 40rem;
+      margin: 20vh auto;
+      padding: 2rem;
+      text-shadow: 0 2px 16px rgba(0,0,0,.45);
+    }
+  </style>
+</head>
+<body>
+  <div class="probe">
+    THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG.
+    1234567890 refraction probe letters bend here.
+  </div>
+  <div class="liquid-glass-orb lg-squircle" data-liquid-glass="squircle" data-filter-id="lg-filter-squircle" aria-hidden="true"></div>
+  <div class="liquid-glass-orb lg-circle" data-liquid-glass="circle" data-filter-id="lg-filter-circle" aria-hidden="true"></div>
+  <svg class="liquid-glass-svg" xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false" color-interpolation-filters="sRGB">
+    <defs id="liquid-glass-defs"></defs>
+  </svg>
+  <script src="../liquid-glass.js?v=archis4"></script>
+</body>
+</html>
