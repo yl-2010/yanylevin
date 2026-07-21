@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agent Plan: Apple Liquid Glass — Postmortem &amp; Next Steps</title>
+    <style>
+      :root {
+        --bg: #0f1210;
+        --panel: #171c19;
+        --ink: #e8eee9;
+        --muted: #9aa89f;
+        --warn: #f0b429;
+        --bad: #ff6b6b;
+        --good: #3dd68c;
+        --accent: #7eb8a8;
+        --line: rgba(232, 238, 233, 0.12);
+        --code: #0a0d0b;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font: 16px/1.6 ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(900px 500px at 10% -10%, rgba(126, 184, 168, 0.12), transparent 55%),
+          radial-gradient(700px 400px at 100% 0%, rgba(240, 180, 41, 0.08), transparent 50%),
+          var(--bg);
+      }
+      main {
+        width: min(52rem, calc(100% - 2rem));
+        margin: 0 auto;
+        padding: 2.5rem 0 4rem;
+      }
+      h1, h2, h3 { line-height: 1.2; letter-spacing: -0.02em; }
+      h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); margin: 0 0 0.5rem; }
+      h2 {
+        margin: 2.25rem 0 0.75rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--line);
+        font-size: 1.35rem;
+      }
+      h3 { margin: 1.35rem 0 0.4rem; font-size: 1.05rem; color: var(--accent); }
+      p, li { color: var(--ink); }
+      .lede { color: var(--muted); font-size: 1.05rem; margin: 0 0 1.5rem; }
+      .meta {
+        display: flex; flex-wrap: wrap; gap: 0.5rem 1rem;
+        color: var(--muted); font-size: 0.9rem; margin-bottom: 1.5rem;
+      }
+      .badge {
+        display: inline-block;
+        padding: 0.15rem 0.55rem;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .badge.bad { color: var(--bad); border-color: rgba(255, 107, 107, 0.35); }
+      .badge.warn { color: var(--warn); border-color: rgba(240, 180, 41, 0.35); }
+      .badge.good { color: var(--good); border-color: rgba(61, 214, 140, 0.35); }
+      .callout {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-left: 3px solid var(--bad);
+        padding: 0.9rem 1rem;
+        border-radius: 0 10px 10px 0;
+        margin: 1rem 0;
+      }
+      .callout.warn { border-left-color: var(--warn); }
+      .callout.good { border-left-color: var(--good); }
+      .callout strong { color: var(--ink); }
+      code, pre {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 0.86em;
+      }
+      code {
+        background: var(--code);
+        padding: 0.1em 0.35em;
+        border-radius: 4px;
+        border: 1px solid var(--line);
+      }
+      pre {
+        background: var(--code);
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 0.9rem 1rem;
+        overflow-x: auto;
+        line-height: 1.45;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.92rem;
+        margin: 0.75rem 0 1.25rem;
+      }
+      th, td {
+        text-align: left;
+        vertical-align: top;
+        padding: 0.55rem 0.65rem;
+        border-bottom: 1px solid var(--line);
+      }
+      th { color: var(--muted); font-weight: 600; }
+      ul, ol { padding-left: 1.25rem; }
+      li + li { margin-top: 0.35rem; }
+      a { color: var(--accent); }
+      .toc a { text-decoration: none; }
+      .toc li { margin-top: 0.25rem; }
+      footer {
+        margin-top: 3rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="badge bad">Failed implementation — read before retrying</p>
+      <h1>Apple Liquid Glass — Agent Postmortem</h1>
+      <p class="lede">
+        Comprehensive recount of the prior agent’s attempt to add Apple-identical
+        Liquid Glass orbs to this site. The shipped result looks like generic
+        frosted glass blobs, <strong>not</strong> Apple Liquid Glass. Use this
+        document to avoid repeating the same mistakes.
+      </p>
+      <div class="meta">
+        <span>Repo: <code>yl-2010/yanylevin</code></span>
+        <span>Site: <code>index.html</code> + <code>liquid-glass.js</code> + <code>styles.css</code></span>
+        <span>Commits on main: <code>00562a6</code> → <code>4b21edd</code> → <code>3d703cb</code></span>
+      </div>
+
+      <div class="callout">
+        <strong>Verdict for the next agent:</strong> Do not polish the current
+        orbs and call it done. The visual target was missed. Tear down or heavily
+        replace the approach; validate in Chrome against a known-good reference
+        demo before declaring success; do not rely on “looks glassy” as the bar.
+      </div>
+
+      <h2 id="toc">Contents</h2>
+      <ol class="toc">
+        <li><a href="#goal">Original goal</a></li>
+        <li><a href="#what-shipped">What shipped (current state)</a></li>
+        <li><a href="#research">Research sources used</a></li>
+        <li><a href="#method">Method the prior agent attempted</a></li>
+        <li><a href="#mistakes">Mistakes (avoid these)</a></li>
+        <li><a href="#why-not-apple">Why it does not look like Apple Liquid Glass</a></li>
+        <li><a href="#browser">Browser reality check</a></li>
+        <li><a href="#files">Files touched</a></li>
+        <li><a href="#playbook">Recommended playbook for the next agent</a></li>
+        <li><a href="#acceptance">Acceptance criteria (pass/fail)</a></li>
+        <li><a href="#do-not">Explicit do-not list</a></li>
+      </ol>
+
+      <h2 id="goal">1. Original goal</h2>
+      <ul>
+        <li>Implement a material <strong>identical</strong> to Apple Liquid Glass (WWDC 2025 / iOS 26 language).</li>
+        <li>Research GitHub / web demos that already solved this.</li>
+        <li>Add two fixed floating elements that stay on screen while scrolling and sit above page content:
+          <ul>
+            <li><strong>Bottom left:</strong> Apple squircle</li>
+            <li><strong>Bottom right:</strong> circle</li>
+          </ul>
+        </li>
+        <li>Push to <code>main</code>.</li>
+      </ul>
+      <p>
+        The user later reported no visible warping of content behind the orbs,
+        and then that the implementation “looks nothing like liquid glass.”
+        That feedback is correct relative to Apple’s product UI.
+      </p>
+
+      <h2 id="what-shipped">2. What shipped (current state)</h2>
+      <p>
+        Two fixed corner orbs with layered CSS (tint / inset shine / specular
+        gradient) plus a JS module that tries to build physics-ish SVG
+        displacement maps and apply them via <code>backdrop-filter: url(#…)</code>
+        on Chromium, with a turbulence <code>filter: url(#…)</code> fallback
+        elsewhere.
+      </p>
+      <table>
+        <thead>
+          <tr><th>Piece</th><th>Location</th><th>Role</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Markup</td>
+            <td><code>index.html</code> (near end of <code>body</code>)</td>
+            <td>Two <code>.liquid-glass-orb</code> nodes + empty SVG <code>#liquid-glass-defs</code></td>
+          </tr>
+          <tr>
+            <td>Engine</td>
+            <td><code>liquid-glass.js</code></td>
+            <td>IOR bevel profile, canvas displacement/specular maps, filter injection, browser branching</td>
+          </tr>
+          <tr>
+            <td>Styles</td>
+            <td><code>styles.css</code> (bottom “Apple Liquid Glass floating orbs” section)</td>
+            <td>Fixed positioning, shape radii, frost layers, float animation</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="callout warn">
+        <strong>What users actually see:</strong> soft translucent circles with
+        white edge highlights — classic glassmorphism. Little or no convincing
+        lens refraction, no Apple-like “liquid” motion, no material response
+        that reads as iOS 26 chrome. On Safari, true SVG backdrop displacement
+        does not run at all.
+      </div>
+
+      <h2 id="research">3. Research sources used</h2>
+      <p>Prior agent cloned / read these (still useful — do not ignore them):</p>
+      <table>
+        <thead>
+          <tr><th>Repo / article</th><th>Why it matters</th><th>Prior agent takeaway</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="https://github.com/archisvaze/liquid-glass">archisvaze/liquid-glass</a></td>
+            <td>Best physics bevel + specular maps; SVG and WebGL paths; interactive controls</td>
+            <td>JS logic largely adapted from here — but site integration / validation was weak</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/lucasromerodb/liquid-glass-effect-macos">lucasromerodb/liquid-glass-effect-macos</a></td>
+            <td>Layered wrapper: effect + tint + shine; <code>filter: url(#glass-distortion)</code> + light blur</td>
+            <td>Layer stack copied; turbulence approach used as fallback</td>
+          </tr>
+          <tr>
+            <td><a href="https://github.com/nikdelvin/liquid-glass">nikdelvin/liquid-glass</a></td>
+            <td>Displacement map as data-URI filter inside <code>backdrop-filter</code>; Safari fallback</td>
+            <td>Referenced conceptually; not faithfully ported</td>
+          </tr>
+          <tr>
+            <td>kube.io / Ekino / LogRocket / WebTricks liquid-glass posts</td>
+            <td>Explain Chromium-only SVG <code>backdrop-filter: url()</code>; feImage maps; support gaps</td>
+            <td>Known but still shipped a “works everywhere” looking frost that fails the visual bar</td>
+          </tr>
+        </tbody>
+      </table>
+      <p>
+        Also note: folder <code>/2/</code> in this repo already had a simpler
+        “Apple Liquid Glass style” theme using only blur/saturate/highlight —
+        that is <em>not</em> real Liquid Glass either; do not treat it as a
+        reference for identity with Apple’s material.
+      </p>
+
+      <h2 id="method">4. Method the prior agent attempted</h2>
+      <h3>Intended pipeline (Chromium)</h3>
+      <ol>
+        <li>Compute a 1D refraction profile from glass thickness, bezel width, IOR, and a surface height function (<code>convex_circle</code> / <code>convex_squircle</code>).</li>
+        <li>Rasterize a displacement map (R=X shift, G=Y shift) and a specular map on canvas.</li>
+        <li>Inject an SVG <code>&lt;filter&gt;</code> with <code>feGaussianBlur</code> → <code>feImage</code> (maps) → <code>feDisplacementMap</code> → specular composites.</li>
+        <li>Apply <code>backdrop-filter: blur(…) url(#filterId) …</code> on <code>.lg-effect</code>.</li>
+      </ol>
+      <h3>Fallback pipeline (Safari / Firefox)</h3>
+      <ol>
+        <li>Plain <code>backdrop-filter: blur + saturate + brightness</code>.</li>
+        <li>Additionally <code>filter: url(#lg-turbulence-distort)</code> to warp the frosted bitmap (not true page refraction).</li>
+      </ol>
+      <h3>Shapes</h3>
+      <ul>
+        <li>Circle: <code>border-radius: 50%</code></li>
+        <li>Squircle: <code>border-radius: 28%</code> + <code>corner-shape: squircle</code> (where supported), plus a superellipse (n≈5) attempt in the displacement generator</li>
+      </ul>
+
+      <h2 id="mistakes">5. Mistakes (avoid these)</h2>
+
+      <h3>Mistake A — Declared victory without visual proof</h3>
+      <p>
+        The agent spent time on research and plumbing, then pushed to main without
+        a hard visual comparison against Apple UI or even against
+        <code>archisvaze/liquid-glass</code> / Lucas demos side-by-side. When the
+        user said it looked wrong, that should have been treated as a hard fail,
+        not a messaging problem.
+      </p>
+      <div class="callout">
+        <strong>Rule:</strong> If you cannot open Chrome, overlay the orb on busy
+        content, and clearly see lens-like edge refraction matching a reference
+        demo, you are not done.
+      </div>
+
+      <h3>Mistake B — Backdrop roots killed refraction</h3>
+      <p>
+        First CSS pass put <code>isolation: isolate</code> (and later
+        <code>transform</code> animation / <code>will-change: transform</code>)
+        on the orb wrapper. That creates a backdrop root: the effect samples
+        empty pixels inside the orb instead of the page. Result: tinted frost,
+        zero meaningful warp. Partially fixed later by removing isolation and
+        switching float animation to <code>margin-bottom</code>, but this cost
+        a full user complaint cycle.
+      </p>
+      <pre><code>/* BAD — do not put these on an ancestor of the backdrop-filter layer */
+isolation: isolate;
+transform: …;          /* including animated transforms */
+will-change: transform;
+opacity: &lt; 1 on wrapper;
+filter: … on wrapper;</code></pre>
+
+      <h3>Mistake C — Treated “CSSOM accepts url(#test)” as “Safari works”</h3>
+      <p>
+        Safari can accept <code>backdrop-filter: url(#…)</code> in the style
+        object and still <strong>not render</strong> SVG reference filters for
+        backdrop. UA sniffing was added late. Assume Chromium-only for true
+        refraction unless you verify otherwise on a real Safari build.
+      </p>
+
+      <h3>Mistake D — Fragile SVG filter injection</h3>
+      <p>
+        First version used <code>insertAdjacentHTML</code> into SVG
+        <code>&lt;defs&gt;</code>, which can create HTML-namespaced nodes that
+        fail as filters. Later switched to parsing via an SVG holder —
+        better, but still never validated that the filter actually displaced
+        pixels in the live page.
+      </p>
+
+      <h3>Mistake E — Wrong visual recipe even when refraction “works”</h3>
+      <p>
+        Apple Liquid Glass is not only edge displacement. The prior agent under-delivered on:
+      </p>
+      <ul>
+        <li>Convincing lens thickness / rim light (product-quality specular, not a soft CSS radial)</li>
+        <li>Material that feels continuous with OS chrome (controls, sheets, buttons) rather than decorative blobs</li>
+        <li>Motion: subtle liquid response, not a bobbing <code>margin</code> float</li>
+        <li>Contrast against this site’s calm gradient background — refraction needs busy/high-frequency content behind the glass to read; corner placement over empty footer-ish areas hides the effect</li>
+        <li>Correct blur budget: Apple glass is often sharper with localized bend; dumping heavy blur washes the lens look into frost</li>
+      </ul>
+
+      <h3>Mistake F — Over-adapted physics code, under-matched reference demos</h3>
+      <p>
+        Copying archis math without also copying their full visual stack
+        (shadows, tint opacity, specular opacity, scale, background choice,
+        element size, and live tuning UI) produced a pale imitation. The
+        reference demos look good partly because of <em>scene</em> (rich
+        wallpaper) and carefully tuned defaults — not the formula alone.
+      </p>
+
+      <h3>Mistake G — Shipped decorative orbs instead of a reusable material</h3>
+      <p>
+        The ask was a material identical to Apple’s. The delivery was two
+        fixed ornaments. Even if the filter were perfect, there is no shared
+        primitive usable for nav/buttons/cards, and no proof the material
+        holds up at different sizes.
+      </p>
+
+      <h3>Mistake H — Process / tooling failures</h3>
+      <ul>
+        <li>Got stuck attempting screenshots / browser tooling instead of finishing validation another way (user had to interrupt).</li>
+        <li>Pushed incomplete visuals to <code>main</code> early, then patched reactively.</li>
+        <li>Did not leave an agent plan document until the user asked for this one.</li>
+      </ul>
+
+      <h2 id="why-not-apple">6. Why it does not look like Apple Liquid Glass</h2>
+      <table>
+        <thead>
+          <tr><th>Apple Liquid Glass cue</th><th>Current site orbs</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Strong edge refraction that magnifies/bends UI behind the rim</td>
+            <td>Often absent or too subtle; fallback is noise warp of frost</td>
+          </tr>
+          <tr>
+            <td>Bright, tight specular along the continuous rim</td>
+            <td>Generic soft CSS highlight / inset box-shadow</td>
+          </tr>
+          <tr>
+            <td>Low fill opacity; content remains readable through the pane</td>
+            <td>Reads as milky blob, especially in fallback mode</td>
+          </tr>
+          <tr>
+            <td>Feels like thick physical glass in the OS compositor</td>
+            <td>Feels like a web glassmorphism badge</td>
+          </tr>
+          <tr>
+            <td>Works as interactive chrome</td>
+            <td>Non-interactive corner decoration</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 id="browser">7. Browser reality check</h2>
+      <ul>
+        <li><span class="badge good">Chromium</span> Only reliable target today for <code>backdrop-filter: url(#svgFilter)</code> with <code>feDisplacementMap</code> / <code>feImage</code>.</li>
+        <li><span class="badge bad">Safari</span> SVG reference filters on backdrop are dropped (as of this writing). Frost + optional <code>filter:url</code> on the layer only.</li>
+        <li><span class="badge warn">Firefox</span> Same class of limitation for rich SVG backdrop graphs.</li>
+      </ul>
+      <p>
+        If the user is on Safari (likely, given Apple material ask), they will
+        never see the Chromium refraction path. Either ship a WebGL/shader
+        path that works cross-browser (archis has <code>webgl.html</code>), or
+        set expectations explicitly — but still make Chromium look
+        <em>actually</em> like the reference.
+      </p>
+
+      <h2 id="files">8. Files touched by the prior attempt</h2>
+      <pre><code>index.html        — orb markup + SVG defs + script tag
+liquid-glass.js   — refraction engine / filter apply
+styles.css        — .liquid-glass-orb* rules at bottom
+agent-plans/      — this document (added after failure)</code></pre>
+      <p>Related but not part of the failed orb work: theme experiments under <code>1/</code>–<code>5/</code>, especially <code>2/</code> (fake “liquid glass” cards).</p>
+
+      <h2 id="playbook">9. Recommended playbook for the next agent</h2>
+      <ol>
+        <li>
+          <strong>Pick a known-good reference and match it first offline.</strong>
+          Start from <code>archisvaze/liquid-glass</code> (SVG <em>and</em> consider WebGL)
+          or Lucas’s CodeSandbox. Reproduce one circle and one squircle on a
+          busy background page until they are indistinguishable from the demo
+          at default “Apple-like” settings.
+        </li>
+        <li>
+          <strong>Validate in Chrome with busy content under the glass.</strong>
+          Put the orb over the portrait and over text. You must see rim bend.
+          If not, stop integrating into the marketing site.
+        </li>
+        <li>
+          <strong>Keep the backdrop-filter element free of backdrop roots.</strong>
+          No <code>isolation</code>, opacity, filter, or transform on ancestors
+          of the sampling layer. Prefer animating position properties that do
+          not create containing/backdrop roots, or animate a sibling chrome layer.
+        </li>
+        <li>
+          <strong>Prefer WebGL if “identical to Apple” is non-negotiable cross-browser.</strong>
+          SVG backdrop displacement will never satisfy Safari users. Archis’s
+          WebGL path exists for this reason.
+        </li>
+        <li>
+          <strong>Tune like a product material, not a math toy.</strong>
+          Match: outer shadow, inner light wrap, tint (~few % white), bezel width
+          as a fraction of radius, low blur, high localized displacement at rim,
+          specular map opacity. Steal numbers from the reference demo’s defaults
+          before inventing your own.
+        </li>
+        <li>
+          <strong>Scene matters.</strong>
+          This site’s soft mint/burgundy wash is a bad showcase. Temporarily add
+          a high-frequency test backdrop (or force orbs over the portrait) while
+          developing; then restyle for production once the lens is undeniable.
+        </li>
+        <li>
+          <strong>Only then wire into <code>index.html</code>.</strong>
+          Fixed bottom-left squircle / bottom-right circle, <code>position: fixed</code>,
+          high z-index, pointer-events as product requires.
+        </li>
+        <li>
+          <strong>Hard-refresh / cache-bust JS</strong> when iterating
+          (<code>liquid-glass.js?v=…</code>) so you are not debugging a stale file.
+        </li>
+      </ol>
+
+      <h2 id="acceptance">10. Acceptance criteria (pass/fail)</h2>
+      <p>Do <strong>not</strong> merge/push as done unless all of these pass:</p>
+      <ul>
+        <li><span class="badge good">Pass</span> Side-by-side with archis/Lucas (or Apple OS screenshot): rim refraction quality is in the same league in Chrome.</li>
+        <li><span class="badge good">Pass</span> Over the site portrait, text letters visibly bend near the glass edge while scrolling.</li>
+        <li><span class="badge good">Pass</span> Squircle reads as Apple continuous-corner / squircle, not a rounded square.</li>
+        <li><span class="badge good">Pass</span> Orbs remain fixed bottom-left / bottom-right above content while scrolling.</li>
+        <li><span class="badge good">Pass</span> Safari has an intentional fallback that still looks premium (or WebGL works there) — not a milky blank disk.</li>
+        <li><span class="badge bad">Fail</span> “It’s blurry and shiny” without lens distortion.</li>
+        <li><span class="badge bad">Fail</span> Effect only visible on a wallpaper demo page, disappears on this site.</li>
+      </ul>
+
+      <h2 id="do-not">11. Explicit do-not list</h2>
+      <ul>
+        <li>Do not call blur + saturate + inset highlight “Liquid Glass.”</li>
+        <li>Do not put <code>isolation: isolate</code> on the glass wrapper.</li>
+        <li>Do not animate <code>transform</code> on a backdrop-filter ancestor.</li>
+        <li>Do not trust Safari CSSOM acceptance of <code>url(#filter)</code>.</li>
+        <li>Do not push to <code>main</code> until Chrome shows obvious refraction.</li>
+        <li>Do not spend the session stuck on screenshot infrastructure; use a real browser check or a minimal headless dump only if it unblocks comparison quickly.</li>
+        <li>Do not treat <code>/2/index.html</code> as an Apple-identical reference.</li>
+        <li>Do not increase tint/opacity to “make it more visible” — that makes it less like Apple glass.</li>
+      </ul>
+
+      <div class="callout good">
+        <strong>Short version:</strong> Previous agent built decorative frosted
+        orbs with a half-working Chromium displacement experiment. Real Liquid
+        Glass needs verified rim refraction (probably start from archis SVG or
+        WebGL), a backdrop-root-safe DOM, and side-by-side visual proof before
+        any push to main.
+      </div>
+
+      <footer>
+        Written for successor agents working on <code>yanylevin</code>.
+        Path: <code>agent-plans/liquid-glass-postmortem.html</code>.
+        Prior implementation remains on <code>main</code> until replaced;
+        treat it as a cautionary artifact, not a foundation to nibble at.
+      </footer>
+    </main>
+  </body>
+</html>
