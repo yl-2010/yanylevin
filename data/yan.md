@@ -288,11 +288,17 @@ For fun, Yan loves working with tech, for example:
 - Setting up smart-home automations with Apple HomeKit
 - Downloading the latest Apple developer betas (iOS, iPadOS, macOS, tvOS, watchOS, etc.) to try new features
 
+## Collaboration / outreach
+
+- **Open to collaboration, internships, and project outreach — always**
+- Interested in anything that helps expand his **CS**, **AI**, or **math** skills
+- Best contact for this: email **yl-2010@outlook.com** — feel free to email about anything like this
+
 ## Interests & themes
 
 - Hard problems across proofs, programs, and products people actually use
 - Competitive math, software research, debate, and teaching younger students math beyond worksheets
-- Open to research, building, and interesting problems
+- Open to research, building, collaboration, internships, and interesting problems in CS, AI, and math
 - Hands-on personal tech: local LLMs, HomeKit automations, Apple OS betas
 
 ## Website / presence
@@ -335,3 +341,6 @@ He has a lot of experience in Python, Java, and HTML.
 
 ### What does Yan do for fun?
 He loves working with tech — running local LLMs on his Mac Studio, setting up Apple HomeKit smart-home automations, and trying the latest Apple developer betas (iOS, iPadOS, macOS, tvOS, watchOS, etc.) to see new features.
+
+### Is Yan open to collaboration or internships?
+Yes — always. He’s interested in anything that expands his CS, AI, or math skills. Email yl-2010@outlook.com about opportunities like this.
