@@ -3,7 +3,7 @@
  * Browser never needs a JWT; Vercel mints one server-side.
  */
 
-const { SignJWT } = require("jose");
+const { mintHs256Jwt } = require("./_jwt");
 
 const ISSUER = "yanylevin-next";
 const AUDIENCE = "yanylevin-mac-api";
@@ -16,41 +16,34 @@ function macApiBase() {
   return String(raw).replace(/\/$/, "");
 }
 
-async function mintToken(secret) {
-  return new SignJWT({
-    email: VISITOR_EMAIL,
-    name: "Site visitor",
-  })
-    .setProtectedHeader({ alg: "HS256" })
-    .setSubject(VISITOR_EMAIL)
-    .setIssuer(ISSUER)
-    .setAudience(AUDIENCE)
-    .setIssuedAt()
-    .setExpirationTime("10m")
-    .sign(new TextEncoder().encode(secret));
-}
-
 module.exports = async function handler(req, res) {
-  if (req.method !== "POST") {
-    res.setHeader("Allow", "POST");
-    res.status(405).json({ ok: false, error: "method not allowed" });
-    return;
-  }
-
-  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
-  if (!secret) {
-    res.status(503).json({ ok: false, error: "AUTH_SECRET not configured" });
-    return;
-  }
-
-  const body = req.body || {};
-  if (!Array.isArray(body.messages) || body.messages.length === 0) {
-    res.status(400).json({ ok: false, error: "messages required" });
-    return;
-  }
-
   try {
-    const token = await mintToken(secret);
+    if (req.method !== "POST") {
+      res.setHeader("Allow", "POST");
+      res.status(405).json({ ok: false, error: "method not allowed" });
+      return;
+    }
+
+    const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET;
+    if (!secret) {
+      res.status(503).json({ ok: false, error: "AUTH_SECRET not configured" });
+      return;
+    }
+
+    const body = req.body || {};
+    if (!Array.isArray(body.messages) || body.messages.length === 0) {
+      res.status(400).json({ ok: false, error: "messages required" });
+      return;
+    }
+
+    const token = mintHs256Jwt({
+      secret,
+      email: VISITOR_EMAIL,
+      issuer: ISSUER,
+      audience: AUDIENCE,
+      expiresInSec: 600,
+    });
+
     const upstream = await fetch(`${macApiBase()}/api/chat`, {
       method: "POST",
       headers: {
@@ -72,7 +65,7 @@ module.exports = async function handler(req, res) {
     } catch {
       res.status(502).json({
         ok: false,
-        error: `Mac API returned non-JSON (${upstream.status})`,
+        error: `Mac API returned non-JSON (${upstream.status}): ${text.slice(0, 180)}`,
       });
       return;
     }
