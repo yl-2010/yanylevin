@@ -1,4 +1,5 @@
 :root {
+  color-scheme: light;
   --ink: #141c1a;
   --ink-soft: #3d4a46;
   --mist: #eef2f0;
@@ -9,12 +10,104 @@
   --lake: #2f5f5a;
   --line: rgba(20, 28, 26, 0.12);
   --shine: rgba(255, 255, 255, 0.55);
+  --header-bg: rgba(247, 249, 248, 0.72);
+  --header-bg-scrolled: rgba(247, 249, 248, 0.9);
+  --bg-lake-glow: rgba(47, 95, 90, 0.12);
+  --bg-burgundy-glow: rgba(122, 36, 50, 0.08);
+  --pointer-glow: rgba(47, 95, 90, 0.1);
+  --noise-opacity: 0.35;
+  --noise-blend: multiply;
+  --surface-wash-top: rgba(255, 255, 255, 0.35);
+  --surface-wash-bottom: rgba(255, 255, 255, 0.05);
+  --building-wash: rgba(122, 36, 50, 0.06);
+  --building-sheen: rgba(255, 255, 255, 0.25);
+  --btn-ghost-border: rgba(20, 28, 26, 0.28);
+  --btn-ghost-hover-bg: rgba(20, 28, 26, 0.04);
+  --btn-primary-shadow: rgba(92, 26, 37, 0.22);
+  --entry-hover-bg: rgba(47, 95, 90, 0.06);
+  --entry-hover-border: rgba(20, 28, 26, 0.18);
+  --award-hover-bg: rgba(47, 95, 90, 0.07);
+  --portrait-border-hover: rgba(122, 36, 50, 0.35);
+  --portrait-shadow: rgba(20, 28, 26, 0.12);
+  --on-accent: #f7f9f8;
+  --footer-bg: rgba(20, 28, 26, 0.94);
+  --footer-fg: rgba(247, 249, 248, 0.85);
+  --footer-heading: #ffffff;
+  --footer-muted: rgba(247, 249, 248, 0.55);
+  --footer-link-border: rgba(247, 249, 248, 0.4);
+  --footer-glow: rgba(47, 95, 90, 0.22);
+  /* Liquid Glass — light (archis / iOS light) */
+  --lg-tint-rgb: 255, 255, 255;
+  --lg-tint-opacity: 0.06;
+  --lg-shadow-blur: 20px;
+  --lg-shadow-spread: -5px;
+  --lg-shadow-color: rgba(255, 255, 255, 0.45);
+  --lg-outer-shadow-blur: 24px;
+  --lg-outer-shadow: rgba(0, 0, 0, 0.18);
+  --lg-fallback-tint: 0.18;
+  --lg-fallback-shine: rgba(255, 255, 255, 0.5);
   --font-display: "Bricolage Grotesque", Georgia, serif;
   --font-body: "Karla", ui-sans-serif, sans-serif;
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --header-h: 4.25rem;
   --pointer-x: 50%;
   --pointer-y: 40%;
+}
+
+/* System dark mode — browser / OS preference */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ink: #e8eeea;
+    --ink-soft: #a3b0aa;
+    --mist: #1a2220;
+    --mist-deep: #101614;
+    --foam: #0c100e;
+    --burgundy: #d06a78;
+    --burgundy-deep: #e8919c;
+    --lake: #6eb0a6;
+    --line: rgba(232, 238, 234, 0.12);
+    --shine: rgba(255, 255, 255, 0.14);
+    --header-bg: rgba(12, 16, 14, 0.72);
+    --header-bg-scrolled: rgba(12, 16, 14, 0.9);
+    --bg-lake-glow: rgba(110, 176, 166, 0.1);
+    --bg-burgundy-glow: rgba(208, 106, 120, 0.1);
+    --pointer-glow: rgba(110, 176, 166, 0.12);
+    --noise-opacity: 0.22;
+    --noise-blend: soft-light;
+    --surface-wash-top: rgba(255, 255, 255, 0.04);
+    --surface-wash-bottom: rgba(255, 255, 255, 0.015);
+    --building-wash: rgba(208, 106, 120, 0.1);
+    --building-sheen: rgba(255, 255, 255, 0.04);
+    --btn-ghost-border: rgba(232, 238, 234, 0.28);
+    --btn-ghost-hover-bg: rgba(232, 238, 234, 0.06);
+    --btn-primary-shadow: rgba(208, 106, 120, 0.28);
+    --entry-hover-bg: rgba(110, 176, 166, 0.1);
+    --entry-hover-border: rgba(232, 238, 234, 0.2);
+    --award-hover-bg: rgba(110, 176, 166, 0.1);
+    --portrait-border-hover: rgba(208, 106, 120, 0.45);
+    --portrait-shadow: rgba(0, 0, 0, 0.45);
+    --on-accent: #f3f6f4;
+    --footer-bg: rgba(8, 11, 10, 0.96);
+    --footer-fg: rgba(232, 238, 234, 0.88);
+    --footer-heading: #f3f6f4;
+    --footer-muted: rgba(232, 238, 234, 0.5);
+    --footer-link-border: rgba(232, 238, 234, 0.35);
+    --footer-glow: rgba(110, 176, 166, 0.18);
+    /*
+     * Liquid Glass — dark (iOS-style): deeper frost, ambient outer shadow,
+     * subtler luminance rim (still light specular, not milky white fill).
+     */
+    --lg-tint-rgb: 18, 24, 22;
+    --lg-tint-opacity: 0.28;
+    --lg-shadow-blur: 22px;
+    --lg-shadow-spread: -4px;
+    --lg-shadow-color: rgba(255, 255, 255, 0.28);
+    --lg-outer-shadow-blur: 28px;
+    --lg-outer-shadow: rgba(0, 0, 0, 0.5);
+    --lg-fallback-tint: 0.14;
+    --lg-fallback-shine: rgba(255, 255, 255, 0.32);
+  }
 }
 
 *,
@@ -34,11 +127,12 @@ body {
   font-size: 1.0625rem;
   line-height: 1.65;
   background:
-    radial-gradient(1200px 700px at 10% -10%, rgba(47, 95, 90, 0.12), transparent 55%),
-    radial-gradient(900px 600px at 100% 20%, rgba(122, 36, 50, 0.08), transparent 50%),
+    radial-gradient(1200px 700px at 10% -10%, var(--bg-lake-glow), transparent 55%),
+    radial-gradient(900px 600px at 100% 20%, var(--bg-burgundy-glow), transparent 50%),
     linear-gradient(180deg, var(--foam) 0%, var(--mist) 45%, var(--mist-deep) 100%);
   background-attachment: fixed;
   min-height: 100vh;
+  transition: color 0.25s var(--ease-out), background 0.35s var(--ease-out);
 }
 
 body::before {
@@ -46,9 +140,9 @@ body::before {
   position: fixed;
   inset: 0;
   pointer-events: none;
-  opacity: 0.35;
+  opacity: var(--noise-opacity);
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
-  mix-blend-mode: multiply;
+  mix-blend-mode: var(--noise-blend);
   z-index: 0;
 }
 
@@ -62,7 +156,7 @@ body::after {
   opacity: 0.55;
   background: radial-gradient(
     520px 520px at var(--pointer-x) var(--pointer-y),
-    rgba(47, 95, 90, 0.1),
+    var(--pointer-glow),
     transparent 60%
   );
   transition: opacity 0.4s var(--ease-out);
@@ -93,6 +187,12 @@ a:hover {
   z-index: 100;
 }
 
+@media (prefers-color-scheme: dark) {
+  .skip-link {
+    color: var(--mist-deep);
+  }
+}
+
 .skip-link:focus {
   top: 1rem;
 }
@@ -108,7 +208,7 @@ a:hover {
   align-items: center;
   justify-content: space-between;
   padding: 0 clamp(1.25rem, 4vw, 3rem);
-  background: rgba(247, 249, 248, 0.72);
+  background: var(--header-bg);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid transparent;
   transition: border-color 0.3s var(--ease-out), background 0.3s var(--ease-out);
@@ -116,7 +216,7 @@ a:hover {
 
 .site-header.is-scrolled {
   border-bottom-color: var(--line);
-  background: rgba(247, 249, 248, 0.9);
+  background: var(--header-bg-scrolled);
 }
 
 .wordmark {
@@ -339,8 +439,8 @@ main {
 
 .hero-portrait:hover,
 .hero-portrait:focus-within {
-  border-color: rgba(122, 36, 50, 0.35);
-  box-shadow: 0 18px 40px rgba(20, 28, 26, 0.12);
+  border-color: var(--portrait-border-hover);
+  box-shadow: 0 18px 40px var(--portrait-shadow);
   transform: translateY(-4px);
 }
 
@@ -433,25 +533,25 @@ main {
 
 .btn-primary {
   background: var(--burgundy);
-  color: var(--foam);
+  color: var(--on-accent);
 }
 
 .btn-primary:hover {
   background: var(--burgundy-deep);
-  color: var(--foam);
-  box-shadow: 0 10px 24px rgba(92, 26, 37, 0.22);
+  color: var(--on-accent);
+  box-shadow: 0 10px 24px var(--btn-primary-shadow);
 }
 
 .btn-ghost {
   background: transparent;
   color: var(--ink);
-  border-color: rgba(20, 28, 26, 0.28);
+  border-color: var(--btn-ghost-border);
 }
 
 .btn-ghost:hover {
   border-color: var(--ink);
   color: var(--ink);
-  background: rgba(20, 28, 26, 0.04);
+  background: var(--btn-ghost-hover-bg);
 }
 
 /* --- Sections --- */
@@ -517,8 +617,8 @@ main {
   border-block: 1px solid var(--line);
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.35),
-    rgba(255, 255, 255, 0.05)
+    var(--surface-wash-top),
+    var(--surface-wash-bottom)
   );
 }
 
@@ -622,10 +722,10 @@ main {
   padding-left: 1rem;
   background: linear-gradient(
     90deg,
-    rgba(47, 95, 90, 0.06),
+    var(--entry-hover-bg),
     transparent 55%
   );
-  border-top-color: rgba(20, 28, 26, 0.18);
+  border-top-color: var(--entry-hover-border);
 }
 
 .entry:hover::before,
@@ -733,7 +833,7 @@ main {
 
 .award-list li:hover {
   color: var(--ink);
-  background: rgba(47, 95, 90, 0.07);
+  background: var(--award-hover-bg);
   transform: translateX(4px);
 }
 
@@ -744,8 +844,8 @@ main {
 
 .building {
   background:
-    linear-gradient(120deg, rgba(122, 36, 50, 0.06), transparent 55%),
-    linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.25));
+    linear-gradient(120deg, var(--building-wash), transparent 55%),
+    linear-gradient(180deg, transparent, var(--building-sheen));
 }
 
 .building h2 {
@@ -755,8 +855,8 @@ main {
 .site-footer {
   padding: 4rem 0 3rem;
   border-top: 1px solid var(--line);
-  background: rgba(20, 28, 26, 0.94);
-  color: rgba(247, 249, 248, 0.85);
+  background: var(--footer-bg);
+  color: var(--footer-fg);
   position: relative;
   overflow: hidden;
 }
@@ -769,7 +869,7 @@ main {
   height: 140%;
   background: radial-gradient(
     circle,
-    rgba(47, 95, 90, 0.22),
+    var(--footer-glow),
     transparent 65%
   );
   pointer-events: none;
@@ -791,16 +891,16 @@ main {
 }
 
 .footer-brand {
-  color: var(--foam);
+  color: var(--footer-heading);
   font-size: clamp(2rem, 5vw, 3rem);
   margin-bottom: 0.75rem;
   background: linear-gradient(
     105deg,
-    #fff 0%,
+    var(--footer-heading) 0%,
     rgba(247, 249, 248, 0.85) 40%,
     rgba(180, 210, 205, 0.95) 50%,
     rgba(247, 249, 248, 0.9) 60%,
-    #fff 100%
+    var(--footer-heading) 100%
   );
   background-size: 220% 100%;
   -webkit-background-clip: text;
@@ -819,11 +919,11 @@ main {
 }
 
 .footer-email a {
-  color: var(--foam);
+  color: var(--footer-heading);
   font-weight: 600;
   font-size: 1.05rem;
   text-decoration: none;
-  border-bottom: 1px solid rgba(247, 249, 248, 0.4);
+  border-bottom: 1px solid var(--footer-link-border);
   transition:
     border-bottom-color 0.25s var(--ease-out),
     color 0.25s var(--ease-out),
@@ -831,7 +931,7 @@ main {
 }
 
 .footer-email a:hover {
-  border-bottom-color: var(--foam);
+  border-bottom-color: var(--footer-heading);
   color: #fff;
   letter-spacing: 0.02em;
 }
@@ -843,10 +943,10 @@ main {
 }
 
 .footer-links a {
-  color: var(--foam);
+  color: var(--footer-heading);
   font-weight: 600;
   text-decoration: none;
-  border-bottom: 1px solid rgba(247, 249, 248, 0.4);
+  border-bottom: 1px solid var(--footer-link-border);
   transition:
     border-bottom-color 0.25s var(--ease-out),
     color 0.25s var(--ease-out),
@@ -854,7 +954,7 @@ main {
 }
 
 .footer-links a:hover {
-  border-bottom-color: var(--foam);
+  border-bottom-color: var(--footer-heading);
   color: #fff;
   transform: translateY(-2px);
 }
@@ -863,7 +963,7 @@ main {
   margin: 1.75rem 0 0;
   font-size: 0.9rem;
   letter-spacing: 0.02em;
-  color: rgba(247, 249, 248, 0.55);
+  color: var(--footer-muted);
 }
 
 /* Reveal on scroll */
@@ -960,7 +1060,7 @@ main {
   }
 
   .footer-brand {
-    color: var(--foam);
+    color: var(--footer-heading);
   }
 
 }
@@ -983,11 +1083,6 @@ main {
 
 .liquid-glass-orb {
   --lg-size: 9.5rem;
-  --lg-tint-opacity: 0.06;
-  --lg-shadow-blur: 20px;
-  --lg-shadow-spread: -5px;
-  --lg-shadow-color: rgba(255, 255, 255, 0.45);
-  --lg-outer-shadow-blur: 24px;
   --lg-radius: 42px;
   --lg-filter: none;
   position: fixed;
@@ -998,7 +1093,8 @@ main {
   pointer-events: none;
   /* Archis uses isolation:isolate on the glass pane — required for ::after z-index:-1 */
   isolation: isolate;
-  box-shadow: 0 4px var(--lg-outer-shadow-blur) rgba(0, 0, 0, 0.18);
+  box-shadow: 0 4px var(--lg-outer-shadow-blur) var(--lg-outer-shadow);
+  transition: box-shadow 0.35s var(--ease-out);
 }
 
 .liquid-glass-orb.lg-squircle {
@@ -1012,7 +1108,7 @@ main {
   left: auto;
 }
 
-/* Tint + inset light wrap — archis .glassDiv::before */
+/* Tint + inset light wrap — archis .glassDiv::before (adapts light/dark) */
 .liquid-glass-orb::before {
   content: "";
   position: absolute;
@@ -1021,8 +1117,11 @@ main {
   border-radius: inherit;
   box-shadow: inset 0 0 var(--lg-shadow-blur) var(--lg-shadow-spread)
     var(--lg-shadow-color);
-  background-color: rgba(255, 255, 255, var(--lg-tint-opacity));
+  background-color: rgba(var(--lg-tint-rgb), var(--lg-tint-opacity));
   pointer-events: none;
+  transition:
+    background-color 0.35s var(--ease-out),
+    box-shadow 0.35s var(--ease-out);
 }
 
 /* Physics refraction — archis .glassDiv::after */
@@ -1047,10 +1146,24 @@ main {
 .liquid-glass-orb.lg-fallback::before {
   /* tint kept; shine added via box-shadow blend */
   box-shadow:
-    inset 2px 2px 1px 0 rgba(255, 255, 255, 0.5),
-    inset -1px -1px 1px 1px rgba(255, 255, 255, 0.5),
+    inset 2px 2px 1px 0 var(--lg-fallback-shine),
+    inset -1px -1px 1px 1px var(--lg-fallback-shine),
     inset 0 0 var(--lg-shadow-blur) var(--lg-shadow-spread) var(--lg-shadow-color);
-  background-color: rgba(255, 255, 255, 0.18);
+  background-color: rgba(var(--lg-tint-rgb), var(--lg-fallback-tint));
+}
+
+/* iOS dark Liquid Glass: slightly deeper blur on the sampling layer */
+@media (prefers-color-scheme: dark) {
+  .liquid-glass-orb.lg-refraction::after {
+    /* Keep url(#filter); add a touch more frost like iOS dark glass */
+    backdrop-filter: var(--lg-filter) brightness(0.92) saturate(1.15);
+    -webkit-backdrop-filter: var(--lg-filter) brightness(0.92) saturate(1.15);
+  }
+
+  .liquid-glass-orb.lg-fallback::after {
+    backdrop-filter: blur(5px) brightness(0.9) saturate(1.2);
+    -webkit-backdrop-filter: blur(5px) brightness(0.9) saturate(1.2);
+  }
 }
 
 .liquid-glass-orb.lg-fallback::after {

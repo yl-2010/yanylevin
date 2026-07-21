@@ -29,6 +29,17 @@
     circle: { ior: 1.85, scaleRatio: 0.55, bezelFrac: 0.38, specOpacity: 0.38 },
   };
 
+  // iOS dark Liquid Glass: deeper frost, softer specular luminance
+  const DARK_GLASS = {
+    blurAmt: 0.55,
+    specOpacityMul: 0.72,
+    specSat: 2.5,
+  };
+
+  function isDarkMode() {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  }
+
   const SURFACE_FNS = {
     // verbatim from archisvaze/liquid-glass
     convex_squircle: (x) => Math.pow(1 - Math.pow(1 - x, 4), 0.25),
@@ -273,6 +284,7 @@
     }
 
     const tune = SHAPE_TUNE[shape] || SHAPE_TUNE.circle;
+    const dark = isDarkMode();
     const heightFn =
       shape === "circle" ? SURFACE_FNS.convex_circle : SURFACE_FNS.convex_squircle;
     // Archis defaults use bezel≈radius on large panes. On small orbs that would
@@ -311,6 +323,10 @@
     const specUrl = generateSpecularMap(mw, mh, mRadius, mBezel * 2.5);
     // feDisplacementMap scale is in filter primitive units (= element CSS px)
     const scale = (maxDisp / mapScale) * tune.scaleRatio;
+    const blurAmt = dark ? DARK_GLASS.blurAmt : ARCHIS.blurAmt;
+    const specOpacity =
+      tune.specOpacity * (dark ? DARK_GLASS.specOpacityMul : 1);
+    const specSat = dark ? DARK_GLASS.specSat : ARCHIS.specSat;
 
     setFilterMarkup(
       defs,
@@ -321,10 +337,10 @@
         h,
         dispUrl,
         specUrl,
-        ARCHIS.blurAmt,
+        blurAmt,
         scale,
-        tune.specOpacity,
-        ARCHIS.specSat
+        specOpacity,
+        specSat
       )
     );
 
@@ -339,13 +355,11 @@
     if (!orbs.length) return;
 
     const useSvgBackdrop = isChromiumSvgBackdrop();
-    const root = document.documentElement.style;
-    root.setProperty("--lg-tint-opacity", String(ARCHIS.tintOpacity));
-    root.setProperty("--lg-shadow-blur", `${ARCHIS.shadowBlur}px`);
-    root.setProperty("--lg-shadow-spread", `${ARCHIS.shadowSpread}px`);
-    root.setProperty("--lg-shadow-color", ARCHIS.shadowColor);
-    root.setProperty("--lg-outer-shadow-blur", `${ARCHIS.outerShadowBlur}px`);
+    const dark = isDarkMode();
+    // Tint / rim / outer shadow come from CSS (light + prefers-color-scheme: dark).
+    // JS only rebuilds the refraction filter graph for dark frosting/specular.
     document.documentElement.classList.toggle("lg-chrome", useSvgBackdrop);
+    document.documentElement.classList.toggle("lg-dark", dark);
 
     orbs.forEach((el) => initOrb(el, useSvgBackdrop));
   }
@@ -368,4 +382,13 @@
       };
     })()
   );
+
+  // Rebuild glass when the OS / browser color scheme flips
+  const schemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const onSchemeChange = () => requestAnimationFrame(() => requestAnimationFrame(initAll));
+  if (typeof schemeQuery.addEventListener === "function") {
+    schemeQuery.addEventListener("change", onSchemeChange);
+  } else if (typeof schemeQuery.addListener === "function") {
+    schemeQuery.addListener(onSchemeChange);
+  }
 })();
