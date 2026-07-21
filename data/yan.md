@@ -280,11 +280,20 @@ On Eastside Prep’s team in the National Speech & Debate Association (grades 9�
 
 - A lot of experience in **Python**, **Java**, and **HTML**
 
+## Fun / hobbies
+
+For fun, Yan loves working with tech, for example:
+
+- Running local LLMs on his Mac Studio
+- Setting up smart-home automations with Apple HomeKit
+- Downloading the latest Apple developer betas (iOS, iPadOS, macOS, tvOS, watchOS, etc.) to try new features
+
 ## Interests & themes
 
 - Hard problems across proofs, programs, and products people actually use
 - Competitive math, software research, debate, and teaching younger students math beyond worksheets
 - Open to research, building, and interesting problems
+- Hands-on personal tech: local LLMs, HomeKit automations, Apple OS betas
 
 ## Website / presence
 
@@ -323,3 +332,6 @@ Computer Science, possibly specializing in something AI-related, with a math min
 
 ### What programming languages does Yan know?
 He has a lot of experience in Python, Java, and HTML.
+
+### What does Yan do for fun?
+He loves working with tech — running local LLMs on his Mac Studio, setting up Apple HomeKit smart-home automations, and trying the latest Apple developer betas (iOS, iPadOS, macOS, tvOS, watchOS, etc.) to see new features.
