@@ -1,42 +1,40 @@
-# Cloudflare Tunnel + Cloudflare DNS (yanylevin)
+# Cloudflare Tunnel (yanylevin) — NoteLMs-style
 
-Same pattern as NoteLMs: **`yanylevin.com` lives in the NoteLMs Cloudflare account** (NS `addyson` / `margo`). Apex/www stay on Vercel via proxied A records; **`api.yanylevin.com`** is a proxied Tunnel CNAME to the Mac Express API on port **3004**.
+`yanylevin.com` lives in the **same Cloudflare account as NoteLMs** (not SocketHR). Public DNS is on Cloudflare; the static site still hosts on Vercel via apex/`www` A records.
 
-This is a **separate** tunnel from SocketHR (`~/.cloudflared/config.yml`) and NoteLMs (`~/.cloudflared/config-notelms.yml`). Do **not** put LM Studio (`:1234`) on the tunnel.
+Do **not** put LM Studio (`:1234`) on the tunnel.
 
-## Live Mac config
+## Live pieces
 
-```yaml
-# ~/.cloudflared/config-yanylevin.yml
-tunnel: 15a6dfc9-457c-49c4-80c5-5218924341c9
-credentials-file: /Users/yanlevin/.cloudflared/15a6dfc9-457c-49c4-80c5-5218924341c9.json
+| Piece | Value |
+|-------|--------|
+| Tunnel name | `yanylevin-api` |
+| Tunnel UUID | `15a6dfc9-457c-49c4-80c5-5218924341c9` |
+| Local config | `~/.cloudflared/config-yanylevin.yml` |
+| Credentials | `~/.cloudflared/15a6dfc9-457c-49c4-80c5-5218924341c9.json` |
+| Origin cert (this account) | `~/.cloudflared/cert.pem.notelms.bak` |
+| Hostname | `api.yanylevin.com` → `http://127.0.0.1:3004` |
 
-ingress:
-  - hostname: api.yanylevin.com
-    service: http://127.0.0.1:3004
-  - service: http_status:404
+## Recreate (if needed)
+
+```bash
+# Use the NoteLMs Cloudflare account cert
+cp ~/.cloudflared/cert.pem.notelms.bak ~/.cloudflared/cert.pem
+cloudflared tunnel login   # only if cert missing; select yanylevin.com
+bash deploy/cloudflared/setup-path-a.sh
+# Then in Cloudflare DNS: proxied CNAME api → <UUID>.cfargotunnel.com
 ```
 
-Origin cert for this account: `~/.cloudflared/cert.pem.notelms.bak`  
-(`TUNNEL_ORIGIN_CERT` when creating/listing tunnels in the NoteLMs account.)
+`setup-path-a.sh` still writes local ingress config; for this domain the **authoritative** `api` record must be the **proxied** Cloudflare DNS CNAME (same as NoteLMs), not a Vercel-only CNAME.
 
-## DNS
-
-| Type | Name | Value | Proxy |
-|------|------|--------|-------|
-| A | `@` / `www` | Vercel anycast (`64.29.17.x`) | Proxied |
-| CNAME | `api` | `15a6dfc9-457c-49c4-80c5-5218924341c9.cfargotunnel.com` | **Proxied** |
-
-Registrar nameservers (Vercel domain): `addyson.ns.cloudflare.com`, `margo.ns.cloudflare.com`.
-
-Do **not** add `api.yanylevin.com` as a Vercel *project domain*.
-
-## Every session (or LaunchAgents)
+## Every session / LaunchAgents
 
 ```bash
 cd /Users/yanlevin/github/yanylevin && npm run server
 cloudflared tunnel --config ~/.cloudflared/config-yanylevin.yml run
 ```
+
+Or rely on `com.yanylevin.server` + `com.yanylevin.cloudflared`.
 
 ## Verify
 
@@ -46,9 +44,3 @@ curl -sS https://api.yanylevin.com/health
 ```
 
 Expect: `{"ok":true,"service":"yanylevin-server",...}`
-
-## Troubleshooting
-
-- **502** — Tunnel up but nothing on `127.0.0.1:3004`.
-- **NXDOMAIN / unresolved** — Nameservers not yet propagated; zone still `initializing` in Cloudflare.
-- **Wrong host** — Ingress hostname must be exactly `api.yanylevin.com`.

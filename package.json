@@ -1,0 +1,15 @@
+{
+  "name": "yanylevin",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Yan Levin personal site + Mac Studio LLM API",
+  "scripts": {
+    "server": "npm run start --prefix server",
+    "server:dev": "npm run dev --prefix server",
+    "verify:public-api": "curl -sS -f https://api.yanylevin.com/health",
+    "test:server": "npm test --prefix server"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
