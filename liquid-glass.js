@@ -1,19 +1,27 @@
 /**
- * Apple Liquid Glass — physics-based refraction via SVG backdrop-filter.
- * Adapted from archisvaze/liquid-glass (IOR bevel + specular maps).
- * Chromium: full refraction. Safari/Firefox: layered glassmorphism fallback.
+ * Apple Liquid Glass — visible backdrop refraction.
+ *
+ * Chromium: backdrop-filter: blur() url(#svg-displacement)
+ * Everywhere else: backdrop blur + filter:url() on the frosted layer
+ * (warps the captured backdrop; weaker but still visible).
+ *
+ * Physics bevel maps (archis-style) when Chromium supports SVG backdrop filters;
+ * feTurbulence displacement as a guaranteed visible warp fallback.
  */
 (() => {
   const SIZE = 112;
+
+  // Aggressive enough that edge bend is obvious over text/photo
   const CONFIG = {
-    glassThickness: 72,
-    bezelWidth: 48,
-    ior: 1.85,
-    scaleRatio: 1.05,
-    blurAmt: 0.45,
-    specOpacity: 0.55,
-    specSat: 5,
-    tintOpacity: 0.1,
+    glassThickness: 90,
+    bezelWidth: 52,
+    ior: 2.2,
+    scaleRatio: 1.35,
+    blurAmt: 0.35,
+    specOpacity: 0.5,
+    specSat: 4,
+    tintOpacity: 0.08,
+    turbulenceScale: 72,
   };
 
   const SURFACE = {
@@ -21,13 +29,20 @@
     convexCircle: (x) => Math.sqrt(1 - (1 - x) * (1 - x)),
   };
 
-  function supportsBackdropUrl() {
+  function supportsSvgBackdropFilter() {
+    // Safari accepts the CSSOM string but does not render SVG reference filters
+    // on backdrop-filter. Detect Chromium-ish engines only.
+    const ua = navigator.userAgent;
+    const isSafari =
+      /Safari/i.test(ua) && !/Chrome|Chromium|Edg|OPR|Firefox/i.test(ua);
+    if (isSafari) return false;
+
     const el = document.createElement("div");
     el.style.cssText = "backdrop-filter: url(#test)";
-    return (
+    const accepted =
       el.style.backdropFilter === "url(#test)" ||
-      el.style.backdropFilter === 'url("#test")'
-    );
+      el.style.backdropFilter === 'url("#test")';
+    return accepted && !isSafari;
   }
 
   function calculateRefractionProfile(glassThickness, bezelWidth, heightFn, ior, samples) {
@@ -60,7 +75,6 @@
     return profile;
   }
 
-  /** Rounded-rect / circle displacement (archis algorithm). */
   function generateRoundDisplacementMap(w, h, radius, bezelWidth, profile, maxDisp) {
     const c = document.createElement("canvas");
     c.width = w;
@@ -111,10 +125,6 @@
     return c.toDataURL();
   }
 
-  /**
-   * Apple-style continuous squircle via superellipse (n ≈ 5).
-   * Builds a bezel displacement field along the outline SDF.
-   */
   function generateSquircleDisplacementMap(w, h, bezelWidth, profile, maxDisp, n) {
     n = n || 5;
     const c = document.createElement("canvas");
@@ -144,14 +154,14 @@
         const rho = Math.pow(Math.abs(nx), n) + Math.pow(Math.abs(ny), n);
         if (rho < eps) continue;
 
-        // Approximate distance from outline in pixel space
         const r = Math.pow(rho, 1 / n);
         const distFromEdge = (1 - r) * Math.min(ax, ay);
         if (distFromEdge < 0 || distFromEdge > bezelWidth) continue;
 
-        // Gradient of superellipse for outward normal
-        const gx = n * Math.pow(Math.abs(nx) + eps, n - 1) * Math.sign(nx || 1) / ax;
-        const gy = n * Math.pow(Math.abs(ny) + eps, n - 1) * Math.sign(ny || 1) / ay;
+        const gx =
+          (n * Math.pow(Math.abs(nx) + eps, n - 1) * Math.sign(nx || 1)) / ax;
+        const gy =
+          (n * Math.pow(Math.abs(ny) + eps, n - 1) * Math.sign(ny || 1)) / ay;
         const gMag = Math.sqrt(gx * gx + gy * gy) || 1;
         const cos = gx / gMag;
         const sin = gy / gMag;
@@ -205,7 +215,9 @@
         const cos = x / dist;
         const sin = -y / dist;
         const dot = Math.abs(cos * sv[0] + sin * sv[1]);
-        const edge = Math.sqrt(Math.max(0, 1 - (1 - fromSide / Math.max(bezelWidth, 1)) ** 2));
+        const edge = Math.sqrt(
+          Math.max(0, 1 - (1 - fromSide / Math.max(bezelWidth, 1)) ** 2)
+        );
         const coeff = dot * edge;
         const col = (255 * coeff) | 0;
         const alpha = (col * coeff * op) | 0;
@@ -248,15 +260,19 @@
         const distFromEdge = (1 - r) * Math.min(ax, ay);
         if (distFromEdge < 0 || distFromEdge > bezelWidth) continue;
 
-        const gx = n * Math.pow(Math.abs(nx) + eps, n - 1) * Math.sign(nx || 1) / ax;
-        const gy = n * Math.pow(Math.abs(ny) + eps, n - 1) * Math.sign(ny || 1) / ay;
+        const gx =
+          (n * Math.pow(Math.abs(nx) + eps, n - 1) * Math.sign(nx || 1)) / ax;
+        const gy =
+          (n * Math.pow(Math.abs(ny) + eps, n - 1) * Math.sign(ny || 1)) / ay;
         const gMag = Math.sqrt(gx * gx + gy * gy) || 1;
         const cos = gx / gMag;
         const sin = -gy / gMag;
         const fromSide = distFromEdge;
         const op = Math.min(1, fromSide / 2);
         const dot = Math.abs(cos * sv[0] + sin * sv[1]);
-        const edge = Math.sqrt(Math.max(0, 1 - (1 - fromSide / bezelWidth) ** 2));
+        const edge = Math.sqrt(
+          Math.max(0, 1 - (1 - fromSide / bezelWidth) ** 2)
+        );
         const coeff = dot * edge;
         const col = (255 * coeff) | 0;
         const alpha = (col * coeff * op) | 0;
@@ -271,16 +287,53 @@
     return c.toDataURL();
   }
 
-  function buildFilterMarkup(id, w, h, dispUrl, specUrl, blurAmt, scale, specOpacity, specSat) {
+  function ensureBaseFilters(defs) {
+    if (document.getElementById("lg-turbulence-distort")) return;
+
+    const svgNS = "http://www.w3.org/2000/svg";
+    const filter = document.createElementNS(svgNS, "filter");
+    filter.setAttribute("id", "lg-turbulence-distort");
+    filter.setAttribute("x", "-20%");
+    filter.setAttribute("y", "-20%");
+    filter.setAttribute("width", "140%");
+    filter.setAttribute("height", "140%");
+    filter.setAttribute("color-interpolation-filters", "sRGB");
+    filter.innerHTML = `
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.03"
+        numOctaves="2" seed="7" result="noise" />
+      <feGaussianBlur in="noise" stdDeviation="1.2" result="soft" />
+      <feDisplacementMap in="SourceGraphic" in2="soft"
+        scale="${CONFIG.turbulenceScale}"
+        xChannelSelector="R" yChannelSelector="G" />
+    `;
+    defs.appendChild(filter);
+  }
+
+  function setFilterMarkup(defs, id, markup) {
+    const existing = document.getElementById(id);
+    if (existing) existing.remove();
+
+    // Parse in an SVG context so filter primitives are real SVG nodes
+    const svgNS = "http://www.w3.org/2000/svg";
+    const holder = document.createElementNS(svgNS, "svg");
+    holder.innerHTML = markup;
+    const node = holder.querySelector("filter");
+    if (node) defs.appendChild(node);
+  }
+
+  function buildPhysicsFilter(id, w, h, dispUrl, specUrl, blurAmt, scale, specOpacity, specSat) {
     return `
-      <filter id="${id}" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <filter id="${id}" x="-15%" y="-15%" width="130%" height="130%"
+        color-interpolation-filters="sRGB">
         <feGaussianBlur in="SourceGraphic" stdDeviation="${blurAmt}" result="blurred_source" />
-        <feImage href="${dispUrl}" x="0" y="0" width="${w}" height="${h}" result="disp_map" preserveAspectRatio="none" />
+        <feImage href="${dispUrl}" x="0" y="0" width="${w}" height="${h}"
+          result="disp_map" preserveAspectRatio="none" />
         <feDisplacementMap in="blurred_source" in2="disp_map"
           scale="${scale}" xChannelSelector="R" yChannelSelector="G"
           result="displaced" />
         <feColorMatrix in="displaced" type="saturate" values="${specSat}" result="displaced_sat" />
-        <feImage href="${specUrl}" x="0" y="0" width="${w}" height="${h}" result="spec_layer" preserveAspectRatio="none" />
+        <feImage href="${specUrl}" x="0" y="0" width="${w}" height="${h}"
+          result="spec_layer" preserveAspectRatio="none" />
         <feComposite in="displaced_sat" in2="spec_layer" operator="in" result="spec_masked" />
         <feComponentTransfer in="spec_layer" result="spec_faded">
           <feFuncA type="linear" slope="${specOpacity}" />
@@ -292,19 +345,18 @@
 
   function initOrb(el, opts) {
     const filterId = opts.filterId;
-    const shape = opts.shape; // "circle" | "squircle"
-    const w = el.offsetWidth || SIZE;
-    const h = el.offsetHeight || SIZE;
+    const shape = opts.shape;
+    const useSvgBackdrop = opts.useSvgBackdrop;
+    const w = Math.max(2, Math.round(el.offsetWidth || SIZE));
+    const h = Math.max(2, Math.round(el.offsetHeight || SIZE));
     const radius =
-      shape === "circle"
-        ? Math.min(w, h) / 2
-        : Math.min(w, h) * 0.34; // continuous-corner-ish for fallback maps
+      shape === "circle" ? Math.min(w, h) / 2 : Math.min(w, h) * 0.34;
 
     const heightFn =
       shape === "circle" ? SURFACE.convexCircle : SURFACE.convexSquircle;
     const bezel = Math.min(
       CONFIG.bezelWidth,
-      radius - 1,
+      Math.max(2, radius - 1),
       Math.min(w, h) / 2 - 1
     );
 
@@ -316,7 +368,7 @@
       128
     );
     const maxDisp = Math.max(...Array.from(profile).map(Math.abs)) || 1;
-    const scale = maxDisp * CONFIG.scaleRatio;
+    const scale = Math.max(28, maxDisp * CONFIG.scaleRatio);
 
     let dispUrl;
     let specUrl;
@@ -330,38 +382,48 @@
 
     const defs = document.getElementById("liquid-glass-defs");
     if (!defs) return;
+    ensureBaseFilters(defs);
 
-    const existing = document.getElementById(filterId);
-    if (existing) existing.remove();
-
-    const markup = buildFilterMarkup(
+    setFilterMarkup(
+      defs,
       filterId,
-      w,
-      h,
-      dispUrl,
-      specUrl,
-      CONFIG.blurAmt,
-      scale,
-      CONFIG.specOpacity,
-      CONFIG.specSat
+      buildPhysicsFilter(
+        filterId,
+        w,
+        h,
+        dispUrl,
+        specUrl,
+        CONFIG.blurAmt,
+        scale,
+        CONFIG.specOpacity,
+        CONFIG.specSat
+      )
     );
-    // Keep sibling filters intact when rebuilding one orb
-    defs.insertAdjacentHTML("beforeend", markup);
 
     const effect = el.querySelector(".lg-effect");
     if (!effect) return;
 
-    if (supportsBackdropUrl()) {
+    // Reset previous inline filters
+    effect.style.backdropFilter = "";
+    effect.style.webkitBackdropFilter = "";
+    effect.style.filter = "";
+
+    if (useSvgBackdrop) {
       el.classList.add("lg-refraction");
       el.classList.remove("lg-fallback");
-      effect.style.backdropFilter = `url(#${filterId})`;
-      effect.style.webkitBackdropFilter = `url(#${filterId})`;
+      // Chromium: warp the real page backdrop
+      const bf = `blur(1.5px) url(#${filterId}) saturate(1.35) brightness(1.06)`;
+      effect.style.backdropFilter = bf;
+      effect.style.webkitBackdropFilter = bf;
     } else {
       el.classList.add("lg-fallback");
       el.classList.remove("lg-refraction");
-      effect.style.backdropFilter = "blur(22px) saturate(180%) brightness(1.08)";
-      effect.style.webkitBackdropFilter =
-        "blur(22px) saturate(180%) brightness(1.08)";
+      // Capture backdrop, then displace that bitmap with filter:url
+      // (works in Safari/Firefox — warping is of the frosted snapshot)
+      const bf = "blur(14px) saturate(170%) brightness(1.08)";
+      effect.style.backdropFilter = bf;
+      effect.style.webkitBackdropFilter = bf;
+      effect.style.filter = "url(#lg-turbulence-distort)";
     }
   }
 
@@ -369,10 +431,12 @@
     const orbs = document.querySelectorAll("[data-liquid-glass]");
     if (!orbs.length) return;
 
+    const useSvgBackdrop = supportsSvgBackdropFilter();
     document.documentElement.style.setProperty(
       "--lg-tint-opacity",
       String(CONFIG.tintOpacity)
     );
+    document.documentElement.classList.toggle("lg-chrome", useSvgBackdrop);
 
     orbs.forEach((el) => {
       const shape = el.getAttribute("data-liquid-glass") || "circle";
@@ -380,7 +444,7 @@
         el.getAttribute("data-filter-id") ||
         `lg-filter-${shape}-${Math.random().toString(36).slice(2, 7)}`;
       el.setAttribute("data-filter-id", filterId);
-      initOrb(el, { shape, filterId });
+      initOrb(el, { shape, filterId, useSvgBackdrop });
     });
   }
 

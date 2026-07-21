@@ -970,21 +970,22 @@ main {
 
 /* --- Apple Liquid Glass floating orbs --- */
 .liquid-glass-svg {
-  position: absolute;
+  /* Must remain in the tree (not display:none) so url(#id) resolves */
+  position: fixed;
   width: 0;
   height: 0;
-  overflow: hidden;
   pointer-events: none;
 }
 
 .liquid-glass-orb {
-  --lg-size: 7rem;
-  --lg-tint-opacity: 0.1;
+  --lg-size: 7.5rem;
+  --lg-tint-opacity: 0.08;
   position: fixed;
   z-index: 60;
   width: var(--lg-size);
   height: var(--lg-size);
-  isolation: isolate;
+  /* Do NOT set isolation/opacity/filter on this wrapper — that creates a
+     backdrop root and the glass only samples empty pixels (no warp). */
   pointer-events: none;
   overflow: hidden;
   box-shadow:
@@ -1020,11 +1021,9 @@ main {
 
 .lg-effect {
   z-index: 0;
-  overflow: hidden;
-  isolation: isolate;
-  /* Chromium applies SVG refraction via JS; fallback set in JS too */
-  backdrop-filter: blur(18px) saturate(170%) brightness(1.05);
-  -webkit-backdrop-filter: blur(18px) saturate(170%) brightness(1.05);
+  /* Default frost; JS swaps in SVG displacement when available */
+  backdrop-filter: blur(14px) saturate(170%) brightness(1.06);
+  -webkit-backdrop-filter: blur(14px) saturate(170%) brightness(1.06);
 }
 
 .lg-tint {
@@ -1048,47 +1047,42 @@ main {
   background:
     radial-gradient(
       120% 80% at 28% 18%,
-      rgba(255, 255, 255, 0.55) 0%,
-      rgba(255, 255, 255, 0.12) 28%,
+      rgba(255, 255, 255, 0.5) 0%,
+      rgba(255, 255, 255, 0.1) 28%,
       transparent 55%
     ),
     linear-gradient(
       155deg,
-      rgba(255, 255, 255, 0.35) 0%,
+      rgba(255, 255, 255, 0.28) 0%,
       transparent 42%
     );
   mix-blend-mode: soft-light;
-  opacity: 0.9;
+  opacity: 0.75;
 }
 
-/* Stronger edge refraction cue when SVG filter is active */
 .liquid-glass-orb.lg-refraction .lg-tint {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .liquid-glass-orb.lg-refraction .lg-specular {
-  opacity: 0.55;
+  opacity: 0.45;
   mix-blend-mode: screen;
 }
 
 .liquid-glass-orb.lg-fallback .lg-tint {
-  background: rgba(255, 255, 255, 0.22);
-}
-
-.liquid-glass-orb.lg-fallback .lg-effect {
-  filter: contrast(1.05);
+  background: rgba(255, 255, 255, 0.16);
 }
 
 @keyframes lg-float {
   0%,
   100% {
-    transform: translate3d(0, 0, 0) scale(1);
+    margin-bottom: 0;
   }
   40% {
-    transform: translate3d(0, -7px, 0) scale(1.02);
+    margin-bottom: 7px;
   }
   70% {
-    transform: translate3d(0, -3px, 0) scale(0.99);
+    margin-bottom: 3px;
   }
 }
 
