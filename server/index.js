@@ -10,6 +10,7 @@ import cors from "cors";
 import { authConfigured, requireAuth, getAuthConfig } from "./auth.js";
 import { probeLmStudio, chatCompletions, getLmStudioConfig } from "./lmstudio.js";
 import { buildYanSystemPrompt, loadYanMarkdown } from "./yan-kb.js";
+import { appendChatTurn } from "./chat-log.js";
 import { mintVisitorToken } from "./mint.js";
 
 const PORT = Number(process.env.PORT || 3004);
@@ -169,6 +170,15 @@ app.post("/api/chat", requireAuth, async (req, res) => {
       maxTokens:
         typeof req.body?.maxTokens === "number" ? req.body.maxTokens : 2048,
     });
+
+    // Audit trail: every user prompt + model reply → data/chat-log.md
+    appendChatTurn({
+      messages: conversation,
+      assistantContent: result.content,
+      model: result.model,
+      ip: req.ip || req.socket?.remoteAddress || "",
+    }).catch((err) => console.error("[chat-log]", err));
+
     res.json({
       ok: true,
       content: result.content,

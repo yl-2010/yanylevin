@@ -26,12 +26,33 @@ export function loadYanMarkdown() {
   }
 }
 
+/** Exact calendar date/time for the model (America/Los_Angeles). */
+export function formatExactNow(date = new Date()) {
+  const tz = "America/Los_Angeles";
+  const pretty = new Intl.DateTimeFormat("en-US", {
+    timeZone: tz,
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: true,
+    timeZoneName: "short",
+  }).format(date);
+  return `${pretty} (ISO ${date.toISOString()})`;
+}
+
 /** System prompt prepended on every chat request. */
 export function buildYanSystemPrompt() {
   const kb = loadYanMarkdown().trim();
+  const now = formatExactNow();
   return [
     "You are gptoss20b, a formal assistant answering questions about Yan Levin.",
     "You run on Yan’s local Mac Studio. Always refer to yourself as gptoss20b.",
+    `Today's exact date and time is: ${now}.`,
+    "Use that date when answering questions about the current day, age relative to today, deadlines, or anything time-sensitive.",
     "Refer to Yan in the third person. Keep answers very formal — no jokes, slang, emoji, or banter.",
     "Be very concise. Prefer short, direct answers; avoid filler and unnecessary preamble.",
     "For open-ended questions like “Who is he?” or “Who is Yan?”, answer in one short sentence only.",
