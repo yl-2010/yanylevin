@@ -1,6 +1,6 @@
 # Yan Levin
 
-Knowledge base for answering questions about Yan Levin. Prefer facts from this file. If something is not covered here, say you don't know rather than inventing details. Do not volunteer Yan’s phone number unless the user directly asks for it. Do not mention Instagram, Twitter/X, TikTok, or Snapchat. Do not volunteer the YouTube channel unless the user specifically asks about YouTube.
+Knowledge base for answering questions about Yan Levin. Prefer facts from this file. If something is not covered here, say you don't know rather than inventing details. Do not volunteer Yan’s phone number unless the user directly asks for it. Do not mention Instagram, Twitter/X, TikTok, or Snapchat. Do not volunteer the YouTube channel unless the user specifically asks about YouTube. Do not discuss siblings, parents’ jobs, or other private family details — family context in this file is limited to heritage and languages only.
 
 ## Identity & contact
 
@@ -10,8 +10,12 @@ Knowledge base for answering questions about Yan Levin. Prefer facts from this f
   - School address on transcript: 10613 NE 38th Pl, Kirkland, WA 98033
   - **CEEB code:** 480564
   - Expected graduation: June 2028 (EPS Class of 2028)
-- **Previous school:** Evergreen Middle School (EMS), Lake Washington School District — Redmond, WA (grades 6–8)
+- **Previous schools:**
+  - Bellevue Children’s Academy — Pre-K through 2nd grade
+  - Elizabeth Blackwell Elementary — 3rd through 5th grade
+  - Evergreen Middle School (EMS), Lake Washington School District — Redmond, WA (grades 6–8)
 - **Location:** Kirkland, WA
+- **Family privacy:** Do not mention siblings, parents’ jobs, or other private family details. Heritage and languages only.
 - **Email:** yl-2010@outlook.com
 - **Phone:** +1 425 260 8044
   - **Agent rule:** Only share this phone number if the user directly asks for Yan’s phone number / phone / mobile / cell. Do not volunteer it in bios, contact summaries, or general “how can I reach Yan?” answers that can be satisfied with email.
@@ -276,8 +280,10 @@ On Eastside Prep’s team in the National Speech & Debate Association (grades 9�
 - Grade 11 summer; ~2 weeks × 40 hrs/week intensive AI coursework at Fitzwilliam College, Cambridge
 - FitzEd courses: https://www.fitz.cam.ac.uk/fitzed-courses-offer
 
-## Earlier years (middle school foundations)
+## Earlier years (elementary & middle school)
 
+- **Bellevue Children’s Academy** — Pre-K through 2nd grade
+- **Elizabeth Blackwell Elementary** — 3rd through 5th grade
 - Attended **Evergreen Middle School** (Lake Washington School District, Redmond, WA) for grades 6–8 (2021–22 through 2023–24) before Eastside Prep; earned all A’s with Quest/accelerated coursework (see Academics → Middle school)
 - Seven years at Prime Factor Math Circle (student); then TA in high school
 - UW Math Circle (grades 7–8)
@@ -358,7 +364,10 @@ Email yl-2010@outlook.com, GitHub https://github.com/yl-2010, or LinkedIn https:
 It varies, but in general he loves learning about Computer Science, LLMs, and AI.
 
 ### Where does Yan go to school?
-Eastside Preparatory School in Kirkland, Washington — Class of 2028 (CEEB 480564; expected graduation June 2028). Before that, Evergreen Middle School in Redmond, WA (grades 6–8, LWSD). Lives in Kirkland, WA.
+Eastside Preparatory School in Kirkland, Washington — Class of 2028 (CEEB 480564; expected graduation June 2028). Earlier: Bellevue Children’s Academy (Pre-K–2), Elizabeth Blackwell Elementary (3–5), Evergreen Middle School in Redmond, WA (grades 6–8, LWSD). Lives in Kirkland, WA.
+
+### Can you tell me about Yan’s family / siblings / parents?
+No — do not discuss siblings, parents’ jobs, or other private family details. You may only use heritage (half Indian, half Russian) and language background already listed in this file.
 
 ### What were Yan’s middle school grades?
 At Evergreen Middle School, all listed courses were A’s. He was in Quest tracks for English, social studies, and science, and took accelerated math (7th-grade math in 6th, Algebra 1 in 7th, Geometry in 8th). Grade 6 Semester 1 GPA was 4.000.
