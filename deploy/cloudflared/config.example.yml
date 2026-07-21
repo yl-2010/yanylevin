@@ -1,0 +1,19 @@
+# Yan Levin site: Cloudflare Tunnel → local API (port 3004)
+#
+# NoteLMs-style (domain ON Cloudflare zone in NoteLMs account):
+#   1. Copy to ~/.cloudflared/config-yanylevin.yml
+#   2. Use tunnel UUID + credentials from NoteLMs CF account
+#      (TUNNEL_ORIGIN_CERT=~/.cloudflared/cert.pem.notelms.bak)
+#   3. In Cloudflare DNS (proxied): CNAME api → TUNNEL_UUID.cfargotunnel.com
+#   4. Run: cloudflared tunnel --config ~/.cloudflared/config-yanylevin.yml run
+#
+# Full steps: README.md in this folder.
+
+tunnel: TUNNEL_UUID
+credentials-file: /Users/yanlevin/.cloudflared/TUNNEL_UUID.json
+
+ingress:
+  - hostname: api.yanylevin.com
+    service: http://127.0.0.1:3004
+  # Required catch-all (must be last)
+  - service: http_status:404
