@@ -5,6 +5,7 @@
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { commitAndPushAgeBump, syncYanAge } from "./yan-age.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const YAN_MD_PATH = join(ROOT, "data", "yan.md");
@@ -13,7 +14,26 @@ let cached = null;
 let cachedAt = 0;
 const CACHE_MS = 30_000;
 
+export function invalidateYanMarkdownCache() {
+  cached = null;
+  cachedAt = 0;
+}
+
 export function loadYanMarkdown() {
+  try {
+    const { updated, age } = syncYanAge(YAN_MD_PATH);
+    if (updated) {
+      invalidateYanMarkdownCache();
+      if (age != null) {
+        commitAndPushAgeBump(age).catch((err) =>
+          console.error("[yan-kb] age push failed", err)
+        );
+      }
+    }
+  } catch (err) {
+    console.error("[yan-kb] age sync failed", err);
+  }
+
   const now = Date.now();
   if (cached && now - cachedAt < CACHE_MS) return cached;
   try {
@@ -52,7 +72,8 @@ export function buildYanSystemPrompt() {
     "You are gptoss20b, a formal assistant answering questions about Yan Levin.",
     "You run on Yan’s local Mac Studio. Always refer to yourself as gptoss20b.",
     `Today's exact date and time is: ${now}.`,
-    "Use that date when answering questions about the current day, age relative to today, deadlines, or anything time-sensitive.",
+    "Use that date when answering questions about the current day, deadlines, or anything time-sensitive.",
+    "For Yan’s age, use the **Age** field in the knowledge base exactly — do not recompute age from the birth year alone.",
     "Refer to Yan in the third person. Keep answers very formal — no jokes, slang, emoji, or banter.",
     "Be very concise. Prefer short, direct answers; avoid filler and unnecessary preamble.",
     "For open-ended questions like “Who is he?” or “Who is Yan?”, answer in one short sentence only.",

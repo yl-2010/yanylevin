@@ -12,6 +12,7 @@ Knowledge base for answering questions about Yan Levin. Prefer facts from this f
 
 - **Name:** Yan Levin (full name: Yan Yuvan Levin; school records also as Yan Y. Levin)
 - **Date of birth:** June 2010
+- **Age:** 16 *(auto-updated from date of birth; do not edit by hand)*
 - **Current school:** Junior at Eastside Preparatory School (Eastside Prep), Kirkland, WA — **Class of 2028**
   - School address on transcript: 10613 NE 38th Pl, Kirkland, WA 98033
   - **CEEB code:** 480564
@@ -398,6 +399,9 @@ Around late elementary school, when he programmed games in Scratch for his littl
 
 ### Where does Yan go to school?
 Eastside Preparatory School in Kirkland, Washington — Class of 2028 (CEEB 480564; expected graduation June 2028). Earlier: Bellevue Children’s Academy (Pre-K–2), Elizabeth Blackwell Elementary (3–5), Evergreen Middle School in Redmond, WA (grades 6–8, LWSD). Lives in Kirkland, WA.
+
+### How old is Yan?
+Use the **Age** value under Identity & contact (auto-updated from date of birth June 2010). Answer with that exact number — do not recompute from the year alone.
 
 ### Can you tell me about Yan’s family / siblings / parents?
 No — do not discuss siblings, parents’ jobs, or other private family details. You may only use heritage (half Indian, half Russian) and language background already listed in this file.

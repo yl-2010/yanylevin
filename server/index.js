@@ -9,7 +9,12 @@ import express from "express";
 import cors from "cors";
 import { authConfigured, requireAuth, getAuthConfig } from "./auth.js";
 import { probeLmStudio, chatCompletions, getLmStudioConfig } from "./lmstudio.js";
-import { buildYanSystemPrompt, loadYanMarkdown } from "./yan-kb.js";
+import {
+  buildYanSystemPrompt,
+  invalidateYanMarkdownCache,
+  loadYanMarkdown,
+} from "./yan-kb.js";
+import { syncYanAgeAndPublish } from "./yan-age.js";
 import { appendChatTurn } from "./chat-log.js";
 import { mintVisitorToken } from "./mint.js";
 
@@ -196,8 +201,22 @@ app.use((_req, res) => {
   res.status(404).json({ ok: false, error: "not found" });
 });
 
+/** Keep Age in yan.md current (birthday rollover while server is up). */
+const AGE_SYNC_MS = 60 * 60 * 1000;
+async function runAgeSync() {
+  try {
+    const result = await syncYanAgeAndPublish();
+    if (result.updated) invalidateYanMarkdownCache();
+  } catch (err) {
+    console.error("[yan-age] scheduled sync failed", err);
+  }
+}
+
 app.listen(PORT, HOST, () => {
   console.log(
     `[yanylevin-server] listening on http://${HOST}:${PORT} (auth=${authConfigured() ? "configured" : "missing"})`
   );
+  runAgeSync();
+  setInterval(runAgeSync, AGE_SYNC_MS);
 });
+
