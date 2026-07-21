@@ -6,8 +6,11 @@
   "scripts": {
     "server": "npm run start --prefix server",
     "server:dev": "npm run dev --prefix server",
-    "verify:public-api": "curl -sS -f https://api.yanylevin.com/health",
+    "verify:public-api": "curl -sS -f --resolve api.yanylevin.com:443:$(dig +short api.yanylevin.com @1.1.1.1 | head -1) https://api.yanylevin.com/health || curl -sS -f https://api.yanylevin.com/health",
     "test:server": "npm test --prefix server"
+  },
+  "dependencies": {
+    "jose": "^6.2.4"
   },
   "engines": {
     "node": ">=20"

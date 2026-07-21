@@ -391,4 +391,9 @@
   } else if (typeof schemeQuery.addListener === "function") {
     schemeQuery.addListener(onSchemeChange);
   }
+
+  // Allow chatbot (and other UI) to rebuild filters after size/shape changes.
+  window.reinitLiquidGlass = () => {
+    requestAnimationFrame(() => requestAnimationFrame(initAll));
+  };
 })();

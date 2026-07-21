@@ -9,6 +9,8 @@ import express from "express";
 import cors from "cors";
 import { authConfigured, requireAuth, getAuthConfig } from "./auth.js";
 import { probeLmStudio, chatCompletions, getLmStudioConfig } from "./lmstudio.js";
+import { buildYanSystemPrompt, loadYanMarkdown } from "./yan-kb.js";
+import { mintVisitorToken } from "./mint.js";
 
 const PORT = Number(process.env.PORT || 3004);
 const HOST = process.env.HOST || "0.0.0.0";
@@ -20,6 +22,8 @@ const DEFAULT_ORIGINS = [
   "http://127.0.0.1:8080",
   "http://localhost:3000",
   "http://127.0.0.1:3000",
+  "http://localhost:5500",
+  "http://127.0.0.1:5500",
 ];
 
 function allowedOrigins() {
@@ -29,6 +33,20 @@ function allowedOrigins() {
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
+}
+
+/** Very small in-memory rate limit for visitor token minting. */
+const tokenHits = new Map();
+function rateLimitOk(ip, limit = 30, windowMs = 60_000) {
+  const now = Date.now();
+  const key = ip || "unknown";
+  let bucket = tokenHits.get(key);
+  if (!bucket || now - bucket.start > windowMs) {
+    bucket = { start: now, count: 0 };
+    tokenHits.set(key, bucket);
+  }
+  bucket.count += 1;
+  return bucket.count <= limit;
 }
 
 const app = express();
@@ -50,11 +68,16 @@ app.use(express.json({ limit: "2mb" }));
 app.get("/health", async (_req, res) => {
   const lm = await probeLmStudio();
   const { issuer, audience } = getAuthConfig();
+  const kb = loadYanMarkdown();
   res.json({
     ok: true,
     service: "yanylevin-server",
     authConfigured: authConfigured(),
     jwt: { issuer, audience },
+    knowledgeBase: {
+      loaded: Boolean(kb && kb.trim()),
+      bytes: kb ? Buffer.byteLength(kb, "utf8") : 0,
+    },
     lmStudio: {
       ok: lm.ok,
       baseUrl: lm.baseUrl,
@@ -66,8 +89,42 @@ app.get("/health", async (_req, res) => {
 });
 
 /**
- * Free-form chat against GPT-OSS for a future site chatbot.
- * Requires Bearer JWT (issuer yanylevin-next, audience yanylevin-mac-api).
+ * Mint a short-lived visitor JWT for the public FAQ chatbot.
+ * Used by local preview and as a fallback when the Vercel bridge is unavailable.
+ */
+app.get("/api/visitor-token", async (req, res) => {
+  try {
+    if (!authConfigured()) {
+      res.status(503).json({ ok: false, error: "AUTH_SECRET not configured" });
+      return;
+    }
+    const ip = req.ip || req.socket?.remoteAddress || "";
+    if (!rateLimitOk(ip)) {
+      res.status(429).json({ ok: false, error: "rate limit exceeded" });
+      return;
+    }
+    const token = await mintVisitorToken();
+    const { issuer, audience } = getAuthConfig();
+    res.setHeader("Cache-Control", "no-store");
+    res.json({
+      ok: true,
+      token,
+      expiresIn: 600,
+      issuer,
+      audience,
+    });
+  } catch (err) {
+    console.error("[/api/visitor-token]", err);
+    res.status(err.status || 500).json({
+      ok: false,
+      error: err.message || "token mint failed",
+    });
+  }
+});
+
+/**
+ * Free-form chat against GPT-OSS for the site chatbot.
+ * Requires Bearer JWT. Always injects yan.md as the system prompt.
  */
 app.post("/api/chat", requireAuth, async (req, res) => {
   try {
@@ -92,8 +149,21 @@ app.post("/api/chat", requireAuth, async (req, res) => {
       return;
     }
 
+    // Always ground answers in yan.md — strip client system messages so visitors
+    // cannot override the knowledge base / persona.
+    const conversation = safe.filter((m) => m.role !== "system");
+    if (!conversation.length) {
+      res.status(400).json({ ok: false, error: "no user messages" });
+      return;
+    }
+
+    const grounded = [
+      { role: "system", content: buildYanSystemPrompt() },
+      ...conversation,
+    ];
+
     const result = await chatCompletions({
-      messages: safe,
+      messages: grounded,
       temperature:
         typeof req.body?.temperature === "number" ? req.body.temperature : 0.4,
       maxTokens:
