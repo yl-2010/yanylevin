@@ -3,379 +3,210 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Yan Levin — Editorial</title>
+    <title>Yan Levin</title>
     <meta
       name="description"
       content="Yan Levin, junior at Eastside Prep in Kirkland. Math olympiad competitor, UT Austin research intern, and co-founder of SocketHR."
     />
+    <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,900;1,9..144,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --paper: #f5efe1;
-        --paper-2: #efe7d5;
-        --ink: #201a12;
-        --ink-soft: #4a4133;
-        --rule: #c9bda0;
-        --accent: #8a2b12;
-        --accent-2: #1d4b3e;
-        --display: "Fraunces", Georgia, serif;
-        --body: "Newsreader", Georgia, serif;
+        --bg: #ffffff;
+        --fg: #16181d;
+        --muted: #6b7280;
+        --line: rgba(0, 0, 0, 0.1);
+        --hover: rgba(0, 0, 0, 0.035);
+        --font: "Inter", system-ui, sans-serif;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0d0e11;
+          --fg: #eceef2;
+          --muted: #9aa0ac;
+          --line: rgba(255, 255, 255, 0.12);
+          --hover: rgba(255, 255, 255, 0.05);
+        }
       }
       * { box-sizing: border-box; }
       html { scroll-behavior: smooth; }
       body {
-        margin: 0;
-        background: var(--paper);
-        color: var(--ink);
-        font-family: var(--body);
-        font-size: 1.12rem;
-        line-height: 1.7;
-        background-image:
-          radial-gradient(circle at 12% 8%, rgba(138,43,18,0.05), transparent 40%),
-          repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(32,26,18,0.012) 3px, rgba(32,26,18,0.012) 4px);
+        margin: 0; background: var(--bg); color: var(--fg);
+        font-family: var(--font); font-size: 1.02rem; line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
       }
       img { max-width: 100%; display: block; }
-      a { color: var(--accent); text-underline-offset: 0.15em; }
-      .wrap { width: min(72rem, calc(100% - 3rem)); margin: 0 auto; }
-      .masthead {
-        border-bottom: 3px double var(--ink);
-        padding: 1.1rem 0 0.8rem;
-        display: flex; align-items: baseline; justify-content: space-between;
-        flex-wrap: wrap; gap: 0.75rem;
-      }
-      .masthead .name {
-        font-family: var(--display);
-        font-weight: 900; font-size: clamp(1.5rem, 3vw, 2.1rem);
-        letter-spacing: -0.02em; text-decoration: none; color: var(--ink);
-      }
-      .masthead nav { display: flex; flex-wrap: wrap; gap: 1.1rem; }
-      .masthead nav a {
-        color: var(--ink-soft); text-decoration: none;
-        font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.14em;
-        font-family: var(--display); font-weight: 600;
-      }
-      .masthead nav a:hover { color: var(--accent); }
-      .dateline {
-        display: flex; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;
-        font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.2em;
-        color: var(--ink-soft); padding: 0.5rem 0; border-bottom: 1px solid var(--rule);
-      }
+      a { color: inherit; text-underline-offset: 0.2em; text-decoration-color: var(--muted); }
+      .wrap { width: min(46rem, calc(100% - 2.5rem)); margin: 0 auto; }
 
-      /* Hero */
-      .hero { padding: clamp(2rem, 5vw, 3.5rem) 0; border-bottom: 1px solid var(--rule); }
-      .hero-grid { display: grid; gap: 2rem; align-items: center; }
-      @media (min-width: 820px) { .hero-grid { grid-template-columns: 1.5fr 1fr; } }
-      .kicker {
-        font-family: var(--display); font-weight: 600; text-transform: uppercase;
-        letter-spacing: 0.18em; font-size: 0.8rem; color: var(--accent); margin: 0 0 0.75rem;
-      }
-      .hero h1 {
-        font-family: var(--display); font-weight: 900;
-        font-size: clamp(2.6rem, 7vw, 5rem); line-height: 0.98; letter-spacing: -0.03em;
-        margin: 0 0 1rem;
-      }
-      .hero .standfirst { font-size: 1.25rem; color: var(--ink-soft); max-width: 34ch; margin: 0 0 1.5rem; }
-      .hero .standfirst::first-letter {
-        font-family: var(--display); font-weight: 900; font-size: 3.4rem;
-        float: left; line-height: 0.72; padding: 0.1rem 0.5rem 0 0; color: var(--accent);
-      }
-      .byline { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ink-soft); }
-      .cta-row { display: flex; flex-wrap: wrap; gap: 0.9rem; margin-top: 1.25rem; }
-      .btn {
-        font-family: var(--display); font-weight: 600; text-decoration: none;
-        padding: 0.65rem 1.3rem; font-size: 0.95rem;
-      }
-      .btn-primary { background: var(--ink); color: var(--paper); }
-      .btn-primary:hover { background: var(--accent); }
-      .btn-ghost { border: 1.5px solid var(--ink); color: var(--ink); }
-      .btn-ghost:hover { background: var(--ink); color: var(--paper); }
-      .portrait {
-        margin: 0; position: relative; border: 1px solid var(--ink);
-        padding: 0.5rem; background: var(--paper-2);
-        box-shadow: 8px 8px 0 rgba(32,26,18,0.14);
-      }
-      .portrait img { width: 100%; aspect-ratio: 1; object-fit: cover; object-position: 42% 16%; filter: sepia(0.18) contrast(1.03); }
-      .portrait figcaption {
-        font-family: var(--display); font-style: italic; font-size: 0.8rem;
-        color: var(--ink-soft); text-align: center; padding-top: 0.5rem;
-      }
+      header { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
+      .bar { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 0; }
+      .logo { font-weight: 600; letter-spacing: -0.01em; text-decoration: none; }
+      nav { display: flex; gap: 1.4rem; }
+      nav a { color: var(--muted); text-decoration: none; font-size: 0.9rem; }
+      nav a:hover { color: var(--fg); }
+      @media (max-width: 560px) { nav { display: none; } }
 
-      /* Sections */
-      section { padding: clamp(2.5rem, 6vw, 4rem) 0; border-bottom: 1px solid var(--rule); }
-      .sec-head { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.5rem; }
-      .sec-head .num {
-        font-family: var(--display); font-weight: 900; font-size: 1.1rem; color: var(--accent);
-      }
-      .sec-head h2 {
-        font-family: var(--display); font-weight: 900; font-size: clamp(1.8rem, 4vw, 2.8rem);
-        letter-spacing: -0.02em; margin: 0; line-height: 1.05;
-      }
-      .lede { font-size: 1.2rem; color: var(--ink-soft); max-width: 46rem; margin: 0 0 1.5rem; }
-      .cols { columns: 2 18rem; column-gap: 2.5rem; }
-      .cols p { margin: 0 0 1rem; }
+      .hero { padding: clamp(3.5rem, 12vh, 7rem) 0 clamp(2.5rem, 7vh, 4rem); }
+      .portrait { width: 96px; height: 96px; border-radius: 50%; overflow: hidden; margin: 0 0 1.75rem; }
+      .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 42% 16%; }
+      h1 { font-weight: 700; font-size: clamp(1.9rem, 5vw, 2.9rem); line-height: 1.1; letter-spacing: -0.03em; margin: 0 0 1rem; max-width: 18ch; }
+      .lede { color: var(--muted); font-size: 1.12rem; margin: 0 0 1.75rem; max-width: 40ch; }
+      .links { display: flex; gap: 1.5rem; font-size: 0.95rem; }
+      .links a { text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 2px; }
+      .links a:hover { border-color: var(--fg); }
 
-      .metrics { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2,1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
-      @media (min-width: 720px) { .metrics { grid-template-columns: repeat(4,1fr); } }
-      .metrics li { background: var(--paper); padding: 1.25rem 1rem; }
-      .metric-value { display: block; font-family: var(--display); font-weight: 900; font-size: clamp(2rem,5vw,3rem); line-height: 1; letter-spacing: -0.03em; }
-      .metric-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-soft); }
+      section { padding: clamp(2.5rem, 7vh, 4rem) 0; border-top: 1px solid var(--line); }
+      h2 { font-weight: 600; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0 0 1.75rem; }
+      .about p { margin: 0 0 1rem; max-width: 60ch; }
+      .about p:last-child { margin-bottom: 0; }
 
-      /* Timeline */
-      .timeline { list-style: none; margin: 1.5rem 0 0; padding: 0; border-top: 2px solid var(--ink); }
-      .timeline li {
-        display: grid; grid-template-columns: 6rem 1fr; gap: 1.5rem;
-        padding: 1.4rem 0; border-bottom: 1px solid var(--rule); align-items: baseline;
-      }
-      @media (max-width: 620px) { .timeline li { grid-template-columns: 4.5rem 1fr; gap: 1rem; } }
-      .timeline .year { font-family: var(--display); font-weight: 900; font-size: 1.4rem; color: var(--accent); }
-      .timeline h3 { font-family: var(--display); font-weight: 600; font-size: 1.25rem; margin: 0 0 0.25rem; }
-      .timeline p { margin: 0; color: var(--ink-soft); font-size: 1rem; }
+      .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+      @media (min-width: 560px) { .stats { grid-template-columns: repeat(4, 1fr); } }
+      .stats .v { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.02em; }
+      .stats .k { color: var(--muted); font-size: 0.85rem; }
 
-      .stack article { padding: 1.4rem 0; border-bottom: 1px solid var(--rule); }
-      .stack article:last-child { border-bottom: none; }
-      .stack h3 { font-family: var(--display); font-weight: 600; font-size: 1.4rem; margin: 0 0 0.25rem; }
-      .when { font-style: italic; color: var(--accent-2); margin: 0 0 0.5rem; }
-      .stack p { margin: 0; color: var(--ink-soft); }
-      .awards { columns: 2 16rem; column-gap: 2rem; list-style: none; padding: 0; margin: 0; }
-      .awards li { break-inside: avoid; padding: 0.35rem 0 0.35rem 1.1rem; position: relative; color: var(--ink-soft); }
-      .awards li::before { content: "§"; position: absolute; left: 0; color: var(--accent); font-family: var(--display); }
+      .timeline { list-style: none; margin: 0; padding: 0; }
+      .timeline li { display: grid; grid-template-columns: 3.5rem 1fr; gap: 1.25rem; padding: 1rem 0; }
+      .timeline li + li { border-top: 1px solid var(--line); }
+      .timeline .year { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 0.95rem; padding-top: 0.05rem; }
+      .timeline h3 { font-weight: 600; font-size: 1rem; margin: 0 0 0.15rem; }
+      .timeline p { margin: 0; color: var(--muted); font-size: 0.95rem; }
 
-      footer { padding: 3rem 0; background: var(--ink); color: var(--paper); border: none; }
-      footer .name { font-family: var(--display); font-weight: 900; font-size: clamp(2rem,5vw,3rem); margin: 0 0 0.75rem; }
-      footer a { color: var(--paper); }
-      footer .foot-links { display: flex; gap: 1.5rem; margin-top: 1rem; flex-wrap: wrap; }
-      footer .copy { margin-top: 1.5rem; opacity: 0.6; font-size: 0.85rem; }
+      .rows { display: grid; gap: 0; }
+      .row { padding: 1.25rem 0; }
+      .row + .row { border-top: 1px solid var(--line); }
+      .row h3 { font-weight: 600; font-size: 1.05rem; margin: 0 0 0.2rem; }
+      .row .when { color: var(--muted); font-size: 0.88rem; margin: 0 0 0.5rem; }
+      .row p { margin: 0; color: var(--muted); }
+      .row p a { color: var(--fg); }
 
-      .reveal { opacity: 0; transform: translateY(1.25rem); transition: opacity 0.7s ease, transform 0.7s ease; }
+      .awards { list-style: none; margin: 0; padding: 0; }
+      .awards li { padding: 0.5rem 0; color: var(--muted); }
+      .awards li + li { border-top: 1px solid var(--line); }
+
+      footer { border-top: 1px solid var(--line); padding: 2.5rem 0 3.5rem; color: var(--muted); font-size: 0.95rem; }
+      footer a { color: var(--fg); text-decoration: none; }
+      footer .fl { display: flex; gap: 1.25rem; margin: 0.75rem 0; }
+      footer a:hover { text-decoration: underline; }
+
+      .reveal { opacity: 0; transform: translateY(0.75rem); transition: opacity 0.6s ease, transform 0.6s ease; }
       .reveal.vis { opacity: 1; transform: none; }
-      @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } }
+      @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } html { scroll-behavior: auto; } }
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <header class="masthead">
-        <a class="name" href="#top">Yan Levin</a>
+    <header>
+      <div class="wrap bar">
+        <a class="logo" href="#top">Yan Levin</a>
         <nav>
           <a href="#about">About</a>
           <a href="#timeline">Timeline</a>
-          <a href="#research">Research</a>
-          <a href="#building">Building</a>
-          <a href="#math">Math</a>
+          <a href="#work">Work</a>
           <a href="https://github.com/yl-2010" target="_blank" rel="noopener noreferrer">GitHub</a>
         </nav>
-      </header>
-      <div class="dateline">
-        <span>The Levin Review</span>
-        <span>Kirkland, Washington</span>
-        <span>Vol. XVII · Est. 2010</span>
       </div>
+    </header>
 
+    <main class="wrap">
       <section class="hero" id="top">
-        <div class="hero-grid">
-          <div>
-            <p class="kicker">Profile · Mathematics &amp; Software</p>
-            <h1>Building at the edge of math, code, and teaching.</h1>
-            <p class="standfirst">
-              Junior at Eastside Prep in Kirkland, research intern at UT Austin,
-              math olympiad competitor, and co-founder of SocketHR.
-            </p>
-            <p class="byline">By Yan Levin · Staff of one</p>
-            <div class="cta-row">
-              <a class="btn btn-primary" href="#research">Read the research</a>
-              <a class="btn btn-ghost" href="https://github.com/yl-2010" target="_blank" rel="noopener noreferrer">GitHub</a>
-            </div>
-          </div>
-          <figure class="portrait">
-            <img src="../yan-levin.jpg" alt="Portrait of Yan Levin" width="640" height="640" />
-            <figcaption>Yan Levin, photographed for this edition.</figcaption>
-          </figure>
+        <figure class="portrait"><img src="../yan-levin.jpg" alt="Yan Levin" width="640" height="640" /></figure>
+        <h1>Building at the edge of math, code, and teaching.</h1>
+        <p class="lede">Junior at Eastside Prep, research intern at UT Austin, math olympiad competitor, and co-founder of SocketHR.</p>
+        <div class="links">
+          <a href="#work">Work</a>
+          <a href="https://github.com/yl-2010" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="mailto:yl-2010@outlook.com">Email</a>
         </div>
       </section>
 
-      <section id="about" class="reveal">
-        <div class="sec-head"><span class="num">I.</span><h2>I like hard problems.</h2></div>
-        <div class="cols">
-          <p>
-            I'm a junior at Eastside Preparatory School in Kirkland, WA. Most of my
-            time goes into competitive math, software research with Professor Milos
-            Gligoric's group at UT Austin, debate, and teaching younger students
-            the kind of math that goes beyond worksheets.
-          </p>
-          <p>
-            Across those worlds I keep coming back to the same question: how do you
-            make complex ideas clear enough to share, whether that's a proof, a
-            research artifact, or a product for recruiters?
-          </p>
-        </div>
+      <section id="about" class="about reveal">
+        <h2>About</h2>
+        <p>I'm a junior at Eastside Preparatory School in Kirkland, WA. My time goes into competitive math, software research with Professor Milos Gligoric's group at UT Austin, debate, and teaching younger students.</p>
+        <p>Across those worlds I keep asking the same question: how do you make complex ideas clear enough to share?</p>
       </section>
 
       <section id="academics" class="reveal">
-        <div class="sec-head"><span class="num">II.</span><h2>By the numbers.</h2></div>
-        <ul class="metrics">
-          <li><span class="metric-value">3.98</span><span class="metric-label">GPA</span></li>
-          <li><span class="metric-value">1580</span><span class="metric-label">SAT</span></li>
-          <li><span class="metric-value">5</span><span class="metric-label">AP CS A</span></li>
-          <li><span class="metric-value">5</span><span class="metric-label">AP Calc AB</span></li>
-        </ul>
+        <h2>Academics</h2>
+        <div class="stats">
+          <div><div class="v">3.98</div><div class="k">GPA</div></div>
+          <div><div class="v">1580</div><div class="k">SAT</div></div>
+          <div><div class="v">5</div><div class="k">AP CS A</div></div>
+          <div><div class="v">5</div><div class="k">AP Calc AB</div></div>
+        </div>
       </section>
 
       <section id="timeline" class="reveal">
-        <div class="sec-head"><span class="num">III.</span><h2>A chronicle.</h2></div>
-        <p class="lede">The record so far, in the order it happened.</p>
+        <h2>Timeline</h2>
         <ol class="timeline">
-          <li>
-            <span class="year">2018</span>
-            <div>
-              <h3>Foundations at the math circle</h3>
-              <p>Seven years at Prime Factor Math Circle and UW Math Circle; Math Kangaroo every year, grades 1–8, up to 3rd nationally.</p>
-            </div>
-          </li>
-          <li>
-            <span class="year">2022</span>
-            <div>
-              <h3>First UW Math Hour Olympiad</h3>
-              <p>Debut at the University of Washington's oral, proofs-based contest — 5th of ~100, the start of five straight top-five finishes.</p>
-            </div>
-          </li>
-          <li>
-            <span class="year">2024</span>
-            <div>
-              <h3>Estore research begins</h3>
-              <p>Sophomore year: Cypher graph storage in Java, coverage, styling, and CI on the Engineering Software Lab's Estore project.</p>
-            </div>
-          </li>
-          <li>
-            <span class="year">2025</span>
-            <div>
-              <h3>UT Austin &amp; SocketHR</h3>
-              <p>Summer research intern on PLSemanticsBench with Professor Gligoric's group; co-founded SocketHR as CTO.</p>
-            </div>
-          </li>
-          <li>
-            <span class="year">2026</span>
-            <div>
-              <h3>Deeper work, new rooms</h3>
-              <p>2nd at UW Math Hour, Estore continued through summer with in-person weeks, and intensive AI coursework at Cambridge.</p>
-            </div>
-          </li>
+          <li><span class="year">2018</span><div><h3>Math circle foundations</h3><p>Prime Factor and UW Math Circle; Math Kangaroo, up to 3rd nationally.</p></div></li>
+          <li><span class="year">2022</span><div><h3>First UW Math Hour Olympiad</h3><p>5th of ~100 — the start of five straight top-five finishes.</p></div></li>
+          <li><span class="year">2024</span><div><h3>Estore research begins</h3><p>Cypher graph storage in Java, coverage, and CI at the Engineering Software Lab.</p></div></li>
+          <li><span class="year">2025</span><div><h3>UT Austin &amp; SocketHR</h3><p>Summer intern on PLSemanticsBench; co-founded SocketHR as CTO.</p></div></li>
+          <li><span class="year">2026</span><div><h3>Deeper work, new rooms</h3><p>2nd at UW Math Hour, more Estore, and AI coursework at Cambridge.</p></div></li>
         </ol>
       </section>
 
-      <section id="research" class="reveal">
-        <div class="sec-head"><span class="num">IV.</span><h2>Software research at UT Austin</h2></div>
-        <p class="lede">
-          With Professor Gligoric's Engineering Software Lab, I've spent summers and
-          the school year on projects that test what code models understand, and how
-          research software stays maintainable.
-        </p>
-        <div class="stack">
-          <article>
-            <h3>PLSemanticsBench</h3>
-            <p class="when">Summer Research Intern · Summer 2025</p>
-            <p>In-person research internship with Professor Gligoric's graduate students, studying the code-related capabilities of large language models on the <a href="https://github.com/EngineeringSoftware/PLSemanticsBench" target="_blank" rel="noopener noreferrer">PLSemanticsBench</a> project.</p>
-          </article>
-          <article>
-            <h3>Estore</h3>
-            <p class="when">Research Project · Sophomore year + Summer 2026</p>
-            <p>Led improvements to <a href="https://github.com/EngineeringSoftware/estore-internal" target="_blank" rel="noopener noreferrer">Estore</a>: Cypher graph storage support in Java, code coverage, styling, and continuous integration. Continued the work in depth over the following summer, including in-person weeks in April and August.</p>
-          </article>
+      <section id="work" class="reveal">
+        <h2>Research</h2>
+        <div class="rows">
+          <div class="row"><h3>PLSemanticsBench</h3><p class="when">Summer Research Intern · 2025</p><p>In-person internship with Professor Gligoric's group, studying the code capabilities of LLMs on <a href="https://github.com/EngineeringSoftware/PLSemanticsBench" target="_blank" rel="noopener noreferrer">PLSemanticsBench</a>.</p></div>
+          <div class="row"><h3>Estore</h3><p class="when">Research Project · 2024–2026</p><p>Led improvements to <a href="https://github.com/EngineeringSoftware/estore-internal" target="_blank" rel="noopener noreferrer">Estore</a>: Cypher graph storage in Java, coverage, styling, and CI, with in-person weeks the following summer.</p></div>
         </div>
       </section>
 
       <section id="building" class="reveal">
-        <div class="sec-head"><span class="num">V.</span><h2>SocketHR, Co-Founder &amp; CTO</h2></div>
-        <p class="lede">
-          I led full-stack development for a startup that helps recruiters interview
-          and evaluate applicants when résumés are flooded with AI-generated noise.
-          My first real product shipped for people outside a classroom.
-        </p>
-        <p><a class="btn btn-ghost" href="https://sockethr.com/" target="_blank" rel="noopener noreferrer">sockethr.com</a></p>
+        <h2>Building</h2>
+        <div class="rows">
+          <div class="row"><h3>SocketHR — Co-Founder &amp; CTO</h3><p>Led full-stack development for a startup helping recruiters evaluate applicants when résumés are flooded with AI noise. <a href="https://sockethr.com/" target="_blank" rel="noopener noreferrer">sockethr.com</a></p></div>
+        </div>
       </section>
 
       <section id="math" class="reveal">
-        <div class="sec-head"><span class="num">VI.</span><h2>Proofs, podiums, and paying it forward.</h2></div>
-        <p class="lede">Competitive math has been a through-line since elementary school. Teaching is how I give that community back.</p>
-        <div class="stack">
-          <article>
-            <h3>UW Math Hour Olympiad</h3>
-            <p class="when">5 years · grades 6–10</p>
-            <p>Oral, proofs-based contest at the University of Washington. Placed in the top five every year out of ~100 participants: 5th, 2nd, 4th, 3rd, and 2nd (2022–2026). <a href="https://sites.math.washington.edu/~mathcircle/olympiad/" target="_blank" rel="noopener noreferrer">Contest site</a></p>
-          </article>
-          <article>
-            <h3>Teaching Assistant</h3>
-            <p class="when">Prime Factor · Berkeley Math Circle</p>
-            <p>TA at <a href="https://www.pfmathcircle.org/MathCircles.html" target="_blank" rel="noopener noreferrer">Prime Factor Math Circle</a> after graduating from the program, teaching younger students. Also TA'd grades 2–3 at the <a href="https://sumizdat.startlogic.com/bmc_elementary/summer-program-p.html" target="_blank" rel="noopener noreferrer">BMC Summer Camp</a> (3 hours/day for a week).</p>
-          </article>
-          <article>
-            <h3>Husky Math Academy</h3>
-            <p class="when">Grades 9–10 · UW professors</p>
-            <p>Advanced algebra/geometry, number theory, combinatorics, and olympiad proof prep through <a href="https://www.huskymath.org/" target="_blank" rel="noopener noreferrer">Husky Math Academy</a>.</p>
-          </article>
+        <h2>Math &amp; Teaching</h2>
+        <div class="rows">
+          <div class="row"><h3>UW Math Hour Olympiad</h3><p class="when">5 years · grades 6–10</p><p>Oral, proofs-based contest at UW. Top five every year out of ~100: 5th, 2nd, 4th, 3rd, and 2nd (2022–2026). <a href="https://sites.math.washington.edu/~mathcircle/olympiad/" target="_blank" rel="noopener noreferrer">Contest site</a></p></div>
+          <div class="row"><h3>Teaching Assistant</h3><p class="when">Prime Factor · Berkeley Math Circle</p><p>TA at <a href="https://www.pfmathcircle.org/MathCircles.html" target="_blank" rel="noopener noreferrer">Prime Factor</a> and grades 2–3 at the <a href="https://sumizdat.startlogic.com/bmc_elementary/summer-program-p.html" target="_blank" rel="noopener noreferrer">BMC Summer Camp</a>.</p></div>
+          <div class="row"><h3>Husky Math Academy</h3><p class="when">Grades 9–10</p><p>Advanced algebra, number theory, combinatorics, and olympiad proof prep through <a href="https://www.huskymath.org/" target="_blank" rel="noopener noreferrer">Husky Math Academy</a>.</p></div>
         </div>
       </section>
 
       <section id="debate" class="reveal">
-        <div class="sec-head"><span class="num">VII.</span><h2>Lincoln-Douglas, with room for Impromptu.</h2></div>
-        <p class="lede">On Eastside Prep's team in the National Speech &amp; Debate Association: LD as primary, Impromptu or Extemp as secondary.</p>
+        <h2>Debate</h2>
         <ul class="awards">
           <li>Open LD Octofinalist, Newport Knights Invitational</li>
           <li>Open Impromptu Finalist, Newport Knights Invitational</li>
           <li>Open SPAR Finalist, Auburn Riverside &amp; Puyallup Invitationals</li>
           <li>Open LD Quarterfinalist, Bellevue School District Invitational</li>
-          <li>Junior LD Quarterfinalist, Auburn High Invitational</li>
           <li>Novice LD Semifinalist, Mount Vernon Invitational</li>
-          <li>Novice LD Quarterfinalist, Auburn Riverside Invitational</li>
         </ul>
       </section>
 
       <section id="more" class="reveal">
-        <div class="sec-head"><span class="num">VIII.</span><h2>Clubs, volunteering, and earlier chapters.</h2></div>
-        <div class="stack">
-          <article>
-            <h3>Environmental Club Co-Lead</h3>
-            <p class="when">Eastside Prep · grades 9–10</p>
-            <p>Built a program to measure waste-bin sorting accuracy, presented findings to the school, and drove school-wide adoption via <a href="https://epsort.lovable.app/data" target="_blank" rel="noopener noreferrer">EP Sort</a>.</p>
-          </article>
-          <article>
-            <h3>South Asian Affinity Group Co-Lead</h3>
-            <p class="when">Eastside Prep · grades 9–10</p>
-            <p>As someone with mixed-race, partly South Asian heritage, I helped shape a more inclusive club agenda and led weekly meetings.</p>
-          </article>
-          <article>
-            <h3>Volunteering</h3>
-            <p class="when">Logic Land · Seattle Envelopes</p>
-            <p>Volunteered at the <a href="https://www.mathfest26.pfmathcircle.org/" target="_blank" rel="noopener noreferrer">Logic Land Math Festival</a> for elementary kids, and supported classroom technology workflows for Ukrainian refugee students through <a href="https://seattle-envelopes.org/" target="_blank" rel="noopener noreferrer">Seattle Envelopes</a>.</p>
-          </article>
-          <article>
-            <h3>Cambridge AI course</h3>
-            <p class="when">Fitzwilliam College · Summer</p>
-            <p>Intensive AI coursework at Fitzwilliam College, Cambridge: <a href="https://www.fitz.cam.ac.uk/fitzed-courses-offer" target="_blank" rel="noopener noreferrer">FitzEd courses</a>.</p>
-          </article>
-          <article>
-            <h3>Earlier years</h3>
-            <p class="when">Middle school foundations</p>
-            <p>Seven years at Prime Factor Math Circle; UW Math Circle; Math Kangaroo every year grades 1–8 (top 20 nationally, best year 3rd nationally / 2nd in Washington); AMC 8 Honor Roll; MathCounts regional qualifier; Columbia Athletics Club swim team (1st in backstroke); Battle of the Books, 1st in school all three years.</p>
-          </article>
+        <h2>More</h2>
+        <div class="rows">
+          <div class="row"><h3>Environmental Club Co-Lead</h3><p>Built a program to measure waste-sorting accuracy and drove school-wide adoption via <a href="https://epsort.lovable.app/data" target="_blank" rel="noopener noreferrer">EP Sort</a>.</p></div>
+          <div class="row"><h3>South Asian Affinity Group Co-Lead</h3><p>Shaped a more inclusive club agenda and led weekly meetings.</p></div>
+          <div class="row"><h3>Volunteering</h3><p><a href="https://www.mathfest26.pfmathcircle.org/" target="_blank" rel="noopener noreferrer">Logic Land Math Festival</a> and classroom tech for refugee students via <a href="https://seattle-envelopes.org/" target="_blank" rel="noopener noreferrer">Seattle Envelopes</a>.</p></div>
+          <div class="row"><h3>Cambridge AI course</h3><p>Intensive AI coursework at Fitzwilliam College, Cambridge.</p></div>
         </div>
       </section>
-    </div>
+    </main>
 
     <footer id="contact">
       <div class="wrap">
-        <p class="name">Yan Levin</p>
-        <p>Eastside Prep · Kirkland, WA · Open to research, building, and interesting problems.</p>
         <p><a href="mailto:yl-2010@outlook.com">yl-2010@outlook.com</a></p>
-        <p class="foot-links">
+        <p class="fl">
           <a href="https://github.com/yl-2010" target="_blank" rel="noopener noreferrer">GitHub</a>
           <a href="https://sockethr.com/" target="_blank" rel="noopener noreferrer">SocketHR</a>
         </p>
-        <p class="copy">© 2026 Yan Levin</p>
+        <p>© 2026 Yan Levin · Kirkland, WA</p>
       </div>
     </footer>
 
