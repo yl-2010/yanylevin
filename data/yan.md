@@ -4,8 +4,12 @@ Knowledge base for answering questions about Yan Levin. Prefer facts from this f
 
 ## Identity & contact
 
-- **Name:** Yan Levin (full name on school records: Yan Y. Levin)
+- **Name:** Yan Levin (full name: Yan Yuvan Levin; school records also as Yan Y. Levin)
+- **Date of birth:** June 2010
 - **Current school:** Junior at Eastside Preparatory School (Eastside Prep), Kirkland, WA
+  - School address on transcript: 10613 NE 38th Pl, Kirkland, WA 98033
+  - **CEEB code:** 480564
+  - Expected graduation: June 2028
 - **Previous school:** Evergreen Middle School (EMS), Lake Washington School District — Redmond, WA (grades 6–8)
 - **Location:** Kirkland, WA
 - **Email:** yl-2010@outlook.com
@@ -15,18 +19,67 @@ Knowledge base for answering questions about Yan Levin. Prefer facts from this f
 
 ## Short bio
 
-Yan Levin is a junior at Eastside Prep in Kirkland, WA. He works at the intersection of competitive math, software research, debate, teaching, and product building. He is a research intern with Professor Milos Gligoric’s Engineering Software Lab at UT Austin, a math olympiad competitor, and co-founder & CTO of SocketHR. Before Eastside Prep, he attended Evergreen Middle School in Redmond (LWSD) for grades 6–8.
+Yan Levin is a junior at Eastside Prep in Kirkland, WA. He works at the intersection of competitive math, software research, debate, teaching, and product building. He currently continues research on Estore with Professor Milos Gligoric’s Engineering Software Lab at UT Austin, and is co-founder & CTO of SocketHR (ongoing). He is also a math olympiad competitor. Before Eastside Prep, he attended Evergreen Middle School in Redmond (LWSD) for grades 6–8.
 
 ## Academics
 
-### High school (Eastside Prep)
+### High school summary (Eastside Prep)
 
 | Metric | Value |
 |--------|-------|
-| GPA | 3.98 |
+| Cumulative GPA | 3.98 |
+| Total credits (unofficial transcript, printed 07/21/2026) | 60.5 |
 | SAT | 1580 |
 | AP Computer Science A | 5 |
 | AP Calculus AB | 5 |
+| Expected graduation | June 2028 |
+
+#### 9th grade — 2024–2025 (GPA 4.00 · 19.0 credits)
+
+All listed courses **A**, 1.0 credit each unless noted. Trimester structure (Fall / Winter / Spring):
+
+| Area | Fall | Winter | Spring |
+|------|------|--------|--------|
+| Math | Algebra 2 A | Algebra 2 A | Algebra 2 A |
+| Science | Biology A | Biology A | Biology A |
+| Spanish | Spanish 2 A | Spanish 2 A | Spanish 2 A |
+| Tech | Web Design 1 A | Prog 2: Topics in Comp. Sci. A | Programming 2: OOP A |
+| English | Origins: Lit A | Migration: Lit A | Connections: Lit A |
+| Social Science | Origins: Soc. Sci. A | Migration: Soc. Sci. A | Connections: Soc. Sci. A |
+| Wellness / PE | — | — | P.E. Wellness A |
+
+#### 10th grade — 2025–2026 (GPA 3.97 · 20.0 credits)
+
+| Area | Fall | Winter | Spring |
+|------|------|--------|--------|
+| English | Modern Perspectives: European Literature A | Mod. South Asian Literature A | Mid-East-Amer. Lit. A |
+| Social Science | Mod. European History A | Mod. South Asian History **A-** | History of Middle-East A |
+| Math | Calculus A | Calculus **A-** | Calculus A |
+| Science | Chemistry A | Chemistry A | Chemistry A |
+| Spanish | Spanish 3 A | Spanish 3 A | Spanish 3 A |
+| Fine / performing arts & electives | Graphic Design 1 A; Astronomy: Planetary Systems A | Stagecraft A; Paper Engineering A | Digital Photography A |
+
+#### 11th grade — 2026–2027 (planned · 21.0 credits listed; GPA not yet posted)
+
+| Area | Fall | Winter | Spring |
+|------|------|--------|--------|
+| English | American Literature | American Literature | American Literature |
+| Social Science | US History | US History | US History |
+| Math | Adv. Calculus | Adv. Calculus | Adv. Calculus |
+| Science | Physics | Physics | Physics |
+| Spanish | Spanish 4 | Spanish 4 | Spanish 4 |
+| Other | Yoga; Data Science 1 | Adv Prog: AI & ML; Adv Prog: Emergent Topics | Yoga; Independent Study |
+
+**Seminars:** Winter — AI Ethics (0.5 credit).
+
+#### BYU Independent Study (Precalculus)
+
+Official BYU Independent Study High School transcript (prepared 08/05/2025 via Parchment):
+
+| Course | Completion | Grade | Credit |
+|--------|------------|-------|--------|
+| Precalculus, Part 1: PRECALC 041 (Teacher Led) | 7/15/2025 | A (100%) | 0.50 |
+| Precalculus, Part 2: PRECALC 043 (Teacher Led) | 8/4/2025 | A (95.63%) | 0.50 |
 
 ### Middle school (Evergreen Middle School)
 
@@ -76,30 +129,63 @@ Semester letter grades were all **A**. Numeric semester percentages from Student
 
 **8th-period schedule snapshot (gradebook):** Geometry P1, English 8 Quest P2, US History 2/WA St Hist Quest P3, Film Studies or Fitness P4, Science 8 P5, Spanish 1 P6.
 
+## Activities (hours & details)
+
+Source: activities spreadsheet used for college applications. Years are grade levels unless noted.
+
+| Activity | Grades | Org | When | Weeks/yr | Hrs/wk | Role / notes |
+|----------|--------|-----|------|----------|--------|--------------|
+| Teaching Assistant, Prime Factor Math Circle | 9–10 | Prime Factor School of Math | School year | 30 | 1.5 | TA after graduating from the program |
+| Husky Math Academy | 9–10 | Husky Math Academy | School year | 30 | 3 | Advanced algebra/geometry, number theory, combinatorics, olympiad proof prep with UW professors |
+| Debate Team | 9–10 | NSDA / Eastside Prep | School year | 30 | 6 | LD primary; Impromptu or Extemp secondary |
+| UW Math Hour Olympiad | 6–10 | UW Math Hour Olympiad | — | 52 | 3 | Top-five finishes every year (see Math) |
+| Environmental Club | 9–10 | Eastside Prep | School year | 40 | 2 | Co-Lead; EP Sort waste-sorting data program |
+| South Asian Affinity Group | 9–10 | Eastside Prep | School year | 40 | 2 | Co-Lead |
+| TA, BMC Summer Camp | 10–11 | Berkeley Math Circle | Summer | 1 | 18 | Grades 2–3, 3 hrs/day for a week |
+| Summer Research Intern (PLSemanticsBench) | 10 | UT Austin | Summer | 12 | 20 | Completed Summer 2025; in-person with Prof. Gligoric’s group |
+| Research Project (Estore) — ongoing | 10–11+ | UT Austin | School year + summer | 40 (school year) / 12 (summer) | 5 / 20 | Ongoing research; led Estore improvements; deeper summer work with in-person weeks in April and August |
+| Logic Land Math Festival volunteering | 9, 11 | Logic Land Math Festival | Summer | 1 | 3 | Elementary math festival |
+| Technology for Ukrainian students | 9 | Seattle Envelopes | Summer | 4 | 1 | Instructional manuals for classroom technology |
+| AI Course, Fitzwilliam College Cambridge | 11 | Fitzwilliam College | Summer | 2 | 40 | Intensive AI coursework |
+| SocketHR — ongoing | 10–11+ | SocketHR | All year | 52 | 5 | Ongoing; Co-Founder & CTO; full-stack |
+| Swim Team | 6–8 | Columbia Athletics Club (Sammamish) | Year long | 52 | 3 | 3 years |
+| Student, Prime Factor Math Circle | 2–8 | Prime Factor School of Math | School year | 30 | 1.5 | 7 years; teacher Luba |
+| UW Math Circle | 7–8 | University of Washington Math Circle | School year | 30 | 1.5 | Weekly math topics with peers |
+| Math Kangaroo | 1–8 | Math Kangaroo | — | — | — | Top 20 nationally each year; best 3rd nationally / 2nd in WA |
+| AMC 8 | 8 | AMC | — | — | — | Honor Roll (2024) |
+| MathCounts | 8 | MathCounts | — | — | — | Regional qualifier (2024) |
+| Battle of the Books | 6–8 | Evergreen Middle School | — | — | — | 1st in school all 3 years; district 7th, 4th, then 3rd (2022–2024) |
+
 ## Research (UT Austin)
 
 Works with Professor Milos Gligoric’s Engineering Software Lab at UT Austin on projects about what code models understand and how research software stays maintainable.
 
-### PLSemanticsBench
+**Ongoing now:** Estore. **Completed:** PLSemanticsBench (Summer 2025).
 
-- **Role:** Summer Research Intern
-- **When:** Summer 2025
-- **What:** In-person research internship with Professor Gligoric’s graduate students, studying the code-related capabilities of large language models on PLSemanticsBench.
+### PLSemanticsBench (completed)
+
+- **Status:** Completed (Summer 2025)
+- **Role:** Summer Research Intern (grade 10)
+- **Time:** ~12 weeks × ~20 hrs/week, in-person
+- **What:** Worked with Professor Gligoric’s graduate students on PLSemanticsBench, researching the code-related capabilities of large language models.
 - **Link:** https://github.com/EngineeringSoftware/PLSemanticsBench
 
-### Estore
+### Estore (ongoing)
 
-- **Role:** Research project lead on improvements
-- **When:** Sophomore year + Summer 2026 (including in-person weeks in April and August)
-- **What:** Led improvements to Estore: Cypher graph storage support in Java, code coverage, styling, and continuous integration. Continued the work in depth over the following summer.
+- **Status:** Ongoing — current active research project
+- **Role:** Research project lead on improvements (grade 10 school year), then Summer Research Intern (grade 11 / Summer 2026), continuing afterward
+- **Time:** School year ~40 weeks × ~5 hrs/week; summer ~12 weeks × ~20 hrs/week, including in-person weeks in April and August
+- **What:** Led improvements to Estore: Cypher graph storage support in Java, code coverage, styling, and continuous integration. Continued the work in depth over the following summer and remains an active project.
 - **Link:** https://github.com/EngineeringSoftware/estore-internal
 
 ## Building / startups
 
-### SocketHR — Co-Founder & CTO
+### SocketHR — Co-Founder & CTO (ongoing)
 
-- Led full-stack development for a startup that helps recruiters interview and evaluate applicants when résumés are flooded with AI-generated noise.
-- Described as his first real product shipped for people outside a classroom.
+- **Status:** Ongoing — current active startup
+- Grades 10–11+; ~52 weeks/year × ~5 hrs/week
+- Led full-stack development for a startup that helps recruiters interview and evaluate applicants when résumés are flooded with AI-generated noise
+- First real product shipped for people outside a classroom
 - **Website:** https://sockethr.com/
 
 ## Math & teaching
@@ -109,29 +195,37 @@ Competitive math has been a through-line since elementary school. Teaching is ho
 ### UW Math Hour Olympiad
 
 - Oral, proofs-based contest at the University of Washington
-- Competed for 5 years (grades 6–10)
+- Competed for 5 years (grades 6–10); ~52 weeks × ~3 hrs/week preparation/engagement pattern in activity log
 - Placed in the top five every year out of ~100 participants: 5th, 2nd, 4th, 3rd, and 2nd (2022–2026)
 - Contest site: https://sites.math.washington.edu/~mathcircle/olympiad/
 
 ### Teaching
 
-- **Teaching Assistant at Prime Factor Math Circle** after graduating from the program; teaches younger students. Site: https://www.pfmathcircle.org/MathCircles.html
-- **TA at BMC Summer Camp** (Berkeley Math Circle elementary): grades 2–3, 3 hours/day for a week. Site: https://sumizdat.startlogic.com/bmc_elementary/summer-program-p.html
+- **Teaching Assistant at Prime Factor Math Circle** (grades 9–10): ~30 weeks × 1.5 hrs/week after graduating from the program. Site: https://www.pfmathcircle.org/MathCircles.html
+- **TA at BMC Summer Camp** (Berkeley Math Circle elementary, grades 10–11): grades 2–3, 3 hours/day for a week (~18 hrs/week × 1 week). Site: https://sumizdat.startlogic.com/bmc_elementary/summer-program-p.html
 
 ### Husky Math Academy
 
-- Grades 9–10 with University of Washington professors
+- Grades 9–10; ~30 weeks × 3 hrs/week with University of Washington professors
 - Advanced algebra/geometry, number theory, combinatorics, and olympiad proof prep
 - Site: https://www.huskymath.org/
 
+### Other math background
+
+- Prime Factor Math Circle student for 7 years (grades 2–8); teacher Luba
+- UW Math Circle grades 7–8
+- Math Kangaroo grades 1–8 (top 20 nationally; best year 3rd nationally / 2nd in Washington)
+- AMC 8 Honor Roll (8th grade, 2024)
+- MathCounts regional qualifier (8th grade, 2024)
+
 ## Debate
 
-On Eastside Prep’s team in the National Speech & Debate Association.
+On Eastside Prep’s team in the National Speech & Debate Association (grades 9–10; ~30 weeks × 6 hrs/week).
 
 - **Primary:** Lincoln-Douglas (LD)
 - **Secondary:** Impromptu or Extemp
 
-### Awards
+### Awards (2024–2026)
 
 - Open LD Octofinalist, Newport Knights Invitational
 - Open Impromptu Finalist, Newport Knights Invitational
@@ -145,34 +239,33 @@ On Eastside Prep’s team in the National Speech & Debate Association.
 
 ### Environmental Club Co-Lead
 
-- Eastside Prep, grades 9–10
+- Eastside Prep, grades 9–10; ~40 weeks × 2 hrs/week
 - Built a program to measure waste-bin sorting accuracy, presented findings to the school, and drove school-wide adoption via EP Sort: https://epsort.lovable.app/data
 
 ### South Asian Affinity Group Co-Lead
 
-- Eastside Prep, grades 9–10
+- Eastside Prep, grades 9–10; ~40 weeks × 2 hrs/week
 - As someone who is half Indian and half Russian, helped shape a more inclusive club agenda and led weekly meetings
 
 ### Volunteering
 
-- **Logic Land Math Festival** for elementary kids: https://www.mathfest26.pfmathcircle.org/
-- **Seattle Envelopes:** supported classroom technology workflows for Ukrainian refugee students: https://seattle-envelopes.org/
+- **Logic Land Math Festival** (grades 9, 11): https://www.mathfest26.pfmathcircle.org/
+- **Seattle Envelopes** (grade 9): built instructional manuals for classroom technology for Ukrainian refugee students: https://seattle-envelopes.org/
 
 ### Cambridge AI course
 
-- Intensive AI coursework at Fitzwilliam College, Cambridge (summer)
+- Grade 11 summer; ~2 weeks × 40 hrs/week intensive AI coursework at Fitzwilliam College, Cambridge
 - FitzEd courses: https://www.fitz.cam.ac.uk/fitzed-courses-offer
 
 ## Earlier years (middle school foundations)
 
 - Attended **Evergreen Middle School** (Lake Washington School District, Redmond, WA) for grades 6–8 (2021–22 through 2023–24) before Eastside Prep; earned all A’s with Quest/accelerated coursework (see Academics → Middle school)
-- Seven years at Prime Factor Math Circle
-- UW Math Circle
+- Seven years at Prime Factor Math Circle (student); then TA in high school
+- UW Math Circle (grades 7–8)
 - Math Kangaroo every year grades 1–8 (top 20 nationally; best year 3rd nationally / 2nd in Washington)
-- AMC 8 Honor Roll
-- MathCounts regional qualifier
-- Columbia Athletics Club swim team
-- Battle of the Books, 1st in school all three years
+- AMC 8 Honor Roll; MathCounts regional qualifier
+- Columbia Athletics Club (Sammamish) swim team, grades 6–8
+- Battle of the Books: 1st in school all three years; district placements 7th, 4th, then 3rd (2022–2024)
 
 ## Interests & themes
 
@@ -189,22 +282,25 @@ On Eastside Prep’s team in the National Speech & Debate Association.
 ## FAQ
 
 ### Who is Yan Levin?
-A junior at Eastside Prep in Kirkland, WA — math olympiad competitor, UT Austin research intern with Professor Gligoric’s lab, debate competitor, teacher, and co-founder & CTO of SocketHR.
+A junior at Eastside Prep in Kirkland, WA (Yan Yuvan Levin, born June 2010) — math olympiad competitor, UT Austin research intern with Professor Gligoric’s lab, debate competitor, teacher, and co-founder & CTO of SocketHR.
 
 ### What does Yan work on?
-Competitive math, LLM/code-model research (PLSemanticsBench, Estore), SocketHR, debate, and math teaching/TA roles.
+Ongoing: Estore research at UT Austin and SocketHR (co-founder & CTO). Also competitive math, debate, and math teaching/TA roles. Completed: PLSemanticsBench (Summer 2025).
 
 ### How can I contact Yan?
 Email yl-2010@outlook.com, or find him on GitHub at https://github.com/yl-2010.
 
 ### Where does Yan go to school?
-Eastside Preparatory School in Kirkland, Washington. Before that, Evergreen Middle School in Redmond, WA (grades 6–8, LWSD).
+Eastside Preparatory School in Kirkland, Washington (CEEB 480564; expected graduation June 2028). Before that, Evergreen Middle School in Redmond, WA (grades 6–8, LWSD). Lives in Kirkland, WA.
 
 ### What were Yan’s middle school grades?
 At Evergreen Middle School, all listed courses were A’s. He was in Quest tracks for English, social studies, and science, and took accelerated math (7th-grade math in 6th, Algebra 1 in 7th, Geometry in 8th). Grade 6 Semester 1 GPA was 4.000.
 
+### What are Yan’s high school grades?
+Unofficial EPS transcript: cumulative GPA 3.98, 60.5 credits. 9th grade GPA 4.00; 10th grade GPA 3.97 (two A- grades in Mod. South Asian History and Calculus). BYU Independent Study Precalculus Parts 1–2 both A (completed summer 2025).
+
 ### What is SocketHR?
-A startup Yan co-founded (as CTO) that helps recruiters interview and evaluate applicants when résumés are flooded with AI-generated noise. https://sockethr.com/
+An ongoing startup Yan co-founded (as CTO) that helps recruiters interview and evaluate applicants when résumés are flooded with AI-generated noise. https://sockethr.com/
 
 ### What research has Yan done?
-Software research at UT Austin with Professor Milos Gligoric’s Engineering Software Lab — notably PLSemanticsBench (Summer 2025 intern) and Estore improvements (sophomore year through Summer 2026).
+Software research at UT Austin with Professor Milos Gligoric’s Engineering Software Lab. Estore is ongoing (sophomore year through Summer 2026 and continuing). PLSemanticsBench was a completed Summer 2025 internship.
