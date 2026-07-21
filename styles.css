@@ -962,4 +962,138 @@ main {
   .footer-brand {
     color: var(--foam);
   }
+
+  .liquid-glass-orb {
+    animation: none !important;
+  }
+}
+
+/* --- Apple Liquid Glass floating orbs --- */
+.liquid-glass-svg {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.liquid-glass-orb {
+  --lg-size: 7rem;
+  --lg-tint-opacity: 0.1;
+  position: fixed;
+  z-index: 60;
+  width: var(--lg-size);
+  height: var(--lg-size);
+  isolation: isolate;
+  pointer-events: none;
+  overflow: hidden;
+  box-shadow:
+    0 10px 36px rgba(20, 28, 26, 0.18),
+    0 2px 8px rgba(20, 28, 26, 0.08),
+    inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  animation: lg-float 7.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.liquid-glass-orb.lg-squircle {
+  left: clamp(0.85rem, 3vw, 1.75rem);
+  bottom: clamp(0.85rem, 3vw, 1.75rem);
+  border-radius: 28%;
+  corner-shape: squircle;
+  animation-delay: 0s;
+}
+
+.liquid-glass-orb.lg-circle {
+  right: clamp(0.85rem, 3vw, 1.75rem);
+  bottom: clamp(0.85rem, 3vw, 1.75rem);
+  left: auto;
+  border-radius: 50%;
+  animation-delay: -2.4s;
+}
+
+.liquid-glass-orb > * {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  corner-shape: inherit;
+}
+
+.lg-effect {
+  z-index: 0;
+  overflow: hidden;
+  isolation: isolate;
+  /* Chromium applies SVG refraction via JS; fallback set in JS too */
+  backdrop-filter: blur(18px) saturate(170%) brightness(1.05);
+  -webkit-backdrop-filter: blur(18px) saturate(170%) brightness(1.05);
+}
+
+.lg-tint {
+  z-index: 1;
+  background: rgba(255, 255, 255, var(--lg-tint-opacity));
+  pointer-events: none;
+}
+
+.lg-shine {
+  z-index: 2;
+  pointer-events: none;
+  box-shadow:
+    inset 1.5px 1.5px 0.5px 0 rgba(255, 255, 255, 0.72),
+    inset -1px -1px 1px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -10px 18px rgba(20, 28, 26, 0.06);
+}
+
+.lg-specular {
+  z-index: 3;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      120% 80% at 28% 18%,
+      rgba(255, 255, 255, 0.55) 0%,
+      rgba(255, 255, 255, 0.12) 28%,
+      transparent 55%
+    ),
+    linear-gradient(
+      155deg,
+      rgba(255, 255, 255, 0.35) 0%,
+      transparent 42%
+    );
+  mix-blend-mode: soft-light;
+  opacity: 0.9;
+}
+
+/* Stronger edge refraction cue when SVG filter is active */
+.liquid-glass-orb.lg-refraction .lg-tint {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.liquid-glass-orb.lg-refraction .lg-specular {
+  opacity: 0.55;
+  mix-blend-mode: screen;
+}
+
+.liquid-glass-orb.lg-fallback .lg-tint {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.liquid-glass-orb.lg-fallback .lg-effect {
+  filter: contrast(1.05);
+}
+
+@keyframes lg-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  40% {
+    transform: translate3d(0, -7px, 0) scale(1.02);
+  }
+  70% {
+    transform: translate3d(0, -3px, 0) scale(0.99);
+  }
+}
+
+@media (max-width: 560px) {
+  .liquid-glass-orb {
+    --lg-size: 4.75rem;
+  }
 }
