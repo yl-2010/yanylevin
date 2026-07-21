@@ -186,7 +186,7 @@ Works with Professor Milos Gligoric’s Engineering Software Lab at UT Austin on
 
 - **Status:** Ongoing — current active startup
 - Grades 10–11+; ~52 weeks/year × ~5 hrs/week
-- **Co-founders:** Yan Levin (CTO) and Nikita
+- **Co-founders:** Yan Levin (CTO) and **Nikita Vidolova** (classmate at Eastside Prep)
 - Led full-stack development for a startup that helps recruiters interview and evaluate applicants when résumés are flooded with AI-generated noise
 - First real product shipped for people outside a classroom
 - **Website:** https://sockethr.com/
@@ -194,7 +194,7 @@ Works with Professor Milos Gligoric’s Engineering Software Lab at UT Austin on
 
 #### How SocketHR started
 
-Nikita came to Yan with the problem that recruiters were being flooded with résumés and had no good way to rank them. Yan saw it as a great way to develop his CS and AI skills, so Nikita and Yan co-founded SocketHR to build a tool that helps recruiters. SocketHR also has an ethics / equity side: helping companies be more equitable toward applicants.
+Nikita Vidolova, a classmate of Yan’s at Eastside Prep, came to him with the problem that recruiters were being flooded with résumés and had no good way to rank them. Yan saw it as a great way to develop his CS and AI skills, so Nikita and Yan co-founded SocketHR to build a tool that helps recruiters. SocketHR also has an ethics / equity side: helping companies be more equitable toward applicants.
 
 #### Equity / fairer hiring (from sockethr.com/equity)
 
@@ -354,7 +354,10 @@ At Evergreen Middle School, all listed courses were A’s. He was in Quest track
 Unofficial EPS transcript: cumulative GPA 3.98, 60.5 credits. 9th grade GPA 4.00; 10th grade GPA 3.97 (two A- grades in Mod. South Asian History and Calculus). BYU Independent Study Precalculus Parts 1–2 both A (completed summer 2025).
 
 ### What is SocketHR? / How did SocketHR start?
-An ongoing startup Yan co-founded with Nikita (Yan is CTO). Nikita brought the problem that recruiters were flooded with résumés and had no good way to rank them; Yan saw it as a way to grow his CS and AI skills, and they built SocketHR together. It helps recruiters interview and evaluate applicants amid AI-generated résumé noise, and also supports more equitable hiring (blind AI ranking without names/emails/phones; skills-based simulations that favor performance over pedigree). https://sockethr.com/ · equity: https://sockethr.com/equity
+An ongoing startup Yan co-founded with **Nikita Vidolova** (an Eastside Prep classmate; Yan is CTO). Nikita brought the problem that recruiters were flooded with résumés and had no good way to rank them; Yan saw it as a way to grow his CS and AI skills, and they built SocketHR together. It helps recruiters interview and evaluate applicants amid AI-generated résumé noise, and also supports more equitable hiring (blind AI ranking without names/emails/phones; skills-based simulations that favor performance over pedigree). https://sockethr.com/ · equity: https://sockethr.com/equity
+
+### Who is Nikita / who co-founded SocketHR with Yan?
+**Nikita Vidolova**, a classmate of Yan’s at Eastside Prep. They co-founded SocketHR together; Yan is CTO.
 
 ### What research has Yan done?
 Software research at UT Austin with Professor Milos Gligoric’s Engineering Software Lab. Estore is ongoing (sophomore year through Summer 2026 and continuing). PLSemanticsBench was a completed Summer 2025 internship.
