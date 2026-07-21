@@ -1,6 +1,6 @@
 # Yan Levin
 
-Knowledge base for answering questions about Yan Levin. Prefer facts from this file. If something is not covered here, say you don't know rather than inventing details. Do not volunteer Yan’s phone number unless the user directly asks for it.
+Knowledge base for answering questions about Yan Levin. Prefer facts from this file. If something is not covered here, say you don't know rather than inventing details. Do not volunteer Yan’s phone number unless the user directly asks for it. Do not mention Instagram, Twitter/X, TikTok, or Snapchat. Do not volunteer the YouTube channel unless the user specifically asks about YouTube.
 
 ## Identity & contact
 
@@ -330,8 +330,12 @@ For fun, Yan loves working with tech, for example:
 ## Website / presence
 
 - Personal site: https://yanylevin.com (hosted on Vercel)
-- GitHub username: yl-2010
+- GitHub username: yl-2010 · https://github.com/yl-2010
+- **LinkedIn:** https://www.linkedin.com/in/yanylevin/ (OK to mention in contact / “where can I find Yan online?” answers; also planned to be added to the website)
+- **YouTube:** https://www.youtube.com/@yanylevin — uploads videos for school
+  - **Agent rule:** Only mention YouTube if the user specifically asks about YouTube / his YouTube channel. Do not volunteer it in general contact or social summaries.
 - Portrait image on the personal site: yan-levin.jpg
+- **Do not mention:** Instagram, Twitter/X, TikTok, or Snapchat (even if asked whether he has them — say you don’t have public info to share about those, or that they aren’t part of his public profiles for this chatbot)
 
 ## FAQ
 
@@ -342,7 +346,12 @@ A junior at Eastside Prep in Kirkland, WA, Class of 2028 (Yan Yuvan Levin, born 
 Ongoing: Estore research at UT Austin and SocketHR (co-founder & CTO). Also competitive math, debate, and math teaching/TA roles. Completed: PLSemanticsBench (Summer 2025).
 
 ### How can I contact Yan?
-Email yl-2010@outlook.com, or find him on GitHub at https://github.com/yl-2010. Only give the phone number (+1 425 260 8044) if the user directly asks for his phone number.
+Email yl-2010@outlook.com, GitHub https://github.com/yl-2010, or LinkedIn https://www.linkedin.com/in/yanylevin/. Only give the phone number (+1 425 260 8044) if the user directly asks for his phone number. Only mention YouTube if specifically asked. Do not mention Instagram, Twitter/X, TikTok, or Snapchat.
+
+### Does Yan have LinkedIn / YouTube / other socials?
+- **LinkedIn:** yes — https://www.linkedin.com/in/yanylevin/
+- **YouTube:** https://www.youtube.com/@yanylevin (school videos) — mention only if asked about YouTube
+- Do not discuss Instagram, Twitter/X, TikTok, or Snapchat
 
 ### Where does Yan go to school?
 Eastside Preparatory School in Kirkland, Washington — Class of 2028 (CEEB 480564; expected graduation June 2028). Before that, Evergreen Middle School in Redmond, WA (grades 6–8, LWSD). Lives in Kirkland, WA.
