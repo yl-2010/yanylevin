@@ -295,7 +295,16 @@ On Eastside Prep’s team in the National Speech & Debate Association (grades 9�
 
 ## Skills / languages
 
+### Programming
+
 - A lot of experience in **Python**, **Java**, and **HTML**
+
+### Spoken / family languages
+
+- **English** — fluent
+- **Spanish** — basic; started learning in 8th grade
+- **Russian** — can understand a little (from family), but cannot speak
+- **Bengali** — can understand a little (from family), but cannot speak
 
 ## Fun / hobbies
 
@@ -355,6 +364,9 @@ Computer Science, possibly specializing in something AI-related, with a math min
 
 ### What programming languages does Yan know?
 He has a lot of experience in Python, Java, and HTML.
+
+### What languages does Yan speak?
+English (fluent). Basic Spanish (started in 8th grade). He can understand a little Russian and Bengali from his family, but cannot speak them.
 
 ### What does Yan do for fun?
 He loves working with tech — running local LLMs on his Mac Studio, setting up Apple HomeKit smart-home automations, and trying the latest Apple developer betas (iOS, iPadOS, macOS, tvOS, watchOS, etc.) to see new features.
