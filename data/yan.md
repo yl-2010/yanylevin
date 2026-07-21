@@ -4,8 +4,9 @@ Knowledge base for answering questions about Yan Levin. Prefer facts from this f
 
 ## Identity & contact
 
-- **Name:** Yan Levin
-- **School:** Junior at Eastside Preparatory School (Eastside Prep), Kirkland, WA
+- **Name:** Yan Levin (full name on school records: Yan Y. Levin)
+- **Current school:** Junior at Eastside Preparatory School (Eastside Prep), Kirkland, WA
+- **Previous school:** Evergreen Middle School (EMS), Lake Washington School District — Redmond, WA (grades 6–8)
 - **Location:** Kirkland, WA
 - **Email:** yl-2010@outlook.com
 - **GitHub:** https://github.com/yl-2010
@@ -14,9 +15,11 @@ Knowledge base for answering questions about Yan Levin. Prefer facts from this f
 
 ## Short bio
 
-Yan Levin is a junior at Eastside Prep in Kirkland, WA. He works at the intersection of competitive math, software research, debate, teaching, and product building. He is a research intern with Professor Milos Gligoric’s Engineering Software Lab at UT Austin, a math olympiad competitor, and co-founder & CTO of SocketHR.
+Yan Levin is a junior at Eastside Prep in Kirkland, WA. He works at the intersection of competitive math, software research, debate, teaching, and product building. He is a research intern with Professor Milos Gligoric’s Engineering Software Lab at UT Austin, a math olympiad competitor, and co-founder & CTO of SocketHR. Before Eastside Prep, he attended Evergreen Middle School in Redmond (LWSD) for grades 6–8.
 
 ## Academics
+
+### High school (Eastside Prep)
 
 | Metric | Value |
 |--------|-------|
@@ -24,6 +27,60 @@ Yan Levin is a junior at Eastside Prep in Kirkland, WA. He works at the intersec
 | SAT | 1580 |
 | AP Computer Science A | 5 |
 | AP Calculus AB | 5 |
+
+### Middle school (Evergreen Middle School)
+
+Source: EMS report cards / Student Access gradebook (grades 6–8), prepared for Eastside Prep. School: Evergreen Middle School, 6900 208th Ave NE, Redmond, WA 98053. All listed courses were letter grade **A**.
+
+**Patterns:** Quest (advanced) tracks in English, social studies, and science; accelerated math path (7th-grade math in 6th → Algebra 1 in 7th → Geometry in 8th). Grade 6 Semester 1 GPA recorded as **4.000** (standard / cumulative).
+
+#### Grade 6 — 2021–22
+
+| Course | S1 | S2 / notes |
+|--------|----|------------|
+| English 6 Quest | A | A |
+| Social Studies 6 Quest | A | A |
+| 7th Grade Math (Quest 6) | A | A |
+| Science 6 Quest | A | A |
+| Computer Literacy | A | — (S1) |
+| Fitness 6 | A | — (S1) |
+| Drawing & Painting 1 | — | A (S2) |
+| General Technology 1 | — | A (S2) |
+
+Teacher comments (selected): strong reading/writing process skills; pleasure to have in class; engaged and always excited to learn; work shows application of skills/concepts.
+
+#### Grade 7 — 2022–23
+
+| Course | S1 | S2 / notes |
+|--------|----|------------|
+| English 7 Quest | A | A |
+| US History 1 Quest | A | A |
+| Algebra 1 | A | A |
+| Science 7 Quest | A | A |
+| Future Ready Skills | A | — (S1) |
+| Fitness 7 | A | — (S1) |
+| Digital Media | — | A (S2) |
+| Leadership 1 (6,7) | — | A (S2) |
+
+Teacher comments (selected): pleasure to have in class; excellent effort; positive role model; shows leadership; works well independently.
+
+#### Grade 8 — 2023–24
+
+Semester letter grades were all **A**. Numeric semester percentages from Student Access gradebook:
+
+| Course | S1 % | S2 % |
+|--------|------|------|
+| Geometry | 98.25 | 98.36 |
+| English 8 Quest | 94.85 | 98.95 |
+| US History 2 / WA State History Quest | 93.47 | 98.84 |
+| Science 8 | 99.60 | 100.00 |
+| Spanish 1 | 96.42 | 97.94 |
+| Film Studies | 100.00 | — (S1 elective) |
+| Fitness 7/8 | — | 95.00 (S2) |
+
+Teacher comments (selected): pleasure to have in class; positive addition to class; dependable and cooperative; excellent comprehension of the subject matter; self-directed and makes responsible choices.
+
+**8th-period schedule snapshot (gradebook):** Geometry P1, English 8 Quest P2, US History 2/WA St Hist Quest P3, Film Studies or Fitness P4, Science 8 P5, Spanish 1 P6.
 
 ## Research (UT Austin)
 
@@ -114,6 +171,7 @@ On Eastside Prep’s team in the National Speech & Debate Association.
 
 ## Earlier years (middle school foundations)
 
+- Attended **Evergreen Middle School** (Lake Washington School District, Redmond, WA) for grades 6–8 (2021–22 through 2023–24) before Eastside Prep; earned all A’s with Quest/accelerated coursework (see Academics → Middle school)
 - Seven years at Prime Factor Math Circle
 - UW Math Circle
 - Math Kangaroo every year grades 1–8 (top 20 nationally; best year 3rd nationally / 2nd in Washington)
@@ -146,7 +204,10 @@ Competitive math, LLM/code-model research (PLSemanticsBench, Estore), SocketHR, 
 Email yl-2010@outlook.com, or find him on GitHub at https://github.com/yl-2010.
 
 ### Where does Yan go to school?
-Eastside Preparatory School in Kirkland, Washington.
+Eastside Preparatory School in Kirkland, Washington. Before that, Evergreen Middle School in Redmond, WA (grades 6–8, LWSD).
+
+### What were Yan’s middle school grades?
+At Evergreen Middle School, all listed courses were A’s. He was in Quest tracks for English, social studies, and science, and took accelerated math (7th-grade math in 6th, Algebra 1 in 7th, Geometry in 8th). Grade 6 Semester 1 GPA was 4.000.
 
 ### What is SocketHR?
 A startup Yan co-founded (as CTO) that helps recruiters interview and evaluate applicants when résumés are flooded with AI-generated noise. https://sockethr.com/
