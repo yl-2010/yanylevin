@@ -13,24 +13,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Karla:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Karla:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
         /* Color theme from site #1 */
-        --bg-0: #e9edf1;
-        --bg-1: #dfe5ea;
+        --bg-0: #e8edf2;
+        --bg-1: #dde5ec;
         --fg: #14181d;
         --muted: #5a6470;
-        --accent: #1f6f63;
+        --accent: #1b7d8a;
         --hairline: rgba(20, 24, 29, 0.12);
         --panel-bg: rgba(255, 255, 255, 0.5);
         --panel-brd: rgba(255, 255, 255, 0.6);
         --rim: rgba(255, 255, 255, 0.75);
-        --bloom-a: rgba(31, 111, 99, 0.22);
-        --bloom-b: rgba(214, 178, 120, 0.2);
-        --bloom-c: rgba(90, 130, 190, 0.16);
+        --glow: rgba(255, 255, 255, 0.14);
+        --bloom-a: rgba(24, 125, 145, 0.22);
+        --bloom-b: rgba(206, 176, 122, 0.16);
+        --bloom-c: rgba(70, 120, 200, 0.18);
         --lg-tint-rgb: 255, 255, 255;
         --lg-tint-opacity: 0.06;
         --lg-shadow-blur: 20px;
@@ -41,7 +42,7 @@
         --lg-fallback-tint: 0.2;
         --lg-fallback-shine: rgba(255, 255, 255, 0.5);
         --apple: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
-        --display: "Fraunces", Georgia, serif;
+        --display: var(--apple);
         --body: "Karla", ui-sans-serif, sans-serif;
         --ease: cubic-bezier(0.22, 1, 0.36, 1);
         --pointer-x: 50%;
@@ -50,17 +51,18 @@
       @media (prefers-color-scheme: dark) {
         :root {
           --bg-0: #0b0e11;
-          --bg-1: #10151a;
+          --bg-1: #0f141a;
           --fg: #e9eef2;
           --muted: #98a2ad;
-          --accent: #74c3b5;
+          --accent: #71c4c2;
           --hairline: rgba(233, 238, 242, 0.12);
           --panel-bg: rgba(26, 31, 37, 0.45);
           --panel-brd: rgba(255, 255, 255, 0.1);
           --rim: rgba(255, 255, 255, 0.16);
-          --bloom-a: rgba(64, 150, 138, 0.2);
-          --bloom-b: rgba(150, 120, 70, 0.16);
-          --bloom-c: rgba(70, 100, 160, 0.16);
+          --glow: rgba(200, 214, 224, 0.05);
+          --bloom-a: rgba(58, 150, 152, 0.2);
+          --bloom-b: rgba(150, 120, 70, 0.15);
+          --bloom-c: rgba(66, 104, 168, 0.17);
           --lg-tint-rgb: 18, 24, 22;
           --lg-tint-opacity: 0.28;
           --lg-shadow-blur: 22px;
@@ -90,7 +92,7 @@
       }
       body::after {
         content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-        background: radial-gradient(24rem 24rem at var(--pointer-x) var(--pointer-y), rgba(255,255,255,0.14), transparent 60%);
+        background: radial-gradient(24rem 24rem at var(--pointer-x) var(--pointer-y), var(--glow), transparent 60%);
         transition: opacity 0.4s var(--ease);
       }
       img { max-width: 100%; display: block; }
@@ -106,40 +108,44 @@
         transition: transform 0.3s var(--ease), box-shadow 0.4s var(--ease);
         will-change: transform;
       }
-      .corner::before {
+      .corner::before, .stat-tile::before {
         content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit;
         box-shadow: inset 0 0 var(--lg-shadow-blur) var(--lg-shadow-spread) var(--lg-shadow-color);
         background-color: rgba(var(--lg-tint-rgb), var(--lg-tint-opacity)); pointer-events: none;
       }
-      .corner.lg-refraction::after {
+      .corner.lg-refraction::after, .stat-tile.lg-refraction::after {
         content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
         backdrop-filter: var(--lg-filter); -webkit-backdrop-filter: var(--lg-filter);
         isolation: isolate; pointer-events: none;
       }
-      .corner.lg-fallback {
+      .corner.lg-fallback, .stat-tile.lg-fallback {
         background-color: rgba(var(--lg-tint-rgb), var(--lg-fallback-tint));
         backdrop-filter: blur(10px) saturate(1.5); -webkit-backdrop-filter: blur(10px) saturate(1.5);
       }
       @media (prefers-color-scheme: dark) {
-        .corner.lg-refraction::after { backdrop-filter: var(--lg-filter) brightness(0.92) saturate(1.15); -webkit-backdrop-filter: var(--lg-filter) brightness(0.92) saturate(1.15); }
+        .corner.lg-refraction::after, .stat-tile.lg-refraction::after { backdrop-filter: var(--lg-filter) brightness(0.92) saturate(1.15); -webkit-backdrop-filter: var(--lg-filter) brightness(0.92) saturate(1.15); }
       }
       .corner svg { position: relative; z-index: 2; width: 52%; height: 52%; }
       .corner.squircle { border-radius: var(--lg-radius, 21px); }
       .corner.circle { border-radius: 50%; }
 
-      .c-tl { top: clamp(1rem, 2.5vw, 1.6rem); left: clamp(1rem, 2.5vw, 1.6rem); width: 60px; height: 60px; }
-      .c-tr { top: clamp(1rem, 2.5vw, 1.6rem); right: clamp(1rem, 2.5vw, 1.6rem); width: 50px; height: 50px; }
-      .c-bl { bottom: clamp(1rem, 2.5vw, 1.6rem); left: clamp(1rem, 2.5vw, 1.6rem); width: 60px; height: 60px; cursor: grab; touch-action: none; }
+      .c-tl { top: clamp(1rem, 2.5vw, 1.6rem); left: clamp(1rem, 2.5vw, 1.6rem); width: 120px; height: 120px; }
+      .c-tr { top: clamp(1rem, 2.5vw, 1.6rem); right: clamp(1rem, 2.5vw, 1.6rem); width: 100px; height: 100px; }
+      .c-bl { bottom: clamp(1rem, 2.5vw, 1.6rem); left: clamp(1rem, 2.5vw, 1.6rem); width: 120px; height: 120px; cursor: grab; touch-action: none; }
       .c-bl:active { cursor: grabbing; }
-      .c-br { bottom: clamp(1rem, 2.5vw, 1.6rem); right: clamp(1rem, 2.5vw, 1.6rem); width: 60px; height: 60px; }
+      .c-br { bottom: clamp(1rem, 2.5vw, 1.6rem); right: clamp(1rem, 2.5vw, 1.6rem); width: 120px; height: 120px; }
       .c-tr svg { width: 50%; height: 50%; }
-      .c-br svg { width: 56%; height: 56%; }
+      .c-br svg { width: 52%; height: 52%; }
+      @media (max-width: 900px) {
+        .c-tl, .c-bl, .c-br { width: 96px; height: 96px; }
+        .c-tr { width: 80px; height: 80px; }
+      }
       @media (max-width: 560px) {
-        .c-tl, .c-bl, .c-br { width: 50px; height: 50px; }
-        .c-tr { width: 44px; height: 44px; }
+        .c-tl, .c-bl, .c-br { width: 80px; height: 80px; }
+        .c-tr { width: 66px; height: 66px; }
       }
 
-      .hero { padding: clamp(4.5rem, 11vh, 6.5rem) 0 clamp(2rem, 6vh, 3.5rem); }
+      .hero { padding: clamp(9.5rem, 17vh, 11rem) 0 clamp(2rem, 6vh, 3.5rem); }
       .hero-grid { display: grid; gap: 2rem; align-items: center; }
       @media (min-width: 720px) { .hero-grid { grid-template-columns: 1fr auto; } }
       .eyebrow { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin: 0 0 0.9rem; }
@@ -162,15 +168,26 @@
         transition: transform 0.4s var(--ease); will-change: transform; }
       .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 42% 16%; }
 
-      section { padding: clamp(2.25rem, 6vh, 3.5rem) 0; border-top: 1px solid var(--hairline); }
-      h2 { font-family: var(--display); font-style: italic; font-weight: 500; font-size: 1.05rem; color: var(--muted); margin: 0 0 1.5rem; }
-      .about p { margin: 0 0 1rem; max-width: 60ch; }
-      .about p:last-child { margin: 0; }
+      section { padding: clamp(1.75rem, 5vh, 2.75rem) 0; }
+      h2 { font-family: var(--display); font-weight: 600; font-size: clamp(1.5rem, 3.4vw, 2.05rem); letter-spacing: -0.025em; color: var(--fg); margin: 0 0 1.5rem; }
+      .about p { margin: 0; max-width: 60ch; }
 
-      .stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem; }
-      @media (min-width: 560px) { .stats { grid-template-columns: repeat(4,1fr); } }
-      .stats .v { font-family: var(--display); font-size: clamp(2rem, 5vw, 2.6rem); font-weight: 500; line-height: 1; }
-      .stats .k { color: var(--muted); font-size: 0.84rem; margin-top: 0.3rem; }
+      /* About + Academics share one row */
+      .about-row { display: grid; gap: 1.75rem; align-items: stretch; }
+      @media (min-width: 760px) { .about-row { grid-template-columns: 1fr 1fr; gap: 2.25rem; } }
+      .about-col { align-self: center; }
+
+      .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+      .stat-tile {
+        position: relative; isolation: isolate; --lg-filter: none;
+        border-radius: var(--lg-radius, 26px); min-height: clamp(104px, 15vw, 132px);
+        display: grid; place-items: center; padding: 1rem; text-align: center;
+        box-shadow: 0 6px var(--lg-outer-shadow-blur) var(--lg-outer-shadow);
+      }
+      .stat-tile > * { position: relative; z-index: 2; }
+      .stat-in { display: flex; flex-direction: column; gap: 0.3rem; }
+      .stat-tile .v { font-family: var(--display); font-size: clamp(1.9rem, 5vw, 2.5rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+      .stat-tile .k { color: var(--muted); font-size: 0.82rem; }
 
       .timeline { list-style: none; margin: 0; padding: 0; position: relative; }
       .timeline::before { content: ""; position: absolute; left: 0.42rem; top: 0.5rem; bottom: 0.5rem; width: 2px; background: linear-gradient(var(--accent), transparent); opacity: 0.5; }
@@ -186,7 +203,7 @@
       .rows .row:first-of-type { border-top: none; }
       .rows .row:hover { padding-left: 0.5rem; }
       .row h3 { font-family: var(--display); font-weight: 500; font-size: 1.2rem; margin: 0 0 0.15rem; }
-      .row .when { color: var(--accent); font-style: italic; font-size: 0.88rem; margin: 0 0 0.45rem; }
+      .row .when { color: var(--accent); font-size: 0.88rem; margin: 0 0 0.45rem; }
       .row p { margin: 0; color: var(--muted); }
       .row p a { color: var(--fg); }
 
@@ -216,7 +233,7 @@
     <div class="corner c-bl circle" data-liquid-glass="circle" data-filter-id="lg-bl" role="button" aria-label="Drag me" tabindex="0"></div>
     <!-- Bottom-right: Liquid Glass circle with rounded plus -->
     <div class="corner c-br circle" data-liquid-glass="circle" data-filter-id="lg-br" aria-label="Add" role="button" tabindex="0">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><rect x="9.75" y="4.5" width="4.5" height="15" rx="2.25"/><rect x="4.5" y="9.75" width="15" height="4.5" rx="2.25"/></g></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><rect x="10.35" y="4.5" width="3.3" height="15" rx="1.65"/><rect x="4.5" y="10.35" width="15" height="3.3" rx="1.65"/></g></svg>
     </div>
 
     <main class="wrap" id="top">
@@ -237,17 +254,16 @@
 
       <section id="about" class="about reveal">
         <h2>About</h2>
-        <p>I'm a junior at Eastside Preparatory School in Kirkland, WA. My time goes into competitive math, software research with Professor Milos Gligoric's group at UT Austin, debate, and teaching younger students.</p>
-        <p>Across those worlds I keep asking the same question: how do you make complex ideas clear enough to share?</p>
-      </section>
-
-      <section id="academics" class="reveal">
-        <h2>Academics</h2>
-        <div class="stats">
-          <div><div class="v" data-count>3.98</div><div class="k">GPA</div></div>
-          <div><div class="v" data-count>1580</div><div class="k">SAT</div></div>
-          <div><div class="v" data-count>5</div><div class="k">AP CS A</div></div>
-          <div><div class="v" data-count>5</div><div class="k">AP Calc AB</div></div>
+        <div class="about-row">
+          <div class="about-col">
+            <p>I'm a junior at Eastside Preparatory School in Kirkland, WA. My time goes into competitive math, software research with Professor Milos Gligoric's group at UT Austin, debate, and teaching younger students.</p>
+          </div>
+          <div class="stat-grid">
+            <div class="stat-tile squircle" data-liquid-glass="squircle" data-filter-id="lg-st1"><div class="stat-in"><span class="v" data-count>3.98</span><span class="k">GPA</span></div></div>
+            <div class="stat-tile squircle" data-liquid-glass="squircle" data-filter-id="lg-st2"><div class="stat-in"><span class="v" data-count>1580</span><span class="k">SAT</span></div></div>
+            <div class="stat-tile squircle" data-liquid-glass="squircle" data-filter-id="lg-st3"><div class="stat-in"><span class="v" data-count>5</span><span class="k">AP CS A</span></div></div>
+            <div class="stat-tile squircle" data-liquid-glass="squircle" data-filter-id="lg-st4"><div class="stat-in"><span class="v" data-count>5</span><span class="k">AP Calc AB</span></div></div>
+          </div>
         </div>
       </section>
 
@@ -370,7 +386,12 @@
           if (!el._drag) return;
           el._bx = e.clientX - el._sx; el._by = e.clientY - el._sy; applyT(el);
         });
-        const end = () => { if (!el._drag) return; el._drag = false; el.style.transition = ""; };
+        const end = () => {
+          if (!el._drag) return;
+          el._drag = false; el.style.transition = "";
+          // Dropped near the original spot → snap back exactly to it
+          if (Math.hypot(el._bx || 0, el._by || 0) < 90) { el._bx = 0; el._by = 0; el._mx = 0; el._my = 0; applyT(el); }
+        };
         el.addEventListener("pointerup", end);
         el.addEventListener("pointercancel", end);
       }
