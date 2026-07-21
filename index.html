@@ -327,7 +327,9 @@
         --lg-filter: none;
         --lg-tint-rgb: var(--chat-orange-rgb);
         --lg-tint-opacity: 0.42;
-        /* Lock size: transform+backdrop-filter on this node blew up into a pill-wide oval */
+        /* position:relative so ::before/::after glass layers size to this button,
+           not the positioned .yan-chat-pill ancestor (was painting a pill-wide oval) */
+        position: relative;
         flex: 0 0 2.45rem;
         width: 2.45rem; min-width: 2.45rem; max-width: 2.45rem;
         height: 2.45rem; min-height: 2.45rem; max-height: 2.45rem;
