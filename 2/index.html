@@ -153,24 +153,22 @@
       .lede { color: var(--muted); font-size: 1.15rem; margin: 0; max-width: 42ch; }
 
       /* Portrait held inside an orange-tinted Liquid Glass squircle */
+      /* Frosted glass frame (CSS), saturated orange tint */
       .portrait-glass {
-        position: relative; isolation: isolate; --lg-filter: none;
-        --pad: clamp(0.85rem, 2.2vw, 1.25rem);
-        /* saturated orange, kept translucent so the refracted backdrop reads as glass */
+        position: relative; isolation: isolate;
         --lg-tint-rgb: 253, 88, 2; --lg-tint-opacity: 0.34;
-        width: max-content; padding: var(--pad);
-        /* Use the engine's computed radius so the specular highlight sits on the edge */
-        margin: 0; border-radius: var(--lg-radius, 40px); display: block;
+        width: max-content; padding: clamp(0.85rem, 2.2vw, 1.25rem);
+        margin: 0; border-radius: 40px; display: block;
+        backdrop-filter: blur(16px) saturate(1.7); -webkit-backdrop-filter: blur(16px) saturate(1.7);
         box-shadow: 0 14px 36px var(--lg-outer-shadow);
         transition: transform 0.4s var(--ease); will-change: transform;
       }
       @media (prefers-color-scheme: dark) { .portrait-glass { --lg-tint-rgb: 244, 104, 16; --lg-tint-opacity: 0.36; } }
       .portrait-glass > * { position: relative; z-index: 2; }
-      /* Photo: exact same size as before, and square; corner radius concentric with the engine's squircle */
+      /* Photo: exact same size and corner radius as before, square */
       .portrait {
         width: clamp(150px, 32vw, 200px); height: clamp(150px, 32vw, 200px);
-        border-radius: max(14px, calc(var(--lg-radius, 40px) - var(--pad)));
-        object-fit: cover; object-position: 42% 16%; display: block;
+        border-radius: 26px; object-fit: cover; object-position: 42% 16%; display: block;
       }
 
       section { padding: clamp(1.75rem, 5vh, 2.75rem) 0; }
@@ -249,7 +247,7 @@
             <h1>Building at the edge of math, code, and teaching.</h1>
             <p class="lede">Junior at Eastside Prep, research intern at UT Austin, math olympiad competitor, and co-founder of SocketHR.</p>
           </div>
-          <figure class="portrait-glass" data-liquid-glass="squircle" data-filter-id="lg-pfp" id="tilt">
+          <figure class="portrait-glass" id="tilt">
             <img class="portrait" src="../yan-levin.jpg" alt="Yan Levin" width="640" height="640" />
           </figure>
         </div>
