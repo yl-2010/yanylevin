@@ -26,6 +26,8 @@
 
   const SHAPE_TUNE = {
     squircle: { ior: 3.0, scaleRatio: 1.0, bezelFrac: 0.52, specOpacity: 0.5 },
+    // Same refraction profile as squircle, but radius comes from CSS / data-lg-radius
+    rounded: { ior: 3.0, scaleRatio: 1.0, bezelFrac: 0.52, specOpacity: 0.5 },
     circle: { ior: 1.85, scaleRatio: 0.55, bezelFrac: 0.38, specOpacity: 0.38 },
   };
 
@@ -254,6 +256,54 @@
       </filter>`;
   }
 
+  /** Parse data-lg-radius: number (px), "24", "24px", "1.5rem", "50%". */
+  function parseRadiusAttr(raw, el, w, h) {
+    const s = String(raw).trim();
+    if (!s) return null;
+    const ref = Math.min(w, h);
+    if (s.endsWith("%")) {
+      const pct = parseFloat(s);
+      return Number.isFinite(pct) ? (pct / 100) * ref : null;
+    }
+    const n = parseFloat(s);
+    if (!Number.isFinite(n)) return null;
+    if (s.endsWith("rem")) {
+      const fs = parseFloat(getComputedStyle(el).fontSize) || 16;
+      return n * fs;
+    }
+    // bare number or px (and other absolute units already computed-like)
+    return n;
+  }
+
+  function clampRadius(r, w, h) {
+    const max = Math.min(w, h) / 2;
+    return Math.max(0, Math.min(r, max));
+  }
+
+  /**
+   * Corner radius for the displacement map:
+   * 1) data-lg-radius if set
+   * 2) circle → half the short side
+   * 3) rounded → computed CSS border-radius (arbitrary)
+   * 4) squircle → ~35% of short side (legacy Apple-ish default)
+   */
+  function resolveCornerRadius(el, shape, w, h) {
+    const data = el.getAttribute("data-lg-radius");
+    if (data != null && String(data).trim() !== "") {
+      const parsed = parseRadiusAttr(data, el, w, h);
+      if (parsed != null) return clampRadius(parsed, w, h);
+    }
+
+    if (shape === "circle") return Math.min(w, h) / 2;
+
+    if (shape === "rounded") {
+      const computed = parseFloat(getComputedStyle(el).borderTopLeftRadius);
+      if (Number.isFinite(computed)) return clampRadius(computed, w, h);
+    }
+
+    return Math.min(w, h) * 0.35;
+  }
+
   function initOrb(el, useSvgBackdrop) {
     const shape = el.getAttribute("data-liquid-glass") || "circle";
     const filterId =
@@ -264,13 +314,7 @@
     const w = Math.max(2, Math.round(el.offsetWidth));
     const h = Math.max(2, Math.round(el.offsetHeight));
 
-    // Circle: full radius. Squircle: ~35% of min side (Apple continuous-corner feel)
-    // while still using archis rounded-rect displacement generator.
-    const radius =
-      shape === "circle"
-        ? Math.min(w, h) / 2
-        : Math.min(w, h) * 0.35;
-
+    const radius = resolveCornerRadius(el, shape, w, h);
     el.style.setProperty("--lg-radius", `${radius}px`);
 
     const defs = document.getElementById("liquid-glass-defs");

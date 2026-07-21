@@ -327,18 +327,30 @@
         --lg-filter: none;
         --lg-tint-rgb: var(--chat-orange-rgb);
         --lg-tint-opacity: 0.42;
-        flex: 0 0 auto; width: 2.45rem; height: 2.45rem; margin: 0; padding: 0; border: 0;
+        /* Lock size: transform+backdrop-filter on this node blew up into a pill-wide oval */
+        flex: 0 0 2.45rem;
+        width: 2.45rem; min-width: 2.45rem; max-width: 2.45rem;
+        height: 2.45rem; min-height: 2.45rem; max-height: 2.45rem;
+        margin: 0; padding: 0; border: 0; overflow: hidden;
         border-radius: 50%; display: grid; place-items: center; background: transparent;
         color: var(--fg); isolation: isolate; cursor: pointer;
         box-shadow: 0 4px var(--lg-outer-shadow-blur) var(--lg-outer-shadow);
-        transition: transform 0.25s var(--chat-spring), opacity 0.2s, box-shadow 0.3s var(--ease);
+        transition: opacity 0.2s, box-shadow 0.3s var(--ease), filter 0.25s var(--ease);
       }
       @media (prefers-color-scheme: dark) {
         .yan-chat-send { --lg-tint-opacity: 0.4; }
       }
-      .yan-chat-send svg { width: 42%; height: 42%; display: block; }
-      .yan-chat-send:hover { transform: translateY(-1px) scale(1.05); }
-      .yan-chat-send:disabled { opacity: 0.45; cursor: wait; transform: none; }
+      .yan-chat-send svg {
+        width: 42%; height: 42%; display: block;
+        transition: transform 0.25s var(--chat-spring);
+      }
+      .yan-chat-send:hover {
+        filter: brightness(1.08);
+        box-shadow: 0 6px calc(var(--lg-outer-shadow-blur) + 4px) var(--lg-outer-shadow);
+      }
+      .yan-chat-send:hover svg { transform: translateY(-1px) scale(1.06); }
+      .yan-chat-send:disabled { opacity: 0.45; cursor: wait; filter: none; }
+      .yan-chat-send:disabled svg { transform: none; }
       .yan-chat-send:focus-visible { outline: 2px solid var(--chat-orange); outline-offset: 2px; }
 
       .yan-chat-panel {
@@ -436,7 +448,7 @@
     <div id="yan-chat" class="yan-chat" data-state="closed">
       <div
         class="yan-chat-panel"
-        data-liquid-glass="squircle"
+        data-liquid-glass="rounded"
         data-filter-id="lg-chat-panel"
         hidden
         aria-hidden="true"
@@ -616,7 +628,7 @@
       <defs id="liquid-glass-defs"></defs>
     </svg>
 
-    <script src="liquid-glass.js?v=chat3"></script>
+    <script src="liquid-glass.js?v=chat4-radius"></script>
     <script>
       const ease = (t) => 1 - Math.pow(1 - t, 3);
       const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
