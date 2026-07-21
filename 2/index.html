@@ -155,14 +155,20 @@
       /* Portrait held inside an orange-tinted Liquid Glass squircle */
       .portrait-glass {
         position: relative; isolation: isolate; --lg-filter: none;
-        --lg-tint-rgb: 232, 122, 44; --lg-tint-opacity: 0.34;
-        width: clamp(190px, 34vw, 250px); padding: clamp(0.8rem, 2vw, 1.2rem);
-        margin: 0; border-radius: 40px; display: grid; place-items: center;
+        /* saturated orange, kept translucent so the refracted backdrop reads as glass */
+        --lg-tint-rgb: 244, 104, 16; --lg-tint-opacity: 0.3;
+        width: max-content; padding: clamp(0.85rem, 2.2vw, 1.25rem);
+        margin: 0; border-radius: 40px; display: block;
         box-shadow: 0 14px 36px var(--lg-outer-shadow);
         transition: transform 0.4s var(--ease); will-change: transform;
       }
+      @media (prefers-color-scheme: dark) { .portrait-glass { --lg-tint-opacity: 0.36; } }
       .portrait-glass > * { position: relative; z-index: 2; }
-      .portrait { width: 100%; aspect-ratio: 1; border-radius: 26px; object-fit: cover; object-position: 42% 16%; display: block; }
+      /* Photo: exact same size as before, and square */
+      .portrait {
+        width: clamp(150px, 32vw, 200px); height: clamp(150px, 32vw, 200px);
+        border-radius: 26px; object-fit: cover; object-position: 42% 16%; display: block;
+      }
 
       section { padding: clamp(1.75rem, 5vh, 2.75rem) 0; }
       h2 { font-family: var(--display); font-weight: 600; font-size: clamp(1.5rem, 3.4vw, 2.05rem); letter-spacing: -0.025em; color: var(--fg); margin: 0 0 1.5rem; }
