@@ -2,7 +2,9 @@
 
 Personal site for [Yan Levin](https://github.com/yl-2010), Eastside Prep junior in Kirkland.
 
-**Live site:** [https://yl-2010.github.io/yanylevin/](https://yl-2010.github.io/yanylevin/)
+**Live site:** [https://yanylevin.com](https://yanylevin.com)
+
+Hosted on [Vercel](https://vercel.com).
 
 ## Local preview
 
