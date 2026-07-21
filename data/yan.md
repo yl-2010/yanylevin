@@ -276,6 +276,10 @@ On Eastside Prep’s team in the National Speech & Debate Association (grades 9�
 - Plans a **math minor or double major**
 - Do not invent or guess target universities; if asked which colleges Yan wants to apply to, say you don’t have that information
 
+## Skills / languages
+
+- A lot of experience in **Python**, **Java**, and **HTML**
+
 ## Interests & themes
 
 - Hard problems across proofs, programs, and products people actually use
@@ -316,3 +320,6 @@ Software research at UT Austin with Professor Milos Gligoric’s Engineering Sof
 
 ### What does Yan want to study in college?
 Computer Science, possibly specializing in something AI-related, with a math minor or double major. Do not claim specific target universities unless they are listed elsewhere in this file.
+
+### What programming languages does Yan know?
+He has a lot of experience in Python, Java, and HTML.
