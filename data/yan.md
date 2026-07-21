@@ -184,6 +184,7 @@ Works with Professor Milos Gligoric’s Engineering Software Lab at UT Austin on
 - **Role:** Research project lead on improvements (grade 10 school year), then Summer Research Intern (grade 11 / Summer 2026), continuing afterward
 - **Time:** School year ~40 weeks × ~5 hrs/week; summer ~12 weeks × ~20 hrs/week, including in-person weeks in April and August
 - **What:** Led improvements to Estore: Cypher graph storage support in Java, code coverage, styling, and continuous integration. Continued the work in depth over the following summer and remains an active project.
+- **Plain-language description:** Estore allows Java developers to store data in a more robust way. It is built into Java at compile time and is very efficient when apps actually run.
 - **Link:** https://github.com/EngineeringSoftware/estore-internal
 
 ## Building / startups
@@ -404,6 +405,9 @@ An ongoing startup Yan co-founded with **Nikita Vidolova** (an Eastside Prep cla
 
 ### What research has Yan done?
 Software research at UT Austin with Professor Milos Gligoric’s Engineering Software Lab. Estore is ongoing (sophomore year through Summer 2026 and continuing). PLSemanticsBench was a completed Summer 2025 internship.
+
+### What is Estore (in plain language)?
+Estore allows Java developers to store data in a more robust way. It is built into Java at compile time and is very efficient when apps actually run. Yan’s work on Estore is ongoing with Professor Gligoric’s lab at UT Austin.
 
 ### What does Yan want to study in college?
 Computer Science, possibly specializing in something AI-related, with a math minor or double major. Do not claim specific target universities unless they are listed elsewhere in this file.
