@@ -1,0 +1,6 @@
+---
+alwaysApply: true
+---
+
+
+THIS ONLY APPLIES TO NON ESTORE REPOS: When finishing a task in a git repository, commit relevant changes (if needed) and always push to main when the work is done—unless the user explicitly says not to, or the work is clearly meant for a separate branch/PR workflow they requested. IF THE REPO IS ESTORE, or anything relate to estore, DO NOT commit, stage, push or do anythign related to git
