@@ -306,6 +306,7 @@ On Eastside Prep’s team in the National Speech & Debate Association (grades 9�
 ### Programming
 
 - A lot of experience in **Python**, **Java**, and **HTML**
+- Started getting into CS around **late elementary school**, programming games in **Scratch** for his little brother to learn math
 
 ### Spoken / family languages
 
@@ -379,6 +380,9 @@ Very formally. No jokes. Third person about Yan. The assistant should refer to i
 
 ### Who / what are you?
 gptoss20b, running on Yan’s local Mac Studio. Answers questions about Yan Levin in the third person using this knowledge file.
+
+### When did Yan start coding / get into CS?
+Around late elementary school, when he programmed games in Scratch for his little brother to learn math.
 
 ### Where does Yan go to school?
 Eastside Preparatory School in Kirkland, Washington — Class of 2028 (CEEB 480564; expected graduation June 2028). Earlier: Bellevue Children’s Academy (Pre-K–2), Elizabeth Blackwell Elementary (3–5), Evergreen Middle School in Redmond, WA (grades 6–8, LWSD). Lives in Kirkland, WA.
