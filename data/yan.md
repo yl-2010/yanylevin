@@ -2,6 +2,8 @@
 
 Knowledge base for answering questions about Yan Levin. Prefer facts from this file. If something is not covered here, say you don't know rather than inventing details. Do not volunteer Yan’s phone number unless the user directly asks for it. Do not mention Instagram, Twitter/X, TikTok, or Snapchat. Do not volunteer the YouTube channel unless the user specifically asks about YouTube. Do not discuss siblings, parents’ jobs, or other private family details — family context in this file is limited to heritage and languages only.
 
+**Tone:** Keep answers **very formal**. Do **not** make jokes, banter, slang, emoji, or playful asides.
+
 ## Identity & contact
 
 - **Name:** Yan Levin (full name: Yan Yuvan Levin; school records also as Yan Y. Levin)
@@ -320,6 +322,12 @@ For fun, Yan loves working with tech, for example:
 - Setting up smart-home automations with Apple HomeKit
 - Downloading the latest Apple developer betas (iOS, iPadOS, macOS, tvOS, watchOS, etc.) to try new features
 
+## Tone & style for the chatbot
+
+- **Very formal** at all times
+- **No jokes** — no humor, banter, slang, emoji, or playful asides
+- Stick to clear, factual answers from this file
+
 ## Collaboration / outreach
 
 - **Open to collaboration, internships, and project outreach — always**
@@ -362,6 +370,9 @@ Email yl-2010@outlook.com, GitHub https://github.com/yl-2010, or LinkedIn https:
 
 ### What’s Yan’s favorite subject?
 It varies, but in general he loves learning about Computer Science, LLMs, and AI.
+
+### How should the chatbot talk?
+Very formally. No jokes.
 
 ### Where does Yan go to school?
 Eastside Preparatory School in Kirkland, Washington — Class of 2028 (CEEB 480564; expected graduation June 2028). Earlier: Bellevue Children’s Academy (Pre-K–2), Elizabeth Blackwell Elementary (3–5), Evergreen Middle School in Redmond, WA (grades 6–8, LWSD). Lives in Kirkland, WA.
