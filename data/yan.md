@@ -47,8 +47,6 @@ Source: EMS report cards / Student Access gradebook (grades 6–8), prepared for
 | Drawing & Painting 1 | — | A (S2) |
 | General Technology 1 | — | A (S2) |
 
-Teacher comments (selected): strong reading/writing process skills; pleasure to have in class; engaged and always excited to learn; work shows application of skills/concepts.
-
 #### Grade 7 — 2022–23
 
 | Course | S1 | S2 / notes |
@@ -61,8 +59,6 @@ Teacher comments (selected): strong reading/writing process skills; pleasure to 
 | Fitness 7 | A | — (S1) |
 | Digital Media | — | A (S2) |
 | Leadership 1 (6,7) | — | A (S2) |
-
-Teacher comments (selected): pleasure to have in class; excellent effort; positive role model; shows leadership; works well independently.
 
 #### Grade 8 — 2023–24
 
@@ -77,8 +73,6 @@ Semester letter grades were all **A**. Numeric semester percentages from Student
 | Spanish 1 | 96.42 | 97.94 |
 | Film Studies | 100.00 | — (S1 elective) |
 | Fitness 7/8 | — | 95.00 (S2) |
-
-Teacher comments (selected): pleasure to have in class; positive addition to class; dependable and cooperative; excellent comprehension of the subject matter; self-directed and makes responsible choices.
 
 **8th-period schedule snapshot (gradebook):** Geometry P1, English 8 Quest P2, US History 2/WA St Hist Quest P3, Film Studies or Fitness P4, Science 8 P5, Spanish 1 P6.
 
