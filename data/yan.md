@@ -186,9 +186,26 @@ Works with Professor Milos Gligoric’s Engineering Software Lab at UT Austin on
 
 - **Status:** Ongoing — current active startup
 - Grades 10–11+; ~52 weeks/year × ~5 hrs/week
+- **Co-founders:** Yan Levin (CTO) and Nikita
 - Led full-stack development for a startup that helps recruiters interview and evaluate applicants when résumés are flooded with AI-generated noise
 - First real product shipped for people outside a classroom
 - **Website:** https://sockethr.com/
+- **Equity page:** https://sockethr.com/equity
+
+#### How SocketHR started
+
+Nikita came to Yan with the problem that recruiters were being flooded with résumés and had no good way to rank them. Yan saw it as a great way to develop his CS and AI skills, so Nikita and Yan co-founded SocketHR to build a tool that helps recruiters. SocketHR also has an ethics / equity side: helping companies be more equitable toward applicants.
+
+#### Equity / fairer hiring (from sockethr.com/equity)
+
+SocketHR is designed to evaluate what candidates can actually do and to keep identity from skewing that judgment — “fairer hiring, built in.” Traditional hiring often favors polished résumés and familiar backgrounds.
+
+1. **Blind names in AI ranking**  
+   When SocketHR ranks résumés, the AI never sees candidate names, emails, or phone numbers. Identity fields are stripped and redacted before scoring, so rankings reflect qualifications and evidence — not assumptions tied to a name, school, or network.
+
+2. **Skills-based simulations**  
+   Résumés reward the opportunities someone had, not necessarily what they can do. SocketHR’s adaptive on-the-job simulation puts every candidate through a realistic challenge that reveals how they think and perform under pressure. A strong simulation can surface talent that a pedigree-focused screen would miss.  
+   Example framing from the site: someone who worked three jobs to pay tuition may not have a polished CV; a first-generation immigrant may not have the same network. SocketHR aims to choose performance over pedigree so the best person for the role has a real chance to prove it.
 
 ## Math & teaching
 
@@ -327,8 +344,8 @@ At Evergreen Middle School, all listed courses were A’s. He was in Quest track
 ### What are Yan’s high school grades?
 Unofficial EPS transcript: cumulative GPA 3.98, 60.5 credits. 9th grade GPA 4.00; 10th grade GPA 3.97 (two A- grades in Mod. South Asian History and Calculus). BYU Independent Study Precalculus Parts 1–2 both A (completed summer 2025).
 
-### What is SocketHR?
-An ongoing startup Yan co-founded (as CTO) that helps recruiters interview and evaluate applicants when résumés are flooded with AI-generated noise. https://sockethr.com/
+### What is SocketHR? / How did SocketHR start?
+An ongoing startup Yan co-founded with Nikita (Yan is CTO). Nikita brought the problem that recruiters were flooded with résumés and had no good way to rank them; Yan saw it as a way to grow his CS and AI skills, and they built SocketHR together. It helps recruiters interview and evaluate applicants amid AI-generated résumé noise, and also supports more equitable hiring (blind AI ranking without names/emails/phones; skills-based simulations that favor performance over pedigree). https://sockethr.com/ · equity: https://sockethr.com/equity
 
 ### What research has Yan done?
 Software research at UT Austin with Professor Milos Gligoric’s Engineering Software Lab. Estore is ongoing (sophomore year through Summer 2026 and continuing). PLSemanticsBench was a completed Summer 2025 internship.
