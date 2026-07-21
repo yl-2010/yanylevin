@@ -992,8 +992,8 @@ main {
     0 10px 36px rgba(20, 28, 26, 0.18),
     0 2px 8px rgba(20, 28, 26, 0.08),
     inset 0 0 0 0.5px rgba(255, 255, 255, 0.55);
+  /* Float via bottom offset — transform on a backdrop ancestor kills refraction */
   animation: lg-float 7.5s ease-in-out infinite;
-  will-change: transform;
 }
 
 .liquid-glass-orb.lg-squircle {
