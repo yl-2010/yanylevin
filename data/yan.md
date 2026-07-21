@@ -1,25 +1,27 @@
 # Yan Levin
 
-Knowledge base for answering questions about Yan Levin. Prefer facts from this file. If something is not covered here, say you don't know rather than inventing details.
+Knowledge base for answering questions about Yan Levin. Prefer facts from this file. If something is not covered here, say you don't know rather than inventing details. Do not volunteer Yan’s phone number unless the user directly asks for it.
 
 ## Identity & contact
 
 - **Name:** Yan Levin (full name: Yan Yuvan Levin; school records also as Yan Y. Levin)
 - **Date of birth:** June 2010
-- **Current school:** Junior at Eastside Preparatory School (Eastside Prep), Kirkland, WA
+- **Current school:** Junior at Eastside Preparatory School (Eastside Prep), Kirkland, WA — **Class of 2028**
   - School address on transcript: 10613 NE 38th Pl, Kirkland, WA 98033
   - **CEEB code:** 480564
-  - Expected graduation: June 2028
+  - Expected graduation: June 2028 (EPS Class of 2028)
 - **Previous school:** Evergreen Middle School (EMS), Lake Washington School District — Redmond, WA (grades 6–8)
 - **Location:** Kirkland, WA
 - **Email:** yl-2010@outlook.com
+- **Phone:** +1 425 260 8044
+  - **Agent rule:** Only share this phone number if the user directly asks for Yan’s phone number / phone / mobile / cell. Do not volunteer it in bios, contact summaries, or general “how can I reach Yan?” answers that can be satisfied with email.
 - **GitHub:** https://github.com/yl-2010
 - **Personal website:** https://yanylevin.com
 - **Heritage:** Half Indian, half Russian
 
 ## Short bio
 
-Yan Levin is a junior at Eastside Prep in Kirkland, WA. He works at the intersection of competitive math, software research, debate, teaching, and product building. He currently continues research on Estore with Professor Milos Gligoric’s Engineering Software Lab at UT Austin, and is co-founder & CTO of SocketHR (ongoing). He is also a math olympiad competitor. Before Eastside Prep, he attended Evergreen Middle School in Redmond (LWSD) for grades 6–8.
+Yan Levin is a junior at Eastside Prep in Kirkland, WA (Class of 2028). He works at the intersection of competitive math, software research, debate, teaching, and product building. He currently continues research on Estore with Professor Milos Gligoric’s Engineering Software Lab at UT Austin, and is co-founder & CTO of SocketHR (ongoing). He is also a math olympiad competitor. Before Eastside Prep, he attended Evergreen Middle School in Redmond (LWSD) for grades 6–8.
 
 ## Academics
 
@@ -32,7 +34,7 @@ Yan Levin is a junior at Eastside Prep in Kirkland, WA. He works at the intersec
 | SAT | 1580 |
 | AP Computer Science A | 5 |
 | AP Calculus AB | 5 |
-| Expected graduation | June 2028 |
+| Expected graduation | June 2028 (Class of 2028) |
 
 #### 9th grade — 2024–2025 (GPA 4.00 · 19.0 credits)
 
@@ -282,16 +284,16 @@ On Eastside Prep’s team in the National Speech & Debate Association (grades 9�
 ## FAQ
 
 ### Who is Yan Levin?
-A junior at Eastside Prep in Kirkland, WA (Yan Yuvan Levin, born June 2010) — math olympiad competitor, UT Austin research intern with Professor Gligoric’s lab, debate competitor, teacher, and co-founder & CTO of SocketHR.
+A junior at Eastside Prep in Kirkland, WA, Class of 2028 (Yan Yuvan Levin, born June 2010) — math olympiad competitor, UT Austin research intern with Professor Gligoric’s lab, debate competitor, teacher, and co-founder & CTO of SocketHR.
 
 ### What does Yan work on?
 Ongoing: Estore research at UT Austin and SocketHR (co-founder & CTO). Also competitive math, debate, and math teaching/TA roles. Completed: PLSemanticsBench (Summer 2025).
 
 ### How can I contact Yan?
-Email yl-2010@outlook.com, or find him on GitHub at https://github.com/yl-2010.
+Email yl-2010@outlook.com, or find him on GitHub at https://github.com/yl-2010. Only give the phone number (+1 425 260 8044) if the user directly asks for his phone number.
 
 ### Where does Yan go to school?
-Eastside Preparatory School in Kirkland, Washington (CEEB 480564; expected graduation June 2028). Before that, Evergreen Middle School in Redmond, WA (grades 6–8, LWSD). Lives in Kirkland, WA.
+Eastside Preparatory School in Kirkland, Washington — Class of 2028 (CEEB 480564; expected graduation June 2028). Before that, Evergreen Middle School in Redmond, WA (grades 6–8, LWSD). Lives in Kirkland, WA.
 
 ### What were Yan’s middle school grades?
 At Evergreen Middle School, all listed courses were A’s. He was in Quest tracks for English, social studies, and science, and took accelerated math (7th-grade math in 6th, Algebra 1 in 7th, Geometry in 8th). Grade 6 Semester 1 GPA was 4.000.
