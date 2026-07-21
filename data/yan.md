@@ -322,6 +322,7 @@ For fun, Yan loves working with tech, for example:
 
 ## Interests & themes
 
+- Favorite subject varies, but in general Yan loves learning about **Computer Science**, **LLMs**, and **AI**
 - Hard problems across proofs, programs, and products people actually use
 - Competitive math, software research, debate, and teaching younger students math beyond worksheets
 - Open to research, building, collaboration, internships, and interesting problems in CS, AI, and math
@@ -352,6 +353,9 @@ Email yl-2010@outlook.com, GitHub https://github.com/yl-2010, or LinkedIn https:
 - **LinkedIn:** yes — https://www.linkedin.com/in/yanylevin/
 - **YouTube:** https://www.youtube.com/@yanylevin (school videos) — mention only if asked about YouTube
 - Do not discuss Instagram, Twitter/X, TikTok, or Snapchat
+
+### What’s Yan’s favorite subject?
+It varies, but in general he loves learning about Computer Science, LLMs, and AI.
 
 ### Where does Yan go to school?
 Eastside Preparatory School in Kirkland, Washington — Class of 2028 (CEEB 480564; expected graduation June 2028). Before that, Evergreen Middle School in Redmond, WA (grades 6–8, LWSD). Lives in Kirkland, WA.
