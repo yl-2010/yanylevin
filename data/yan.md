@@ -269,6 +269,13 @@ On Eastside Prep’s team in the National Speech & Debate Association (grades 9�
 - Columbia Athletics Club (Sammamish) swim team, grades 6–8
 - Battle of the Books: 1st in school all three years; district placements 7th, 4th, then 3rd (2022–2024)
 
+## College / academic plans
+
+- Plans to major in **Computer Science**
+- May specialize in something **AI-related**
+- Plans a **math minor or double major**
+- Do not invent or guess target universities; if asked which colleges Yan wants to apply to, say you don’t have that information
+
 ## Interests & themes
 
 - Hard problems across proofs, programs, and products people actually use
@@ -306,3 +313,6 @@ An ongoing startup Yan co-founded (as CTO) that helps recruiters interview and e
 
 ### What research has Yan done?
 Software research at UT Austin with Professor Milos Gligoric’s Engineering Software Lab. Estore is ongoing (sophomore year through Summer 2026 and continuing). PLSemanticsBench was a completed Summer 2025 internship.
+
+### What does Yan want to study in college?
+Computer Science, possibly specializing in something AI-related, with a math minor or double major. Do not claim specific target universities unless they are listed elsewhere in this file.
