@@ -386,6 +386,35 @@
         background-color: rgba(var(--lg-tint-rgb), var(--lg-fallback-tint));
         backdrop-filter: blur(14px) saturate(1.5); -webkit-backdrop-filter: blur(14px) saturate(1.5);
       }
+      /*
+       * Chat pill + response panel: stronger liquid-glass tint for LLM readability.
+       * Keep url(#filter) refraction — only raise/lower the tint wash (no frosted blur).
+       * Light: brighter wash so page content fades. Dark: deeper dim so page content recedes.
+       */
+      .yan-chat-pill.corner,
+      .yan-chat-panel {
+        --lg-tint-rgb: 252, 254, 255;
+        --lg-tint-opacity: 0.48;
+        --lg-fallback-tint: 0.42;
+      }
+      .yan-chat-pill.corner.lg-refraction::after,
+      .yan-chat-panel.lg-refraction::after {
+        backdrop-filter: var(--lg-filter) brightness(1.16) saturate(1.06);
+        -webkit-backdrop-filter: var(--lg-filter) brightness(1.16) saturate(1.06);
+      }
+      @media (prefers-color-scheme: dark) {
+        .yan-chat-pill.corner,
+        .yan-chat-panel {
+          --lg-tint-rgb: 10, 14, 16;
+          --lg-tint-opacity: 0.56;
+          --lg-fallback-tint: 0.48;
+        }
+        .yan-chat-pill.corner.lg-refraction::after,
+        .yan-chat-panel.lg-refraction::after {
+          backdrop-filter: var(--lg-filter) brightness(0.7) saturate(1.12);
+          -webkit-backdrop-filter: var(--lg-filter) brightness(0.7) saturate(1.12);
+        }
+      }
       .yan-chat.has-panel .yan-chat-panel {
         pointer-events: auto; opacity: 1; transform: translateY(0) scale(1);
       }
