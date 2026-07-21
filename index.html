@@ -108,24 +108,33 @@
         transition: transform 0.3s var(--ease), box-shadow 0.4s var(--ease);
         will-change: transform;
       }
-      .corner::before, .stat-tile::before, .portrait-glass::before {
+      .corner::before, .stat-tile::before, .portrait-glass::before,
+      .yan-chat-close::before, .yan-chat-send::before {
         content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit;
         box-shadow: inset 0 0 var(--lg-shadow-blur) var(--lg-shadow-spread) var(--lg-shadow-color);
         background-color: rgba(var(--lg-tint-rgb), var(--lg-tint-opacity)); pointer-events: none;
       }
-      .corner.lg-refraction::after, .stat-tile.lg-refraction::after, .portrait-glass.lg-refraction::after {
+      .corner.lg-refraction::after, .stat-tile.lg-refraction::after, .portrait-glass.lg-refraction::after,
+      .yan-chat-close.lg-refraction::after, .yan-chat-send.lg-refraction::after {
         content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
         backdrop-filter: var(--lg-filter); -webkit-backdrop-filter: var(--lg-filter);
         isolation: isolate; pointer-events: none;
       }
-      .corner.lg-fallback, .stat-tile.lg-fallback, .portrait-glass.lg-fallback {
+      .corner.lg-fallback, .stat-tile.lg-fallback, .portrait-glass.lg-fallback,
+      .yan-chat-close.lg-fallback, .yan-chat-send.lg-fallback {
         background-color: rgba(var(--lg-tint-rgb), var(--lg-fallback-tint));
         backdrop-filter: blur(10px) saturate(1.5); -webkit-backdrop-filter: blur(10px) saturate(1.5);
       }
       @media (prefers-color-scheme: dark) {
-        .corner.lg-refraction::after, .stat-tile.lg-refraction::after, .portrait-glass.lg-refraction::after { backdrop-filter: var(--lg-filter) brightness(0.92) saturate(1.15); -webkit-backdrop-filter: var(--lg-filter) brightness(0.92) saturate(1.15); }
+        .corner.lg-refraction::after, .stat-tile.lg-refraction::after, .portrait-glass.lg-refraction::after,
+        .yan-chat-close.lg-refraction::after, .yan-chat-send.lg-refraction::after {
+          backdrop-filter: var(--lg-filter) brightness(0.92) saturate(1.15);
+          -webkit-backdrop-filter: var(--lg-filter) brightness(0.92) saturate(1.15);
+        }
       }
-      .corner svg { position: relative; z-index: 2; width: 52%; height: 52%; }
+      .corner svg, .yan-chat-close svg, .yan-chat-send svg {
+        position: relative; z-index: 2; width: 52%; height: 52%;
+      }
       .corner.squircle { border-radius: var(--lg-radius, 21px); }
       .corner.circle { border-radius: 50%; }
 
@@ -230,14 +239,23 @@
         --chat-pad: clamp(1rem, 2.5vw, 1.6rem);
         --chat-circle: 120px;
         --chat-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        --chat-orange: #fd5802;
+        --chat-orange-rgb: 253, 88, 2;
+        --pill-w: var(--chat-circle);
+        --pill-left: calc(100vw - var(--chat-pad) - var(--chat-circle));
         position: fixed; inset: 0; z-index: 90; pointer-events: none;
+      }
+      @media (prefers-color-scheme: dark) {
+        .yan-chat { --chat-orange: #f46810; --chat-orange-rgb: 244, 104, 16; }
       }
       @media (max-width: 900px) { .yan-chat { --chat-circle: 96px; } }
       @media (max-width: 560px) { .yan-chat { --chat-circle: 80px; } }
+      .yan-chat.is-open {
+        --pill-w: min(calc(var(--chat-circle) * 6), calc(100vw - (var(--chat-pad) * 2)));
+        --pill-left: calc(50vw - (var(--pill-w) / 2));
+      }
 
       .yan-chat-pill.corner {
-        --pill-w: var(--chat-circle);
-        --pill-left: calc(100vw - var(--chat-pad) - var(--chat-circle));
         top: auto; bottom: var(--chat-pad);
         left: var(--pill-left); right: auto;
         width: var(--pill-w); height: var(--chat-circle);
@@ -246,10 +264,7 @@
         transition: left 0.7s var(--chat-spring), width 0.7s var(--chat-spring), box-shadow 0.35s var(--ease);
       }
       .yan-chat.is-open .yan-chat-pill.corner {
-        --pill-w: min(calc(var(--chat-circle) * 6), calc(100vw - (var(--chat-pad) * 2)));
-        --pill-left: calc(50vw - (var(--pill-w) / 2));
         cursor: text;
-        /* Kill magnetic/drag transforms while open */
         transform: none !important;
       }
 
@@ -265,19 +280,18 @@
       }
 
       .yan-chat-close {
+        --lg-filter: none;
         position: absolute; z-index: 5; display: grid; place-items: center;
-        width: 1.55rem; height: 1.55rem; margin: 0; padding: 0; border: 0; border-radius: 50%;
-        color: var(--fg); background: rgba(var(--lg-tint-rgb), 0.4);
-        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.28), 0 2px 10px rgba(0,0,0,0.12);
-        backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+        width: 1.7rem; height: 1.7rem; margin: 0; padding: 0; border: 0; border-radius: 50%;
+        color: var(--fg); background: transparent; isolation: isolate;
+        box-shadow: 0 3px var(--lg-outer-shadow-blur) var(--lg-outer-shadow);
         cursor: pointer; opacity: 0; pointer-events: none; transform: scale(0.7);
-        transition: opacity 0.28s var(--ease), transform 0.4s var(--chat-spring);
+        transition: opacity 0.28s var(--ease), transform 0.4s var(--chat-spring), box-shadow 0.3s var(--ease);
       }
-      .yan-chat-close svg { width: 58%; height: 58%; display: block; }
-      .yan-chat-close:hover { background: rgba(var(--lg-tint-rgb), 0.58); }
-      .yan-chat-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-      .yan-chat-close--pill { top: 0.42rem; left: 0.42rem; }
-      .yan-chat-close--panel { top: 0.85rem; left: 0.85rem; }
+      .yan-chat-close svg { width: 48%; height: 48%; display: block; }
+      .yan-chat-close:focus-visible { outline: 2px solid var(--chat-orange); outline-offset: 2px; }
+      .yan-chat-close--pill { top: 0.38rem; left: 0.38rem; }
+      .yan-chat-close--panel { top: 0.75rem; left: 0.75rem; }
       .yan-chat.is-open:not(.has-panel) .yan-chat-close--pill {
         opacity: 1; pointer-events: auto; transform: scale(1); transition-delay: 0.18s;
       }
@@ -289,8 +303,8 @@
       }
 
       .yan-chat-form {
-        position: absolute; inset: 0; z-index: 4; display: flex; align-items: center; gap: 0.4rem;
-        padding: 0 0.85rem 0 2.35rem; opacity: 0; pointer-events: none;
+        position: absolute; inset: 0; z-index: 4; display: flex; align-items: center; gap: 0.45rem;
+        padding: 0 0.7rem 0 2.45rem; opacity: 0; pointer-events: none;
         transition: opacity 0.28s var(--ease);
       }
       .yan-chat.is-open .yan-chat-form { opacity: 1; pointer-events: auto; transition-delay: 0.2s; }
@@ -301,23 +315,38 @@
       }
       .yan-chat-input::placeholder { color: var(--muted); opacity: 0.8; }
       .yan-chat-send {
-        flex: 0 0 auto; width: 2.35rem; height: 2.35rem; margin: 0; padding: 0; border: 0;
-        border-radius: 50%; display: grid; place-items: center; background: var(--accent);
-        color: #fff; font-size: 1.05rem; font-weight: 600; cursor: pointer;
-        box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 35%, transparent);
-        transition: transform 0.25s var(--chat-spring), opacity 0.2s;
+        --lg-filter: none;
+        --lg-tint-rgb: var(--chat-orange-rgb);
+        --lg-tint-opacity: 0.42;
+        flex: 0 0 auto; width: 2.45rem; height: 2.45rem; margin: 0; padding: 0; border: 0;
+        border-radius: 50%; display: grid; place-items: center; background: transparent;
+        color: var(--fg); isolation: isolate; cursor: pointer;
+        box-shadow: 0 4px var(--lg-outer-shadow-blur) var(--lg-outer-shadow);
+        transition: transform 0.25s var(--chat-spring), opacity 0.2s, box-shadow 0.3s var(--ease);
       }
-      .yan-chat-send:hover { transform: translateY(-1px) scale(1.04); }
+      @media (prefers-color-scheme: dark) {
+        .yan-chat-send { --lg-tint-opacity: 0.4; }
+      }
+      .yan-chat-send svg { width: 42%; height: 42%; display: block; }
+      .yan-chat-send:hover { transform: translateY(-1px) scale(1.05); }
       .yan-chat-send:disabled { opacity: 0.45; cursor: wait; transform: none; }
+      .yan-chat-send:focus-visible { outline: 2px solid var(--chat-orange); outline-offset: 2px; }
 
       .yan-chat-panel {
-        position: fixed; z-index: 89; left: var(--chat-pad); right: var(--chat-pad);
-        top: var(--chat-pad); bottom: calc(var(--chat-circle) + var(--chat-pad) + 0.65rem);
-        width: auto; height: auto; border-radius: clamp(1.5rem, 4vw, 2.4rem);
+        position: fixed; z-index: 89;
+        left: var(--pill-left); right: auto;
+        top: var(--chat-pad);
+        bottom: calc(var(--chat-circle) + var(--chat-pad) + 0.65rem);
+        width: var(--pill-w); height: auto;
+        border-radius: clamp(1.5rem, 4vw, 2.4rem);
         --lg-filter: none; isolation: isolate;
         box-shadow: 0 10px var(--lg-outer-shadow-blur) var(--lg-outer-shadow);
         pointer-events: none; opacity: 0; transform: translateY(18%) scale(0.92); overflow: hidden;
-        transition: opacity 0.45s var(--ease), transform 0.65s var(--chat-spring);
+        transition:
+          opacity 0.45s var(--ease),
+          transform 0.65s var(--chat-spring),
+          left 0.7s var(--chat-spring),
+          width 0.7s var(--chat-spring);
       }
       .yan-chat-panel::before {
         content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit;
@@ -345,22 +374,29 @@
       }
       .yan-chat-messages {
         position: relative; z-index: 3; height: 100%; overflow: auto;
-        padding: 3.1rem 1.35rem 1.35rem; display: flex; flex-direction: column; gap: 0.85rem;
+        padding: 3.1rem 1.2rem 1.2rem; display: flex; flex-direction: column; gap: 0.85rem;
         -webkit-overflow-scrolling: touch;
       }
       .yan-chat-bubble {
-        max-width: min(42rem, 100%); font-family: var(--body);
+        max-width: 100%; font-family: var(--body);
         font-size: clamp(0.95rem, 2.2vw, 1.08rem); line-height: 1.55; color: var(--fg);
         white-space: pre-wrap; word-break: break-word;
       }
-      .yan-chat-bubble--user { align-self: flex-end; text-align: right; color: var(--accent); font-weight: 600; }
+      .yan-chat-bubble--user {
+        align-self: flex-end; text-align: right;
+        color: var(--chat-orange); font-weight: 600;
+      }
       .yan-chat-bubble--assistant { align-self: flex-start; opacity: 0.95; }
       .yan-chat.is-busy .yan-chat-pill {
         animation: yan-chat-pulse 1.2s ease-in-out infinite;
       }
       @keyframes yan-chat-pulse {
         0%, 100% { box-shadow: 0 6px var(--lg-outer-shadow-blur) var(--lg-outer-shadow); }
-        50% { box-shadow: 0 6px var(--lg-outer-shadow-blur) var(--lg-outer-shadow), 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent); }
+        50% {
+          box-shadow:
+            0 6px var(--lg-outer-shadow-blur) var(--lg-outer-shadow),
+            0 0 0 4px rgba(var(--chat-orange-rgb), 0.22);
+        }
       }
       @media (prefers-reduced-motion: reduce) {
         .yan-chat-pill.corner, .yan-chat-panel, .yan-chat-launcher, .yan-chat-close, .yan-chat-form, .yan-chat-send {
@@ -392,7 +428,14 @@
         role="region"
         aria-label="Chat with gptoss20b about Yan Levin"
       >
-        <button type="button" class="yan-chat-close yan-chat-close--panel" data-yan-chat-close aria-label="Close chat">
+        <button
+          type="button"
+          class="yan-chat-close yan-chat-close--panel circle"
+          data-liquid-glass="circle"
+          data-filter-id="lg-chat-x-panel"
+          data-yan-chat-close
+          aria-label="Close chat"
+        >
           <svg viewBox="0 0 24 24" aria-hidden="true" style="transform: rotate(45deg)"><g fill="currentColor"><rect x="10.35" y="4.5" width="3.3" height="15" rx="1.65"/><rect x="4.5" y="10.35" width="15" height="3.3" rx="1.65"/></g></svg>
         </button>
         <div class="yan-chat-messages" aria-live="polite"></div>
@@ -403,7 +446,15 @@
         data-liquid-glass="circle"
         data-filter-id="lg-chat-pill"
       >
-        <button type="button" class="yan-chat-close yan-chat-close--pill" data-yan-chat-close aria-label="Close chat" tabindex="-1">
+        <button
+          type="button"
+          class="yan-chat-close yan-chat-close--pill circle"
+          data-liquid-glass="circle"
+          data-filter-id="lg-chat-x-pill"
+          data-yan-chat-close
+          aria-label="Close chat"
+          tabindex="-1"
+        >
           <svg viewBox="0 0 24 24" aria-hidden="true" style="transform: rotate(45deg)"><g fill="currentColor"><rect x="10.35" y="4.5" width="3.3" height="15" rx="1.65"/><rect x="4.5" y="10.35" width="15" height="3.3" rx="1.65"/></g></svg>
         </button>
 
@@ -431,8 +482,19 @@
             tabindex="-1"
             autocomplete="off"
           />
-          <button type="submit" class="yan-chat-send" aria-label="Send question">
-            <span aria-hidden="true">↑</span>
+          <button
+            type="submit"
+            class="yan-chat-send circle"
+            data-liquid-glass="circle"
+            data-filter-id="lg-chat-send"
+            aria-label="Send question"
+          >
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <g stroke="currentColor" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 18.2V6.4"/>
+                <path d="M6.9 11.3L12 6.2L17.1 11.3"/>
+              </g>
+            </svg>
           </button>
         </form>
       </div>
@@ -539,7 +601,7 @@
       <defs id="liquid-glass-defs"></defs>
     </svg>
 
-    <script src="liquid-glass.js?v=chat2"></script>
+    <script src="liquid-glass.js?v=chat3"></script>
     <script>
       const ease = (t) => 1 - Math.pow(1 - t, 3);
       const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
