@@ -156,13 +156,14 @@
       .portrait-glass {
         position: relative; isolation: isolate; --lg-filter: none;
         /* saturated orange, kept translucent so the refracted backdrop reads as glass */
-        --lg-tint-rgb: 244, 104, 16; --lg-tint-opacity: 0.3;
+        --lg-tint-rgb: 253, 88, 2; --lg-tint-opacity: 0.34;
         width: max-content; padding: clamp(0.85rem, 2.2vw, 1.25rem);
-        margin: 0; border-radius: 40px; display: block;
+        /* Use the engine's computed radius so the specular highlight sits on the edge */
+        margin: 0; border-radius: var(--lg-radius, 40px); display: block;
         box-shadow: 0 14px 36px var(--lg-outer-shadow);
         transition: transform 0.4s var(--ease); will-change: transform;
       }
-      @media (prefers-color-scheme: dark) { .portrait-glass { --lg-tint-opacity: 0.36; } }
+      @media (prefers-color-scheme: dark) { .portrait-glass { --lg-tint-rgb: 244, 104, 16; --lg-tint-opacity: 0.36; } }
       .portrait-glass > * { position: relative; z-index: 2; }
       /* Photo: exact same size as before, and square */
       .portrait {
