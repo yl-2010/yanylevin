@@ -3,113 +3,147 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
     <title>Yan Levin</title>
     <meta
       name="description"
       content="Yan Levin, junior at Eastside Prep in Kirkland. Math olympiad competitor, UT Austin research intern, and co-founder of SocketHR."
     />
-    <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Inter:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --bg: #ffffff;
-        --fg: #111214;
-        --muted: #70747c;
-        --line: rgba(17, 18, 20, 0.12);
-        --accent: #2f5fff;
-        --display: "Inter Tight", Helvetica, Arial, sans-serif;
-        --body: "Inter", Helvetica, Arial, sans-serif;
+        --bg: #f3f5f3;
+        --panel: rgba(255,255,255,0.6);
+        --fg: #121613;
+        --muted: #616b64;
+        --accent: #0d8f5f;
+        --hairline: rgba(18, 22, 19, 0.12);
+        --grid: rgba(18, 22, 19, 0.05);
+        --spot: rgba(13, 143, 95, 0.1);
+        --body: "Inter", system-ui, sans-serif;
+        --display: "Sora", system-ui, sans-serif;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --mx: 50%; --my: 20%;
       }
       @media (prefers-color-scheme: dark) {
         :root {
-          --bg: #0a0b0c;
-          --fg: #f0f1f3;
-          --muted: #8b8f98;
-          --line: rgba(240, 241, 243, 0.14);
-          --accent: #6a8bff;
+          --bg: #090b0a;
+          --panel: rgba(22,26,24,0.5);
+          --fg: #e8eeea;
+          --muted: #94a09a;
+          --accent: #35d891;
+          --hairline: rgba(232, 238, 234, 0.12);
+          --grid: rgba(232, 238, 234, 0.05);
+          --spot: rgba(53, 216, 145, 0.14);
         }
       }
       * { box-sizing: border-box; }
       html { scroll-behavior: smooth; }
-      body {
-        margin: 0; background: var(--bg); color: var(--fg);
-        font-family: var(--body); font-size: 1.02rem; line-height: 1.6;
-        -webkit-font-smoothing: antialiased;
-      }
+      body { margin: 0; background: var(--bg); color: var(--fg);
+        font-family: var(--body); font-size: 1.02rem; line-height: 1.64; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+      /* dotted grid + cursor spotlight */
+      body::before { content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+        background-image: radial-gradient(var(--grid) 1px, transparent 1px); background-size: 26px 26px; }
+      body::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+        background: radial-gradient(26rem 26rem at var(--mx) var(--my), var(--spot), transparent 60%);
+        transition: background 0.1s linear; }
       img { max-width: 100%; display: block; }
-      a { color: var(--fg); text-decoration-color: var(--accent); text-underline-offset: 0.2em; }
-      a:hover { color: var(--accent); }
-      .wrap { width: min(64rem, calc(100% - 3rem)); margin: 0 auto; }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+      .wrap { width: min(52rem, calc(100% - 2.5rem)); margin: 0 auto; }
 
-      header { border-bottom: 1px solid var(--fg); position: sticky; top: 0; background: color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter: blur(10px); z-index: 20; }
-      .bar { display: flex; align-items: baseline; justify-content: space-between; padding: 1rem 0; }
-      .logo { font-family: var(--display); font-weight: 800; letter-spacing: -0.03em; font-size: 1.15rem; text-decoration: none; color: var(--fg); }
-      nav { display: flex; gap: 1.4rem; }
-      nav a { color: var(--muted); text-decoration: none; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; }
-      nav a:hover { color: var(--accent); }
-      @media (max-width: 620px) { nav { display: none; } }
+      header { position: sticky; top: 0; z-index: 40; backdrop-filter: blur(10px);
+        background: color-mix(in srgb, var(--bg) 78%, transparent); border-bottom: 1px solid transparent; transition: border-color 0.3s; }
+      header.scrolled { border-color: var(--hairline); }
+      .bar { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 0; }
+      .logo { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--display); font-weight: 600; color: var(--fg); }
+      .logo svg { width: 20px; height: 20px; color: var(--accent); }
+      nav { display: flex; gap: 1.3rem; }
+      nav a { color: var(--muted); font-size: 0.88rem; }
+      nav a:hover { color: var(--fg); text-decoration: none; }
+      @media (max-width: 560px) { nav { display: none; } }
 
-      .hero { padding: clamp(3rem, 11vh, 7rem) 0 clamp(2.5rem, 7vh, 4.5rem); border-bottom: 1px solid var(--line); }
-      .hero-grid { display: grid; gap: 2rem; align-items: end; }
+      .status { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; color: var(--muted); margin-bottom: 1rem; }
+      .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent); animation: pulse 2.4s var(--ease) infinite; }
+      @keyframes pulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); } 70% { box-shadow: 0 0 0 8px transparent; } 100% { box-shadow: 0 0 0 0 transparent; } }
+
+      .hero { padding: clamp(3rem, 10vh, 6rem) 0 clamp(2.5rem, 6vh, 3.5rem); }
+      .hero-grid { display: grid; gap: 2rem; align-items: center; }
       @media (min-width: 720px) { .hero-grid { grid-template-columns: 1fr auto; } }
-      h1 { font-family: var(--display); font-weight: 800; font-size: clamp(2.4rem, 8vw, 5.5rem); line-height: 0.95; letter-spacing: -0.045em; margin: 0 0 1.25rem; max-width: 14ch; }
-      .lede { color: var(--muted); font-size: 1.15rem; margin: 0; max-width: 40ch; }
-      .portrait { width: 120px; height: 120px; overflow: hidden; margin: 0; }
-      .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 42% 16%; filter: grayscale(1); }
-      .portrait:hover img { filter: none; }
+      h1 { font-family: var(--display); font-weight: 700; font-size: clamp(2.1rem, 5.6vw, 3.3rem); line-height: 1.05; letter-spacing: -0.03em; margin: 0 0 1.1rem; max-width: 15ch; }
+      .lede { color: var(--muted); font-size: 1.15rem; margin: 0 0 1.6rem; max-width: 42ch; }
+      .cta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+      .btn { display: inline-flex; align-items: center; padding: 0.7rem 1.3rem; border-radius: 12px; font-weight: 600; font-size: 0.95rem;
+        border: 1px solid var(--hairline); background: var(--panel); color: var(--fg); backdrop-filter: blur(8px);
+        transition: transform 0.15s var(--ease), border-color 0.25s, box-shadow 0.3s; }
+      .btn:hover { border-color: var(--accent); box-shadow: 0 0 0 4px var(--spot); }
+      .btn-accent { background: var(--accent); color: #04140d; border-color: var(--accent); }
+      .btn-accent:hover { filter: brightness(1.05); }
+      .portrait { width: clamp(150px, 32vw, 200px); aspect-ratio: 1; overflow: hidden; border-radius: 18px; flex: none; position: relative;
+        border: 1px solid var(--hairline); transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease); will-change: transform; }
+      .portrait:hover { box-shadow: 0 0 0 5px var(--spot); }
+      .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 42% 16%; }
 
-      section { padding: clamp(2.5rem, 6vh, 4rem) 0; border-bottom: 1px solid var(--line); }
-      .block { display: grid; gap: 0.75rem 3rem; }
-      @media (min-width: 720px) { .block { grid-template-columns: 12rem 1fr; } }
-      .block > h2 { font-family: var(--display); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin: 0; }
-      .body p { margin: 0 0 1rem; max-width: 62ch; }
-      .body p:last-child { margin: 0; }
+      section { padding: clamp(2.4rem, 6vh, 3.75rem) 0; border-top: 1px solid var(--hairline); }
+      h2 { font-family: var(--display); font-weight: 600; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin: 0 0 1.5rem; }
+      .about p { margin: 0 0 1rem; max-width: 60ch; }
+      .about p:last-child { margin: 0; }
 
-      .stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem; }
+      .stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 1rem; }
       @media (min-width: 560px) { .stats { grid-template-columns: repeat(4,1fr); } }
-      .stats .v { font-family: var(--display); font-weight: 800; font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1; letter-spacing: -0.04em; }
-      .stats .k { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.35rem; }
+      .stats .cell { padding: 1.1rem 1.2rem; border-radius: 14px; border: 1px solid var(--hairline); background: var(--panel); backdrop-filter: blur(8px); transition: border-color 0.25s, box-shadow 0.3s, transform 0.25s var(--ease); }
+      .stats .cell:hover { border-color: var(--accent); box-shadow: 0 0 0 4px var(--spot); transform: translateY(-3px); }
+      .stats .v { font-family: var(--display); font-size: clamp(1.7rem, 4.5vw, 2.3rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+      .stats .k { color: var(--muted); font-size: 0.8rem; margin-top: 0.3rem; }
 
-      .timeline { list-style: none; margin: 0; padding: 0; }
-      .timeline li { display: grid; grid-template-columns: 4rem 1fr; gap: 1.5rem; padding: 0.85rem 0; align-items: baseline; }
-      .timeline li + li { border-top: 1px solid var(--line); }
-      .timeline .year { font-family: var(--display); font-weight: 800; color: var(--accent); font-size: 1.05rem; letter-spacing: -0.02em; }
-      .timeline h3 { font-family: var(--display); font-weight: 600; font-size: 1.05rem; margin: 0 0 0.15rem; }
-      .timeline p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+      .timeline { list-style: none; margin: 0; padding: 0; position: relative; }
+      .timeline::before { content: ""; position: absolute; left: 0.42rem; top: 0.5rem; bottom: 0.5rem; width: 2px; background: var(--hairline); }
+      .timeline li { position: relative; padding: 0 0 1.4rem 1.9rem; }
+      .timeline li:last-child { padding-bottom: 0; }
+      .timeline li::before { content: ""; position: absolute; left: 0; top: 0.35rem; width: 0.9rem; height: 0.9rem; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease); }
+      .timeline li:hover::before { transform: scale(1.3); box-shadow: 0 0 12px var(--accent); }
+      .timeline .year { font-family: var(--display); font-weight: 700; color: var(--accent); font-size: 0.95rem; }
+      .timeline h3 { font-family: var(--display); font-weight: 600; font-size: 1.05rem; margin: 0.1rem 0 0.15rem; }
+      .timeline p { margin: 0; color: var(--muted); font-size: 0.96rem; }
 
-      .rows .row { padding: 0.95rem 0; }
-      .rows .row + .row { border-top: 1px solid var(--line); }
-      .row h3 { font-family: var(--display); font-weight: 600; font-size: 1.15rem; margin: 0 0 0.15rem; }
+      .rows .row { padding: 1.05rem 0; border-top: 1px solid var(--hairline); position: relative; transition: padding-left 0.3s var(--ease); }
+      .rows .row:first-of-type { border-top: none; }
+      .rows .row::before { content: ""; position: absolute; left: 0; top: 1rem; bottom: 1rem; width: 2px; background: var(--accent); transform: scaleY(0); transform-origin: top; transition: transform 0.3s var(--ease); border-radius: 2px; }
+      .rows .row:hover { padding-left: 1rem; }
+      .rows .row:hover::before { transform: scaleY(1); }
+      .row h3 { font-family: var(--display); font-weight: 600; font-size: 1.1rem; margin: 0 0 0.15rem; }
       .row .when { color: var(--accent); font-size: 0.85rem; margin: 0 0 0.45rem; }
       .row p { margin: 0; color: var(--muted); }
+      .row p a { color: var(--fg); }
 
-      .awards { list-style: none; margin: 0; padding: 0; }
-      .awards li { padding: 0.55rem 0; color: var(--muted); }
-      .awards li + li { border-top: 1px solid var(--line); }
+      .awards { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+      @media (min-width: 560px) { .awards { grid-template-columns: 1fr 1fr; } }
+      .awards li { padding: 0.6rem 0.9rem; border-radius: 10px; border: 1px solid var(--hairline); color: var(--muted); font-size: 0.94rem; background: var(--panel); transition: border-color 0.25s, transform 0.25s var(--ease); }
+      .awards li:hover { border-color: var(--accent); color: var(--fg); transform: translateY(-2px); }
 
-      footer { padding: 3rem 0 4rem; }
-      .foot { display: grid; gap: 0.75rem 3rem; }
-      @media (min-width: 720px) { .foot { grid-template-columns: 12rem 1fr; } }
-      .foot .big { font-family: var(--display); font-weight: 800; font-size: clamp(1.8rem, 5vw, 2.6rem); letter-spacing: -0.03em; margin: 0; }
-      .foot p { margin: 0 0 0.5rem; color: var(--muted); }
-      .foot a { text-decoration: none; }
-      .foot .fl { display: flex; gap: 1.5rem; margin-top: 0.5rem; }
+      footer { border-top: 1px solid var(--hairline); padding: 2.5rem 0 3.5rem; color: var(--muted); font-size: 0.95rem; }
+      footer a { color: var(--fg); }
+      footer a:hover { color: var(--accent); }
+      footer .fl { display: flex; gap: 1.25rem; margin: 0.75rem 0; }
 
-      .reveal { opacity: 0; transform: translateY(0.75rem); transition: opacity 0.6s ease, transform 0.6s ease; }
+      .reveal { opacity: 0; transform: translateY(0.9rem); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
       .reveal.vis { opacity: 1; transform: none; }
-      @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } html { scroll-behavior: auto; } }
+      @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } .dot { animation: none; } body::after { display: none; } html { scroll-behavior: auto; } }
     </style>
   </head>
   <body>
     <header>
       <div class="wrap bar">
-        <a class="logo" href="#top">Yan Levin</a>
+        <a class="logo" href="#top">
+          <svg viewBox="0 0 252 252" aria-hidden="true"><path fill="currentColor" d="M229.4,214.58c0,11.34-9.21,20.52-20.55,20.51l-117.33-.11c-2.66-.02-5.21-.49-7.64-1.48-9.37-3.58-14.91-14.5-12.23-24.2.17-.64.37-1.29.61-1.92,0,0,22.86-63.64,22.86-63.64L26.54,49.57c-6.68-9.17-4.66-22.01,4.51-28.69,9.17-6.67,22.01-4.65,28.68,4.51l52.17,71.64,23.93-66.63c3.8-10.58,15.47-16.08,26.05-12.28,10.59,3.81,16.09,15.47,12.28,26.05l-53.8,149.78,88.53.08c11.34.01,20.53,9.21,20.51,20.55Z"/></svg>
+          Yan Levin
+        </a>
         <nav>
           <a href="#about">About</a>
           <a href="#timeline">Timeline</a>
@@ -119,128 +153,139 @@
       </div>
     </header>
 
-    <main class="wrap">
-      <section class="hero" id="top">
+    <main class="wrap" id="top">
+      <section class="hero">
         <div class="hero-grid">
           <div>
+            <span class="status"><span class="dot"></span> Open to research, building &amp; hard problems</span>
             <h1>Building at the edge of math, code, and teaching.</h1>
             <p class="lede">Junior at Eastside Prep, research intern at UT Austin, math olympiad competitor, and co-founder of SocketHR.</p>
+            <div class="cta">
+              <a class="btn btn-accent" href="#work">See work</a>
+              <a class="btn" href="https://github.com/yl-2010" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </div>
           </div>
-          <figure class="portrait"><img src="../yan-levin.jpg" alt="Yan Levin" width="640" height="640" /></figure>
+          <figure class="portrait" id="tilt"><img src="../yan-levin.jpg" alt="Yan Levin" width="640" height="640" /></figure>
         </div>
       </section>
 
-      <section id="about">
-        <div class="block reveal">
-          <h2>About</h2>
-          <div class="body">
-            <p>I'm a junior at Eastside Preparatory School in Kirkland, WA. My time goes into competitive math, software research with Professor Milos Gligoric's group at UT Austin, debate, and teaching younger students.</p>
-            <p>Across those worlds I keep asking the same question: how do you make complex ideas clear enough to share?</p>
-          </div>
+      <section id="about" class="about reveal">
+        <h2>About</h2>
+        <p>I'm a junior at Eastside Preparatory School in Kirkland, WA. My time goes into competitive math, software research with Professor Milos Gligoric's group at UT Austin, debate, and teaching younger students.</p>
+        <p>Across those worlds I keep asking the same question: how do you make complex ideas clear enough to share?</p>
+      </section>
+
+      <section id="academics" class="reveal">
+        <h2>Academics</h2>
+        <div class="stats">
+          <div class="cell"><div class="v" data-count>3.98</div><div class="k">GPA</div></div>
+          <div class="cell"><div class="v" data-count>1580</div><div class="k">SAT</div></div>
+          <div class="cell"><div class="v" data-count>5</div><div class="k">AP CS A</div></div>
+          <div class="cell"><div class="v" data-count>5</div><div class="k">AP Calc AB</div></div>
         </div>
       </section>
 
-      <section id="academics">
-        <div class="block reveal">
-          <h2>Academics</h2>
-          <div class="stats">
-            <div><div class="v">3.98</div><div class="k">GPA</div></div>
-            <div><div class="v">1580</div><div class="k">SAT</div></div>
-            <div><div class="v">5</div><div class="k">AP CS A</div></div>
-            <div><div class="v">5</div><div class="k">AP Calc AB</div></div>
-          </div>
+      <section id="timeline" class="reveal">
+        <h2>Timeline</h2>
+        <ol class="timeline">
+          <li><span class="year">2018</span><h3>Math circle foundations</h3><p>Prime Factor and UW Math Circle; Math Kangaroo, up to 3rd nationally.</p></li>
+          <li><span class="year">2022</span><h3>First UW Math Hour Olympiad</h3><p>5th of ~100 — the start of five straight top-five finishes.</p></li>
+          <li><span class="year">2024</span><h3>Estore research begins</h3><p>Cypher graph storage in Java, coverage, and CI at the Engineering Software Lab.</p></li>
+          <li><span class="year">2025</span><h3>UT Austin &amp; SocketHR</h3><p>Summer intern on PLSemanticsBench; co-founded SocketHR as CTO.</p></li>
+          <li><span class="year">2026</span><h3>Deeper work, new rooms</h3><p>2nd at UW Math Hour, more Estore, and AI coursework at Cambridge.</p></li>
+        </ol>
+      </section>
+
+      <section id="work" class="reveal">
+        <h2>Research</h2>
+        <div class="rows">
+          <div class="row"><h3>PLSemanticsBench</h3><p class="when">Summer Research Intern · 2025</p><p>In-person internship with Professor Gligoric's group, studying the code capabilities of LLMs on <a href="https://github.com/EngineeringSoftware/PLSemanticsBench" target="_blank" rel="noopener noreferrer">PLSemanticsBench</a>.</p></div>
+          <div class="row"><h3>Estore</h3><p class="when">Research Project · 2024–2026</p><p>Led improvements to <a href="https://github.com/EngineeringSoftware/estore-internal" target="_blank" rel="noopener noreferrer">Estore</a>: Cypher graph storage in Java, coverage, styling, and CI.</p></div>
         </div>
       </section>
 
-      <section id="timeline">
-        <div class="block reveal">
-          <h2>Timeline</h2>
-          <ol class="timeline">
-            <li><span class="year">2018</span><div><h3>Math circle foundations</h3><p>Prime Factor and UW Math Circle; Math Kangaroo, up to 3rd nationally.</p></div></li>
-            <li><span class="year">2022</span><div><h3>First UW Math Hour Olympiad</h3><p>5th of ~100 — the start of five straight top-five finishes.</p></div></li>
-            <li><span class="year">2024</span><div><h3>Estore research begins</h3><p>Cypher graph storage in Java, coverage, and CI at the Engineering Software Lab.</p></div></li>
-            <li><span class="year">2025</span><div><h3>UT Austin &amp; SocketHR</h3><p>Summer intern on PLSemanticsBench; co-founded SocketHR as CTO.</p></div></li>
-            <li><span class="year">2026</span><div><h3>Deeper work, new rooms</h3><p>2nd at UW Math Hour, more Estore, and AI coursework at Cambridge.</p></div></li>
-          </ol>
+      <section class="reveal">
+        <h2>Building</h2>
+        <div class="rows">
+          <div class="row"><h3>SocketHR — Co-Founder &amp; CTO</h3><p>Led full-stack development for a startup helping recruiters evaluate applicants when résumés are flooded with AI noise. <a href="https://sockethr.com/" target="_blank" rel="noopener noreferrer">sockethr.com</a></p></div>
         </div>
       </section>
 
-      <section id="work">
-        <div class="block reveal">
-          <h2>Research</h2>
-          <div class="rows">
-            <div class="row"><h3>PLSemanticsBench</h3><p class="when">Summer Research Intern · 2025</p><p>In-person internship with Professor Gligoric's group, studying the code capabilities of LLMs on <a href="https://github.com/EngineeringSoftware/PLSemanticsBench" target="_blank" rel="noopener noreferrer">PLSemanticsBench</a>.</p></div>
-            <div class="row"><h3>Estore</h3><p class="when">Research Project · 2024–2026</p><p>Led improvements to <a href="https://github.com/EngineeringSoftware/estore-internal" target="_blank" rel="noopener noreferrer">Estore</a>: Cypher graph storage in Java, coverage, styling, and CI.</p></div>
-          </div>
+      <section class="reveal">
+        <h2>Math &amp; Teaching</h2>
+        <div class="rows">
+          <div class="row"><h3>UW Math Hour Olympiad</h3><p class="when">5 years · grades 6–10</p><p>Oral, proofs-based contest at UW. Top five every year out of ~100: 5th, 2nd, 4th, 3rd, and 2nd (2022–2026). <a href="https://sites.math.washington.edu/~mathcircle/olympiad/" target="_blank" rel="noopener noreferrer">Contest site</a></p></div>
+          <div class="row"><h3>Teaching Assistant</h3><p class="when">Prime Factor · Berkeley Math Circle</p><p>TA at <a href="https://www.pfmathcircle.org/MathCircles.html" target="_blank" rel="noopener noreferrer">Prime Factor</a> and grades 2–3 at the <a href="https://sumizdat.startlogic.com/bmc_elementary/summer-program-p.html" target="_blank" rel="noopener noreferrer">BMC Summer Camp</a>.</p></div>
+          <div class="row"><h3>Husky Math Academy</h3><p class="when">Grades 9–10</p><p>Advanced algebra, number theory, combinatorics, and olympiad proof prep through <a href="https://www.huskymath.org/" target="_blank" rel="noopener noreferrer">Husky Math Academy</a>.</p></div>
         </div>
       </section>
 
-      <section id="building">
-        <div class="block reveal">
-          <h2>Building</h2>
-          <div class="rows">
-            <div class="row"><h3>SocketHR — Co-Founder &amp; CTO</h3><p>Led full-stack development for a startup helping recruiters evaluate applicants when résumés are flooded with AI noise. <a href="https://sockethr.com/" target="_blank" rel="noopener noreferrer">sockethr.com</a></p></div>
-          </div>
-        </div>
+      <section class="reveal">
+        <h2>Debate</h2>
+        <ul class="awards">
+          <li>Open LD Octofinalist, Newport Knights Invitational</li>
+          <li>Open Impromptu Finalist, Newport Knights Invitational</li>
+          <li>Open SPAR Finalist, Auburn Riverside &amp; Puyallup</li>
+          <li>Open LD Quarterfinalist, Bellevue School District</li>
+          <li>Novice LD Semifinalist, Mount Vernon Invitational</li>
+        </ul>
       </section>
 
-      <section id="math">
-        <div class="block reveal">
-          <h2>Math &amp; Teaching</h2>
-          <div class="rows">
-            <div class="row"><h3>UW Math Hour Olympiad</h3><p class="when">5 years · grades 6–10</p><p>Oral, proofs-based contest at UW. Top five every year out of ~100: 5th, 2nd, 4th, 3rd, and 2nd (2022–2026). <a href="https://sites.math.washington.edu/~mathcircle/olympiad/" target="_blank" rel="noopener noreferrer">Contest site</a></p></div>
-            <div class="row"><h3>Teaching Assistant</h3><p class="when">Prime Factor · Berkeley Math Circle</p><p>TA at <a href="https://www.pfmathcircle.org/MathCircles.html" target="_blank" rel="noopener noreferrer">Prime Factor</a> and grades 2–3 at the <a href="https://sumizdat.startlogic.com/bmc_elementary/summer-program-p.html" target="_blank" rel="noopener noreferrer">BMC Summer Camp</a>.</p></div>
-            <div class="row"><h3>Husky Math Academy</h3><p class="when">Grades 9–10</p><p>Advanced algebra, number theory, combinatorics, and olympiad proof prep through <a href="https://www.huskymath.org/" target="_blank" rel="noopener noreferrer">Husky Math Academy</a>.</p></div>
-          </div>
-        </div>
-      </section>
-
-      <section id="debate">
-        <div class="block reveal">
-          <h2>Debate</h2>
-          <ul class="awards">
-            <li>Open LD Octofinalist, Newport Knights Invitational</li>
-            <li>Open Impromptu Finalist, Newport Knights Invitational</li>
-            <li>Open SPAR Finalist, Auburn Riverside &amp; Puyallup Invitationals</li>
-            <li>Open LD Quarterfinalist, Bellevue School District Invitational</li>
-            <li>Novice LD Semifinalist, Mount Vernon Invitational</li>
-          </ul>
-        </div>
-      </section>
-
-      <section id="more">
-        <div class="block reveal">
-          <h2>More</h2>
-          <div class="rows">
-            <div class="row"><h3>Environmental Club Co-Lead</h3><p>Built a program to measure waste-sorting accuracy and drove school-wide adoption via <a href="https://epsort.lovable.app/data" target="_blank" rel="noopener noreferrer">EP Sort</a>.</p></div>
-            <div class="row"><h3>South Asian Affinity Group Co-Lead</h3><p>Shaped a more inclusive club agenda and led weekly meetings.</p></div>
-            <div class="row"><h3>Volunteering</h3><p><a href="https://www.mathfest26.pfmathcircle.org/" target="_blank" rel="noopener noreferrer">Logic Land Math Festival</a> and classroom tech for refugee students via <a href="https://seattle-envelopes.org/" target="_blank" rel="noopener noreferrer">Seattle Envelopes</a>.</p></div>
-            <div class="row"><h3>Cambridge AI course</h3><p>Intensive AI coursework at Fitzwilliam College, Cambridge.</p></div>
-          </div>
+      <section class="reveal">
+        <h2>More</h2>
+        <div class="rows">
+          <div class="row"><h3>Environmental Club Co-Lead</h3><p>Built a program to measure waste-sorting accuracy and drove school-wide adoption via <a href="https://epsort.lovable.app/data" target="_blank" rel="noopener noreferrer">EP Sort</a>.</p></div>
+          <div class="row"><h3>South Asian Affinity Group Co-Lead</h3><p>Shaped a more inclusive club agenda and led weekly meetings.</p></div>
+          <div class="row"><h3>Volunteering</h3><p><a href="https://www.mathfest26.pfmathcircle.org/" target="_blank" rel="noopener noreferrer">Logic Land Math Festival</a> and classroom tech for refugee students via <a href="https://seattle-envelopes.org/" target="_blank" rel="noopener noreferrer">Seattle Envelopes</a>.</p></div>
+          <div class="row"><h3>Cambridge AI course</h3><p>Intensive AI coursework at Fitzwilliam College, Cambridge.</p></div>
         </div>
       </section>
     </main>
 
     <footer id="contact">
-      <div class="wrap foot">
-        <p class="big">Yan Levin</p>
-        <div>
-          <p><a href="mailto:yl-2010@outlook.com">yl-2010@outlook.com</a></p>
-          <p>Kirkland, WA · Open to research, building, and interesting problems.</p>
-          <p class="fl">
-            <a href="https://github.com/yl-2010" target="_blank" rel="noopener noreferrer">GitHub</a>
-            <a href="https://sockethr.com/" target="_blank" rel="noopener noreferrer">SocketHR</a>
-          </p>
-          <p>© 2026 Yan Levin</p>
-        </div>
+      <div class="wrap">
+        <p><a href="mailto:yl-2010@outlook.com">yl-2010@outlook.com</a></p>
+        <p class="fl">
+          <a href="https://github.com/yl-2010" target="_blank" rel="noopener noreferrer">GitHub</a>
+          <a href="https://sockethr.com/" target="_blank" rel="noopener noreferrer">SocketHR</a>
+        </p>
+        <p>© 2026 Yan Levin · Kirkland, WA</p>
       </div>
     </footer>
 
     <script>
+      const ease = (t) => 1 - Math.pow(1 - t, 3);
+      const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const hdr = document.querySelector("header");
+      addEventListener("scroll", () => hdr.classList.toggle("scrolled", scrollY > 8), { passive: true });
       const io = new IntersectionObserver((es) => {
-        es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("vis"); io.unobserve(e.target); } });
-      }, { threshold: 0.1 });
+        es.forEach((e) => { if (!e.isIntersecting) return; e.target.classList.add("vis");
+          e.target.querySelectorAll?.("[data-count]").forEach(countUp); io.unobserve(e.target); });
+      }, { threshold: 0.15 });
       document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+      function countUp(el) {
+        if (el.dataset.done) return; el.dataset.done = "1";
+        const raw = el.textContent.trim(); const dec = raw.includes("."); const target = Number(raw);
+        if (!isFinite(target) || rm) { el.textContent = raw; return; }
+        const dur = 1000, t0 = performance.now();
+        const tick = (now) => { const t = Math.min(1, (now - t0) / dur); const v = target * ease(t);
+          el.textContent = dec ? v.toFixed(2) : Math.round(v); if (t < 1) requestAnimationFrame(tick); else el.textContent = raw; };
+        el.textContent = dec ? "0.00" : "0"; requestAnimationFrame(tick);
+      }
+      if (!rm) {
+        const root = document.documentElement; let raf = 0, nx = innerWidth/2, ny = innerHeight*0.2;
+        addEventListener("pointermove", (e) => { nx = e.clientX; ny = e.clientY;
+          if (!raf) raf = requestAnimationFrame(() => { raf = 0; root.style.setProperty("--mx", nx+"px"); root.style.setProperty("--my", ny+"px"); }); }, { passive: true });
+        const tilt = document.getElementById("tilt");
+        if (tilt) { tilt.addEventListener("pointermove", (e) => { const r = tilt.getBoundingClientRect();
+            const x = (e.clientX-r.left)/r.width-0.5, y = (e.clientY-r.top)/r.height-0.5;
+            tilt.style.transform = `perspective(700px) rotateX(${-y*7}deg) rotateY(${x*7}deg)`; });
+          tilt.addEventListener("pointerleave", () => tilt.style.transform = ""); }
+        document.querySelectorAll(".btn").forEach((b) => {
+          b.addEventListener("pointermove", (e) => { const r = b.getBoundingClientRect();
+            b.style.transform = `translate(${(e.clientX-r.left-r.width/2)*0.12}px, ${(e.clientY-r.top-r.height/2)*0.18}px)`; });
+          b.addEventListener("pointerleave", () => b.style.transform = ""); });
+      }
     </script>
   </body>
 </html>

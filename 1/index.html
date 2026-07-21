@@ -3,218 +3,398 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
     <title>Yan Levin</title>
     <meta
       name="description"
       content="Yan Levin, junior at Eastside Prep in Kirkland. Math olympiad competitor, UT Austin research intern, and co-founder of SocketHR."
     />
-    <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Karla:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --bg: #ffffff;
-        --fg: #16181d;
-        --muted: #6b7280;
-        --line: rgba(0, 0, 0, 0.1);
-        --hover: rgba(0, 0, 0, 0.035);
-        --font: "Inter", system-ui, sans-serif;
+        --bg-0: #e9edf1;
+        --bg-1: #dfe5ea;
+        --fg: #14181d;
+        --muted: #5a6470;
+        --accent: #1f6f63;
+        --hairline: rgba(20, 24, 29, 0.12);
+        --panel-bg: rgba(255, 255, 255, 0.5);
+        --panel-brd: rgba(255, 255, 255, 0.6);
+        --rim: rgba(255, 255, 255, 0.75);
+        --bloom-a: rgba(31, 111, 99, 0.22);
+        --bloom-b: rgba(214, 178, 120, 0.2);
+        --bloom-c: rgba(90, 130, 190, 0.16);
+        /* Liquid Glass tokens — copied from main site (light) */
+        --lg-tint-rgb: 255, 255, 255;
+        --lg-tint-opacity: 0.06;
+        --lg-shadow-blur: 20px;
+        --lg-shadow-spread: -5px;
+        --lg-shadow-color: rgba(255, 255, 255, 0.45);
+        --lg-outer-shadow-blur: 24px;
+        --lg-outer-shadow: rgba(0, 0, 0, 0.18);
+        --lg-fallback-tint: 0.2;
+        --lg-fallback-shine: rgba(255, 255, 255, 0.5);
+        --display: "Bricolage Grotesque", Georgia, serif;
+        --body: "Karla", ui-sans-serif, sans-serif;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --pointer-x: 50%;
+        --pointer-y: 30%;
       }
       @media (prefers-color-scheme: dark) {
         :root {
-          --bg: #0d0e11;
-          --fg: #eceef2;
-          --muted: #9aa0ac;
-          --line: rgba(255, 255, 255, 0.12);
-          --hover: rgba(255, 255, 255, 0.05);
+          --bg-0: #0b0e11;
+          --bg-1: #10151a;
+          --fg: #e9eef2;
+          --muted: #98a2ad;
+          --accent: #74c3b5;
+          --hairline: rgba(233, 238, 242, 0.12);
+          --panel-bg: rgba(26, 31, 37, 0.45);
+          --panel-brd: rgba(255, 255, 255, 0.1);
+          --rim: rgba(255, 255, 255, 0.16);
+          --bloom-a: rgba(64, 150, 138, 0.2);
+          --bloom-b: rgba(150, 120, 70, 0.16);
+          --bloom-c: rgba(70, 100, 160, 0.16);
+          --lg-tint-rgb: 18, 24, 22;
+          --lg-tint-opacity: 0.28;
+          --lg-shadow-blur: 22px;
+          --lg-shadow-spread: -4px;
+          --lg-shadow-color: rgba(255, 255, 255, 0.28);
+          --lg-outer-shadow-blur: 28px;
+          --lg-outer-shadow: rgba(0, 0, 0, 0.5);
+          --lg-fallback-tint: 0.14;
+          --lg-fallback-shine: rgba(255, 255, 255, 0.3);
         }
       }
       * { box-sizing: border-box; }
       html { scroll-behavior: smooth; }
       body {
-        margin: 0; background: var(--bg); color: var(--fg);
-        font-family: var(--font); font-size: 1.02rem; line-height: 1.65;
-        -webkit-font-smoothing: antialiased;
+        margin: 0; color: var(--fg);
+        font-family: var(--body); font-size: 1.06rem; line-height: 1.65;
+        -webkit-font-smoothing: antialiased; min-height: 100vh;
+        background: linear-gradient(180deg, var(--bg-0), var(--bg-1));
+      }
+      /* Calm, tasteful background for the glass to refract (no neon gradients) */
+      body::before {
+        content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+        background:
+          radial-gradient(42rem 42rem at 8% 4%, var(--bloom-a), transparent 60%),
+          radial-gradient(38rem 38rem at 96% 30%, var(--bloom-b), transparent 62%),
+          radial-gradient(46rem 46rem at 60% 100%, var(--bloom-c), transparent 60%);
+      }
+      /* soft pointer-follow light */
+      body::after {
+        content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+        background: radial-gradient(24rem 24rem at var(--pointer-x) var(--pointer-y), rgba(255,255,255,0.14), transparent 60%);
+        transition: opacity 0.4s var(--ease);
       }
       img { max-width: 100%; display: block; }
-      a { color: inherit; text-underline-offset: 0.2em; text-decoration-color: var(--muted); }
-      .wrap { width: min(46rem, calc(100% - 2.5rem)); margin: 0 auto; }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+      .wrap { width: min(52rem, calc(100% - 2.5rem)); margin: 0 auto; }
 
-      header { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 82%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line); }
-      .bar { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 0; }
-      .logo { font-weight: 600; letter-spacing: -0.01em; text-decoration: none; }
-      nav { display: flex; gap: 1.4rem; }
-      nav a { color: var(--muted); text-decoration: none; font-size: 0.9rem; }
-      nav a:hover { color: var(--fg); }
-      @media (max-width: 560px) { nav { display: none; } }
+      /* ---- Floating Liquid Glass squircle logo (returns to top) ---- */
+      .logo-orb {
+        position: fixed; top: clamp(1rem, 2.5vw, 1.6rem); left: clamp(1rem, 2.5vw, 1.6rem);
+        z-index: 80; width: 60px; height: 60px;
+        --lg-radius: 21px; --lg-filter: none;
+        border-radius: var(--lg-radius); isolation: isolate;
+        display: grid; place-items: center; cursor: pointer;
+        color: var(--fg);
+        box-shadow: 0 6px var(--lg-outer-shadow-blur) var(--lg-outer-shadow);
+        transition: transform 0.4s var(--ease), box-shadow 0.4s var(--ease);
+      }
+      .logo-orb:hover { transform: translateY(-2px) scale(1.05); }
+      .logo-orb::before {
+        content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit;
+        box-shadow: inset 0 0 var(--lg-shadow-blur) var(--lg-shadow-spread) var(--lg-shadow-color);
+        background-color: rgba(var(--lg-tint-rgb), var(--lg-tint-opacity));
+        pointer-events: none;
+      }
+      .logo-orb.lg-refraction::after {
+        content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+        backdrop-filter: var(--lg-filter); -webkit-backdrop-filter: var(--lg-filter);
+        isolation: isolate; pointer-events: none;
+      }
+      .logo-orb.lg-fallback {
+        background-color: rgba(var(--lg-tint-rgb), var(--lg-fallback-tint));
+        backdrop-filter: blur(10px) saturate(1.5); -webkit-backdrop-filter: blur(10px) saturate(1.5);
+      }
+      .logo-orb svg { position: relative; z-index: 2; width: 55%; height: 55%; }
+      @media (prefers-color-scheme: dark) {
+        .logo-orb.lg-refraction::after { backdrop-filter: var(--lg-filter) brightness(0.92) saturate(1.15); -webkit-backdrop-filter: var(--lg-filter) brightness(0.92) saturate(1.15); }
+      }
 
-      .hero { padding: clamp(3.5rem, 12vh, 7rem) 0 clamp(2.5rem, 7vh, 4rem); }
-      .portrait { width: 96px; height: 96px; border-radius: 50%; overflow: hidden; margin: 0 0 1.75rem; }
+      /* ambient glass orb, low-key */
+      .amb-orb {
+        position: fixed; right: clamp(1rem, 3vw, 2rem); bottom: clamp(1rem, 3vw, 2rem);
+        z-index: 5; width: 6.5rem; height: 6.5rem; --lg-radius: 50%; --lg-filter: none;
+        border-radius: 50%; isolation: isolate; pointer-events: none;
+        box-shadow: 0 6px var(--lg-outer-shadow-blur) var(--lg-outer-shadow);
+      }
+      .amb-orb::before {
+        content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit;
+        box-shadow: inset 0 0 var(--lg-shadow-blur) var(--lg-shadow-spread) var(--lg-shadow-color);
+        background-color: rgba(var(--lg-tint-rgb), var(--lg-tint-opacity)); pointer-events: none;
+      }
+      .amb-orb.lg-refraction::after {
+        content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+        backdrop-filter: var(--lg-filter); -webkit-backdrop-filter: var(--lg-filter); pointer-events: none;
+      }
+      .amb-orb.lg-fallback { background-color: rgba(var(--lg-tint-rgb), var(--lg-fallback-tint)); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+      @media (max-width: 620px) { .amb-orb { display: none; } }
+
+      /* ---- Frosted glass panels ---- */
+      .panel {
+        position: relative; isolation: isolate; border-radius: 26px;
+        background: var(--panel-bg);
+        backdrop-filter: blur(22px) saturate(1.8); -webkit-backdrop-filter: blur(22px) saturate(1.8);
+        border: 1px solid var(--panel-brd);
+        box-shadow: 0 10px 30px var(--lg-outer-shadow), inset 0 1px 0 var(--rim);
+        padding: clamp(1.5rem, 4vw, 2.25rem);
+      }
+
+      main { padding: clamp(5rem, 12vh, 7.5rem) 0 3rem; }
+
+      .hero { position: relative; padding: clamp(1rem, 4vh, 2rem) 0 clamp(2rem, 6vh, 3.5rem); }
+      .hero .ghost {
+        position: absolute; left: -0.04em; top: -0.35em; z-index: -1; margin: 0;
+        font-family: var(--display); font-weight: 700; letter-spacing: -0.04em;
+        font-size: clamp(6rem, 26vw, 18rem); line-height: 0.8; color: var(--fg);
+        opacity: 0.05; pointer-events: none; user-select: none;
+      }
+      .hero-top { display: flex; align-items: center; gap: clamp(1.25rem, 4vw, 2rem); flex-wrap: wrap; }
+      .portrait {
+        width: clamp(150px, 34vw, 210px); aspect-ratio: 1; border-radius: 30px; overflow: hidden;
+        flex: none; position: relative; isolation: isolate;
+        box-shadow: 0 16px 40px var(--lg-outer-shadow), inset 0 1px 0 var(--rim);
+        border: 1px solid var(--panel-brd);
+        transition: transform 0.4s var(--ease); will-change: transform;
+      }
       .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 42% 16%; }
-      h1 { font-weight: 700; font-size: clamp(1.9rem, 5vw, 2.9rem); line-height: 1.1; letter-spacing: -0.03em; margin: 0 0 1rem; max-width: 18ch; }
-      .lede { color: var(--muted); font-size: 1.12rem; margin: 0 0 1.75rem; max-width: 40ch; }
-      .links { display: flex; gap: 1.5rem; font-size: 0.95rem; }
-      .links a { text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 2px; }
-      .links a:hover { border-color: var(--fg); }
+      .hero h1 { font-family: var(--display); font-weight: 700; font-size: clamp(2rem, 6vw, 3.4rem); line-height: 1.02; letter-spacing: -0.035em; margin: 0.25rem 0 0; }
+      .hero .name { display: block; font-size: 0.95rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.5rem; }
+      .lede { color: var(--muted); font-size: 1.15rem; margin: 1.1rem 0 1.6rem; max-width: 44ch; }
+      .cta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+      .btn {
+        position: relative; isolation: isolate; display: inline-flex; align-items: center; gap: 0.5rem;
+        padding: 0.7rem 1.3rem; border-radius: 999px; font-weight: 600; font-size: 0.95rem;
+        color: var(--fg); background: var(--panel-bg); border: 1px solid var(--panel-brd);
+        backdrop-filter: blur(16px) saturate(1.7); -webkit-backdrop-filter: blur(16px) saturate(1.7);
+        box-shadow: 0 6px 18px var(--lg-outer-shadow), inset 0 1px 0 var(--rim);
+        transition: transform 0.15s var(--ease), box-shadow 0.3s var(--ease);
+      }
+      .btn:hover { text-decoration: none; box-shadow: 0 10px 26px var(--lg-outer-shadow), inset 0 1px 0 var(--rim); }
+      .btn-accent { color: #fff; background: color-mix(in srgb, var(--accent) 88%, transparent); border-color: color-mix(in srgb, var(--accent) 60%, white); }
 
-      section { padding: clamp(2.5rem, 7vh, 4rem) 0; border-top: 1px solid var(--line); }
-      h2 { font-weight: 600; font-size: 0.82rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin: 0 0 1.75rem; }
-      .about p { margin: 0 0 1rem; max-width: 60ch; }
-      .about p:last-child { margin-bottom: 0; }
+      section.block { margin-top: clamp(1rem, 3vh, 1.5rem); }
+      h2 { font-family: var(--display); font-weight: 600; font-size: 0.82rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin: 0 0 1.25rem; }
+      .about p { margin: 0 0 0.9rem; }
+      .about p:last-child { margin: 0; }
 
-      .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-      @media (min-width: 560px) { .stats { grid-template-columns: repeat(4, 1fr); } }
-      .stats .v { font-size: 1.9rem; font-weight: 700; letter-spacing: -0.02em; }
-      .stats .k { color: var(--muted); font-size: 0.85rem; }
+      .stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.25rem; }
+      @media (min-width: 560px) { .stats { grid-template-columns: repeat(4,1fr); } }
+      .stats .v { font-family: var(--display); font-size: clamp(1.8rem, 4.5vw, 2.4rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+      .stats .k { color: var(--muted); font-size: 0.82rem; margin-top: 0.3rem; }
 
-      .timeline { list-style: none; margin: 0; padding: 0; }
-      .timeline li { display: grid; grid-template-columns: 3.5rem 1fr; gap: 1.25rem; padding: 1rem 0; }
-      .timeline li + li { border-top: 1px solid var(--line); }
-      .timeline .year { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 0.95rem; padding-top: 0.05rem; }
-      .timeline h3 { font-weight: 600; font-size: 1rem; margin: 0 0 0.15rem; }
-      .timeline p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+      .timeline { list-style: none; margin: 0; padding: 0; position: relative; }
+      .timeline::before { content: ""; position: absolute; left: 0.42rem; top: 0.5rem; bottom: 0.5rem; width: 2px; background: linear-gradient(var(--accent), transparent); opacity: 0.5; }
+      .timeline li { position: relative; padding: 0 0 1.4rem 1.9rem; }
+      .timeline li:last-child { padding-bottom: 0; }
+      .timeline li::before { content: ""; position: absolute; left: 0; top: 0.35rem; width: 0.9rem; height: 0.9rem; border-radius: 50%; background: var(--bg-0); border: 2px solid var(--accent); transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease); }
+      .timeline li:hover::before { transform: scale(1.25); box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 22%, transparent); }
+      .timeline .year { font-family: var(--display); font-weight: 700; color: var(--accent); font-size: 0.95rem; }
+      .timeline h3 { font-family: var(--display); font-weight: 600; font-size: 1.05rem; margin: 0.1rem 0 0.15rem; }
+      .timeline p { margin: 0; color: var(--muted); font-size: 0.96rem; }
 
-      .rows { display: grid; gap: 0; }
-      .row { padding: 1.25rem 0; }
-      .row + .row { border-top: 1px solid var(--line); }
-      .row h3 { font-weight: 600; font-size: 1.05rem; margin: 0 0 0.2rem; }
-      .row .when { color: var(--muted); font-size: 0.88rem; margin: 0 0 0.5rem; }
+      .rows .row { padding: 1rem 0; border-top: 1px solid var(--hairline); transition: padding-left 0.3s var(--ease); }
+      .rows .row:first-of-type { border-top: none; }
+      .rows .row:hover { padding-left: 0.5rem; }
+      .row h3 { font-family: var(--display); font-weight: 600; font-size: 1.1rem; margin: 0 0 0.15rem; }
+      .row .when { color: var(--accent); font-size: 0.86rem; margin: 0 0 0.45rem; }
       .row p { margin: 0; color: var(--muted); }
       .row p a { color: var(--fg); }
 
-      .awards { list-style: none; margin: 0; padding: 0; }
-      .awards li { padding: 0.5rem 0; color: var(--muted); }
-      .awards li + li { border-top: 1px solid var(--line); }
+      .awards { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+      @media (min-width: 560px) { .awards { grid-template-columns: 1fr 1fr; } }
+      .awards li { padding: 0.6rem 0.9rem; border-radius: 12px; color: var(--muted); font-size: 0.95rem; background: color-mix(in srgb, var(--fg) 4%, transparent); transition: transform 0.25s var(--ease); }
+      .awards li:hover { transform: translateY(-2px); color: var(--fg); }
 
-      footer { border-top: 1px solid var(--line); padding: 2.5rem 0 3.5rem; color: var(--muted); font-size: 0.95rem; }
-      footer a { color: var(--fg); text-decoration: none; }
+      footer { color: var(--muted); font-size: 0.95rem; text-align: left; margin-top: 1.25rem; }
+      footer a { color: var(--fg); }
       footer .fl { display: flex; gap: 1.25rem; margin: 0.75rem 0; }
-      footer a:hover { text-decoration: underline; }
 
-      .reveal { opacity: 0; transform: translateY(0.75rem); transition: opacity 0.6s ease, transform 0.6s ease; }
+      .reveal { opacity: 0; transform: translateY(1rem); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
       .reveal.vis { opacity: 1; transform: none; }
-      @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } html { scroll-behavior: auto; } }
+      @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } html { scroll-behavior: auto; } body::after { display: none; } }
     </style>
   </head>
   <body>
-    <header>
-      <div class="wrap bar">
-        <a class="logo" href="#top">Yan Levin</a>
-        <nav>
-          <a href="#about">About</a>
-          <a href="#timeline">Timeline</a>
-          <a href="#work">Work</a>
-          <a href="https://github.com/yl-2010" target="_blank" rel="noopener noreferrer">GitHub</a>
-        </nav>
-      </div>
-    </header>
+    <a class="logo-orb" data-liquid-glass="squircle" data-filter-id="lg-logo" href="#top" aria-label="Back to top">
+      <svg viewBox="0 0 252 252" aria-hidden="true"><path fill="currentColor" d="M229.4,214.58c0,11.34-9.21,20.52-20.55,20.51l-117.33-.11c-2.66-.02-5.21-.49-7.64-1.48-9.37-3.58-14.91-14.5-12.23-24.2.17-.64.37-1.29.61-1.92,0,0,22.86-63.64,22.86-63.64L26.54,49.57c-6.68-9.17-4.66-22.01,4.51-28.69,9.17-6.67,22.01-4.65,28.68,4.51l52.17,71.64,23.93-66.63c3.8-10.58,15.47-16.08,26.05-12.28,10.59,3.81,16.09,15.47,12.28,26.05l-53.8,149.78,88.53.08c11.34.01,20.53,9.21,20.51,20.55Z"/></svg>
+    </a>
+    <div class="amb-orb" data-liquid-glass="circle" data-filter-id="lg-amb" aria-hidden="true"></div>
 
-    <main class="wrap">
-      <section class="hero" id="top">
-        <figure class="portrait"><img src="../yan-levin.jpg" alt="Yan Levin" width="640" height="640" /></figure>
-        <h1>Building at the edge of math, code, and teaching.</h1>
+    <main class="wrap" id="top">
+      <section class="hero">
+        <p class="ghost" aria-hidden="true">YL</p>
+        <div class="hero-top">
+          <figure class="portrait" id="tilt"><img src="../yan-levin.jpg" alt="Yan Levin" width="640" height="640" /></figure>
+          <div>
+            <span class="name">Yan Levin</span>
+            <h1>Building at the edge of math, code, and teaching.</h1>
+          </div>
+        </div>
         <p class="lede">Junior at Eastside Prep, research intern at UT Austin, math olympiad competitor, and co-founder of SocketHR.</p>
-        <div class="links">
-          <a href="#work">Work</a>
-          <a href="https://github.com/yl-2010" target="_blank" rel="noopener noreferrer">GitHub</a>
-          <a href="mailto:yl-2010@outlook.com">Email</a>
+        <div class="cta">
+          <a class="btn btn-accent" href="#work">See work</a>
+          <a class="btn" href="https://github.com/yl-2010" target="_blank" rel="noopener noreferrer">GitHub</a>
         </div>
       </section>
 
-      <section id="about" class="about reveal">
-        <h2>About</h2>
-        <p>I'm a junior at Eastside Preparatory School in Kirkland, WA. My time goes into competitive math, software research with Professor Milos Gligoric's group at UT Austin, debate, and teaching younger students.</p>
-        <p>Across those worlds I keep asking the same question: how do you make complex ideas clear enough to share?</p>
-      </section>
-
-      <section id="academics" class="reveal">
-        <h2>Academics</h2>
-        <div class="stats">
-          <div><div class="v">3.98</div><div class="k">GPA</div></div>
-          <div><div class="v">1580</div><div class="k">SAT</div></div>
-          <div><div class="v">5</div><div class="k">AP CS A</div></div>
-          <div><div class="v">5</div><div class="k">AP Calc AB</div></div>
+      <section class="block reveal">
+        <div class="panel about">
+          <h2>About</h2>
+          <p>I'm a junior at Eastside Preparatory School in Kirkland, WA. My time goes into competitive math, software research with Professor Milos Gligoric's group at UT Austin, debate, and teaching younger students.</p>
+          <p>Across those worlds I keep asking the same question: how do you make complex ideas clear enough to share?</p>
         </div>
       </section>
 
-      <section id="timeline" class="reveal">
-        <h2>Timeline</h2>
-        <ol class="timeline">
-          <li><span class="year">2018</span><div><h3>Math circle foundations</h3><p>Prime Factor and UW Math Circle; Math Kangaroo, up to 3rd nationally.</p></div></li>
-          <li><span class="year">2022</span><div><h3>First UW Math Hour Olympiad</h3><p>5th of ~100 — the start of five straight top-five finishes.</p></div></li>
-          <li><span class="year">2024</span><div><h3>Estore research begins</h3><p>Cypher graph storage in Java, coverage, and CI at the Engineering Software Lab.</p></div></li>
-          <li><span class="year">2025</span><div><h3>UT Austin &amp; SocketHR</h3><p>Summer intern on PLSemanticsBench; co-founded SocketHR as CTO.</p></div></li>
-          <li><span class="year">2026</span><div><h3>Deeper work, new rooms</h3><p>2nd at UW Math Hour, more Estore, and AI coursework at Cambridge.</p></div></li>
-        </ol>
+      <section class="block reveal">
+        <div class="panel">
+          <h2>Academics</h2>
+          <div class="stats">
+            <div><div class="v" data-count>3.98</div><div class="k">GPA</div></div>
+            <div><div class="v" data-count>1580</div><div class="k">SAT</div></div>
+            <div><div class="v" data-count>5</div><div class="k">AP CS A</div></div>
+            <div><div class="v" data-count>5</div><div class="k">AP Calc AB</div></div>
+          </div>
+        </div>
       </section>
 
-      <section id="work" class="reveal">
-        <h2>Research</h2>
-        <div class="rows">
+      <section class="block reveal" id="timeline">
+        <div class="panel">
+          <h2>Timeline</h2>
+          <ol class="timeline">
+            <li><span class="year">2018</span><h3>Math circle foundations</h3><p>Prime Factor and UW Math Circle; Math Kangaroo, up to 3rd nationally.</p></li>
+            <li><span class="year">2022</span><h3>First UW Math Hour Olympiad</h3><p>5th of ~100 — the start of five straight top-five finishes.</p></li>
+            <li><span class="year">2024</span><h3>Estore research begins</h3><p>Cypher graph storage in Java, coverage, and CI at the Engineering Software Lab.</p></li>
+            <li><span class="year">2025</span><h3>UT Austin &amp; SocketHR</h3><p>Summer intern on PLSemanticsBench; co-founded SocketHR as CTO.</p></li>
+            <li><span class="year">2026</span><h3>Deeper work, new rooms</h3><p>2nd at UW Math Hour, more Estore, and AI coursework at Cambridge.</p></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="block reveal" id="work">
+        <div class="panel rows">
+          <h2>Research</h2>
           <div class="row"><h3>PLSemanticsBench</h3><p class="when">Summer Research Intern · 2025</p><p>In-person internship with Professor Gligoric's group, studying the code capabilities of LLMs on <a href="https://github.com/EngineeringSoftware/PLSemanticsBench" target="_blank" rel="noopener noreferrer">PLSemanticsBench</a>.</p></div>
-          <div class="row"><h3>Estore</h3><p class="when">Research Project · 2024–2026</p><p>Led improvements to <a href="https://github.com/EngineeringSoftware/estore-internal" target="_blank" rel="noopener noreferrer">Estore</a>: Cypher graph storage in Java, coverage, styling, and CI, with in-person weeks the following summer.</p></div>
+          <div class="row"><h3>Estore</h3><p class="when">Research Project · 2024–2026</p><p>Led improvements to <a href="https://github.com/EngineeringSoftware/estore-internal" target="_blank" rel="noopener noreferrer">Estore</a>: Cypher graph storage in Java, coverage, styling, and CI.</p></div>
         </div>
       </section>
 
-      <section id="building" class="reveal">
-        <h2>Building</h2>
-        <div class="rows">
+      <section class="block reveal">
+        <div class="panel rows">
+          <h2>Building</h2>
           <div class="row"><h3>SocketHR — Co-Founder &amp; CTO</h3><p>Led full-stack development for a startup helping recruiters evaluate applicants when résumés are flooded with AI noise. <a href="https://sockethr.com/" target="_blank" rel="noopener noreferrer">sockethr.com</a></p></div>
         </div>
       </section>
 
-      <section id="math" class="reveal">
-        <h2>Math &amp; Teaching</h2>
-        <div class="rows">
+      <section class="block reveal">
+        <div class="panel rows">
+          <h2>Math &amp; Teaching</h2>
           <div class="row"><h3>UW Math Hour Olympiad</h3><p class="when">5 years · grades 6–10</p><p>Oral, proofs-based contest at UW. Top five every year out of ~100: 5th, 2nd, 4th, 3rd, and 2nd (2022–2026). <a href="https://sites.math.washington.edu/~mathcircle/olympiad/" target="_blank" rel="noopener noreferrer">Contest site</a></p></div>
           <div class="row"><h3>Teaching Assistant</h3><p class="when">Prime Factor · Berkeley Math Circle</p><p>TA at <a href="https://www.pfmathcircle.org/MathCircles.html" target="_blank" rel="noopener noreferrer">Prime Factor</a> and grades 2–3 at the <a href="https://sumizdat.startlogic.com/bmc_elementary/summer-program-p.html" target="_blank" rel="noopener noreferrer">BMC Summer Camp</a>.</p></div>
           <div class="row"><h3>Husky Math Academy</h3><p class="when">Grades 9–10</p><p>Advanced algebra, number theory, combinatorics, and olympiad proof prep through <a href="https://www.huskymath.org/" target="_blank" rel="noopener noreferrer">Husky Math Academy</a>.</p></div>
         </div>
       </section>
 
-      <section id="debate" class="reveal">
-        <h2>Debate</h2>
-        <ul class="awards">
-          <li>Open LD Octofinalist, Newport Knights Invitational</li>
-          <li>Open Impromptu Finalist, Newport Knights Invitational</li>
-          <li>Open SPAR Finalist, Auburn Riverside &amp; Puyallup Invitationals</li>
-          <li>Open LD Quarterfinalist, Bellevue School District Invitational</li>
-          <li>Novice LD Semifinalist, Mount Vernon Invitational</li>
-        </ul>
+      <section class="block reveal">
+        <div class="panel">
+          <h2>Debate</h2>
+          <ul class="awards">
+            <li>Open LD Octofinalist, Newport Knights Invitational</li>
+            <li>Open Impromptu Finalist, Newport Knights Invitational</li>
+            <li>Open SPAR Finalist, Auburn Riverside &amp; Puyallup</li>
+            <li>Open LD Quarterfinalist, Bellevue School District</li>
+            <li>Novice LD Semifinalist, Mount Vernon Invitational</li>
+          </ul>
+        </div>
       </section>
 
-      <section id="more" class="reveal">
-        <h2>More</h2>
-        <div class="rows">
+      <section class="block reveal">
+        <div class="panel rows">
+          <h2>More</h2>
           <div class="row"><h3>Environmental Club Co-Lead</h3><p>Built a program to measure waste-sorting accuracy and drove school-wide adoption via <a href="https://epsort.lovable.app/data" target="_blank" rel="noopener noreferrer">EP Sort</a>.</p></div>
           <div class="row"><h3>South Asian Affinity Group Co-Lead</h3><p>Shaped a more inclusive club agenda and led weekly meetings.</p></div>
           <div class="row"><h3>Volunteering</h3><p><a href="https://www.mathfest26.pfmathcircle.org/" target="_blank" rel="noopener noreferrer">Logic Land Math Festival</a> and classroom tech for refugee students via <a href="https://seattle-envelopes.org/" target="_blank" rel="noopener noreferrer">Seattle Envelopes</a>.</p></div>
           <div class="row"><h3>Cambridge AI course</h3><p>Intensive AI coursework at Fitzwilliam College, Cambridge.</p></div>
         </div>
       </section>
-    </main>
 
-    <footer id="contact">
-      <div class="wrap">
+      <footer id="contact">
         <p><a href="mailto:yl-2010@outlook.com">yl-2010@outlook.com</a></p>
         <p class="fl">
           <a href="https://github.com/yl-2010" target="_blank" rel="noopener noreferrer">GitHub</a>
           <a href="https://sockethr.com/" target="_blank" rel="noopener noreferrer">SocketHR</a>
         </p>
         <p>© 2026 Yan Levin · Kirkland, WA</p>
-      </div>
-    </footer>
+      </footer>
+    </main>
 
+    <svg class="liquid-glass-svg" xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false" color-interpolation-filters="sRGB" style="position:absolute;width:0;height:0;overflow:hidden;pointer-events:none;">
+      <defs id="liquid-glass-defs"></defs>
+    </svg>
+
+    <script src="../liquid-glass.js"></script>
     <script>
+      const ease = (t) => 1 - Math.pow(1 - t, 3);
+      const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
       const io = new IntersectionObserver((es) => {
-        es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("vis"); io.unobserve(e.target); } });
-      }, { threshold: 0.12 });
+        es.forEach((e) => {
+          if (!e.isIntersecting) return;
+          e.target.classList.add("vis");
+          e.target.querySelectorAll?.("[data-count]").forEach(countUp);
+          io.unobserve(e.target);
+        });
+      }, { threshold: 0.14 });
       document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+
+      function countUp(el) {
+        if (el.dataset.done) return; el.dataset.done = "1";
+        const raw = el.textContent.trim(); const dec = raw.includes("."); const target = Number(raw);
+        if (!isFinite(target) || rm) { el.textContent = raw; return; }
+        const dur = 1000, t0 = performance.now();
+        const tick = (now) => { const t = Math.min(1, (now - t0) / dur); const v = target * ease(t);
+          el.textContent = dec ? v.toFixed(2) : Math.round(v); if (t < 1) requestAnimationFrame(tick); else el.textContent = raw; };
+        el.textContent = dec ? "0.00" : "0"; requestAnimationFrame(tick);
+      }
+
+      if (!rm) {
+        const root = document.documentElement; let raf = 0, nx = innerWidth/2, ny = innerHeight*0.3;
+        addEventListener("pointermove", (e) => { nx = e.clientX; ny = e.clientY;
+          if (!raf) raf = requestAnimationFrame(() => { raf = 0; root.style.setProperty("--pointer-x", nx+"px"); root.style.setProperty("--pointer-y", ny+"px"); }); }, { passive: true });
+
+        const tilt = document.getElementById("tilt");
+        if (tilt) {
+          tilt.style.transformStyle = "preserve-3d";
+          tilt.addEventListener("pointermove", (e) => { const r = tilt.getBoundingClientRect();
+            const x = (e.clientX - r.left)/r.width - 0.5, y = (e.clientY - r.top)/r.height - 0.5;
+            tilt.style.transform = `perspective(700px) rotateX(${-y*8}deg) rotateY(${x*8}deg) translateY(-2px)`; });
+          tilt.addEventListener("pointerleave", () => tilt.style.transform = "");
+        }
+        document.querySelectorAll(".btn").forEach((b) => {
+          b.addEventListener("pointermove", (e) => { const r = b.getBoundingClientRect();
+            b.style.transform = `translate(${(e.clientX-r.left-r.width/2)*0.12}px, ${(e.clientY-r.top-r.height/2)*0.18 - 1}px)`; });
+          b.addEventListener("pointerleave", () => b.style.transform = "");
+        });
+      }
     </script>
   </body>
 </html>

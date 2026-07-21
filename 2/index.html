@@ -3,141 +3,172 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark" />
     <title>Yan Levin</title>
     <meta
       name="description"
       content="Yan Levin, junior at Eastside Prep in Kirkland. Math olympiad competitor, UT Austin research intern, and co-founder of SocketHR."
     />
-    <meta name="color-scheme" content="light dark" />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Karla:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --fg: #1c1c1e;
-        --muted: #6e6e73;
-        --accent: #0a84ff;
-        --glass-bg: rgba(255, 255, 255, 0.55);
-        --glass-brd: rgba(255, 255, 255, 0.7);
-        --glass-hi: rgba(255, 255, 255, 0.9);
-        --glass-sh: rgba(31, 38, 60, 0.14);
-        --tint-a: rgba(10, 132, 255, 0.16);
-        --tint-b: rgba(255, 149, 179, 0.14);
-        --tint-c: rgba(120, 220, 190, 0.12);
-        --page-a: #eef1f6;
-        --page-b: #e7ebf2;
-        --font: "Inter", system-ui, -apple-system, sans-serif;
+        --bg: #f4f0ea;
+        --fg: #22201c;
+        --muted: #6a6258;
+        --accent: #bf4d2c;
+        --hairline: rgba(34, 32, 28, 0.13);
+        --panel-bg: rgba(255, 253, 250, 0.55);
+        --panel-brd: rgba(255, 255, 255, 0.6);
+        --rim: rgba(255, 255, 255, 0.7);
+        --lg-tint-rgb: 255, 255, 255;
+        --lg-tint-opacity: 0.06;
+        --lg-shadow-blur: 20px;
+        --lg-shadow-spread: -5px;
+        --lg-shadow-color: rgba(255, 255, 255, 0.45);
+        --lg-outer-shadow-blur: 24px;
+        --lg-outer-shadow: rgba(0, 0, 0, 0.16);
+        --lg-fallback-tint: 0.2;
+        --lg-fallback-shine: rgba(255, 255, 255, 0.5);
+        --display: "Fraunces", Georgia, serif;
+        --body: "Karla", ui-sans-serif, sans-serif;
+        --ease: cubic-bezier(0.22, 1, 0.36, 1);
       }
       @media (prefers-color-scheme: dark) {
         :root {
-          --fg: #f5f5f7;
-          --muted: #a1a1a8;
-          --accent: #409cff;
-          --glass-bg: rgba(40, 42, 50, 0.5);
-          --glass-brd: rgba(255, 255, 255, 0.16);
-          --glass-hi: rgba(255, 255, 255, 0.28);
-          --glass-sh: rgba(0, 0, 0, 0.5);
-          --tint-a: rgba(10, 132, 255, 0.22);
-          --tint-b: rgba(214, 122, 255, 0.16);
-          --tint-c: rgba(80, 210, 190, 0.14);
-          --page-a: #0b0c10;
-          --page-b: #131722;
+          --bg: #14120f;
+          --fg: #eee7dc;
+          --muted: #a49a8b;
+          --accent: #e2795a;
+          --hairline: rgba(238, 231, 220, 0.14);
+          --panel-bg: rgba(32, 29, 25, 0.5);
+          --panel-brd: rgba(255, 255, 255, 0.1);
+          --rim: rgba(255, 255, 255, 0.14);
+          --lg-tint-rgb: 22, 20, 17;
+          --lg-tint-opacity: 0.28;
+          --lg-shadow-blur: 22px;
+          --lg-shadow-spread: -4px;
+          --lg-shadow-color: rgba(255, 255, 255, 0.26);
+          --lg-outer-shadow-blur: 28px;
+          --lg-outer-shadow: rgba(0, 0, 0, 0.5);
+          --lg-fallback-tint: 0.14;
+          --lg-fallback-shine: rgba(255, 255, 255, 0.3);
         }
       }
       * { box-sizing: border-box; }
       html { scroll-behavior: smooth; }
       body {
-        margin: 0; color: var(--fg);
-        font-family: var(--font); font-size: 1.02rem; line-height: 1.65;
-        -webkit-font-smoothing: antialiased; min-height: 100vh;
-        background: linear-gradient(180deg, var(--page-a), var(--page-b));
-      }
-      /* Calm background wash for the glass to refract — subtle, single soft blobs */
-      body::before {
-        content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-        background:
-          radial-gradient(38rem 38rem at 12% 6%, var(--tint-a), transparent 60%),
-          radial-gradient(34rem 34rem at 92% 22%, var(--tint-b), transparent 60%),
-          radial-gradient(40rem 40rem at 70% 96%, var(--tint-c), transparent 62%);
+        margin: 0; background: var(--bg); color: var(--fg);
+        font-family: var(--body); font-size: 1.05rem; line-height: 1.68;
+        -webkit-font-smoothing: antialiased;
       }
       img { max-width: 100%; display: block; }
       a { color: var(--accent); text-decoration: none; }
-      a:hover { text-decoration: underline; }
-      .wrap { width: min(48rem, calc(100% - 2.5rem)); margin: 0 auto; }
+      a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+      .wrap { width: min(50rem, calc(100% - 2.5rem)); margin: 0 auto; }
 
-      .glass {
-        position: relative;
-        background: var(--glass-bg);
-        backdrop-filter: blur(30px) saturate(180%);
-        -webkit-backdrop-filter: blur(30px) saturate(180%);
-        border: 1px solid var(--glass-brd);
-        border-radius: 26px;
-        box-shadow: 0 12px 40px var(--glass-sh), inset 0 1px 0 var(--glass-hi);
+      /* Glass nav pill (main-site engine) */
+      header { position: sticky; top: clamp(0.75rem, 2vw, 1.15rem); z-index: 60; }
+      .nav-glass {
+        position: relative; isolation: isolate; --lg-radius: 22px; --lg-filter: none;
+        display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+        padding: 0.55rem 0.65rem 0.55rem 1.15rem; border-radius: 22px;
+        box-shadow: 0 8px var(--lg-outer-shadow-blur) var(--lg-outer-shadow);
       }
-      /* Specular top-edge highlight, Apple Liquid Glass style */
-      .glass::before {
-        content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
-        background: linear-gradient(180deg, rgba(255,255,255,0.35), transparent 42%);
-        opacity: 0.7; mix-blend-mode: screen;
-      }
-
-      header { position: sticky; top: 0.9rem; z-index: 30; }
-      .nav { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.55rem 0.6rem 0.55rem 1.1rem; border-radius: 999px; }
-      .logo { font-weight: 600; letter-spacing: -0.01em; color: var(--fg); }
-      nav { display: flex; gap: 0.35rem; }
-      nav a { color: var(--muted); font-size: 0.88rem; padding: 0.35rem 0.75rem; border-radius: 999px; }
+      .nav-glass > * { position: relative; z-index: 2; }
+      .nav-glass::before { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit;
+        box-shadow: inset 0 0 var(--lg-shadow-blur) var(--lg-shadow-spread) var(--lg-shadow-color);
+        background-color: rgba(var(--lg-tint-rgb), var(--lg-tint-opacity)); pointer-events: none; }
+      .nav-glass.lg-refraction::after { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+        backdrop-filter: var(--lg-filter); -webkit-backdrop-filter: var(--lg-filter); pointer-events: none; }
+      .nav-glass.lg-fallback { background-color: rgba(var(--lg-tint-rgb), var(--lg-fallback-tint));
+        backdrop-filter: blur(14px) saturate(1.6); -webkit-backdrop-filter: blur(14px) saturate(1.6); }
+      .brand { font-family: var(--display); font-weight: 600; font-size: 1.05rem; color: var(--fg); }
+      nav { display: flex; gap: 0.2rem; }
+      nav a { color: var(--muted); font-size: 0.88rem; padding: 0.4rem 0.7rem; border-radius: 999px; transition: color 0.2s, background 0.2s; }
       nav a:hover { color: var(--fg); background: color-mix(in srgb, var(--fg) 8%, transparent); text-decoration: none; }
-      @media (max-width: 560px) { nav a:not(:last-child) { display: none; } }
+      @media (max-width: 600px) { nav a:not(.pill) { display: none; } }
 
-      main { padding-top: 1.25rem; }
-      .hero { padding: clamp(2rem, 7vh, 4rem) 0 clamp(1.5rem, 4vh, 2.5rem); text-align: center; }
-      .portrait { width: 116px; height: 116px; border-radius: 50%; overflow: hidden; margin: 0 auto 1.5rem; padding: 5px; }
-      .portrait img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: 42% 16%; }
-      h1 { font-weight: 700; font-size: clamp(2rem, 5.5vw, 3.1rem); line-height: 1.08; letter-spacing: -0.035em; margin: 0 auto 1rem; max-width: 16ch; }
-      .lede { color: var(--muted); font-size: 1.12rem; margin: 0 auto 1.75rem; max-width: 40ch; }
-      .cta { display: inline-flex; gap: 0.6rem; }
-      .btn { padding: 0.6rem 1.2rem; border-radius: 999px; font-weight: 500; font-size: 0.95rem; }
-      .btn-p { background: var(--accent); color: #fff; }
-      .btn-p:hover { text-decoration: none; filter: brightness(1.06); }
-      .btn-g { color: var(--fg); }
-      .btn-g:hover { text-decoration: none; }
+      .amb-orb { position: fixed; z-index: 5; --lg-radius: 50%; --lg-filter: none; border-radius: 50%;
+        isolation: isolate; pointer-events: none; box-shadow: 0 6px var(--lg-outer-shadow-blur) var(--lg-outer-shadow); }
+      .amb-orb.a { right: clamp(1rem,4vw,2.5rem); top: 32vh; width: 5rem; height: 5rem; }
+      .amb-orb.b { left: clamp(1rem,4vw,2.5rem); top: 68vh; width: 7rem; height: 7rem; }
+      .amb-orb::before { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit;
+        box-shadow: inset 0 0 var(--lg-shadow-blur) var(--lg-shadow-spread) var(--lg-shadow-color);
+        background-color: rgba(var(--lg-tint-rgb), var(--lg-tint-opacity)); pointer-events: none; }
+      .amb-orb.lg-refraction::after { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+        backdrop-filter: var(--lg-filter); -webkit-backdrop-filter: var(--lg-filter); pointer-events: none; }
+      .amb-orb.lg-fallback { background-color: rgba(var(--lg-tint-rgb), var(--lg-fallback-tint)); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+      @media (max-width: 720px) { .amb-orb { display: none; } }
 
-      section { padding: clamp(1.25rem, 3vh, 2rem) 0; }
-      .card { padding: clamp(1.5rem, 4vw, 2rem); }
-      h2 { font-weight: 600; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin: 0 0 1.25rem; }
-      .about p { margin: 0 0 0.85rem; color: var(--fg); }
+      .hero { padding: clamp(3rem, 9vh, 5.5rem) 0 clamp(2rem, 6vh, 3.5rem); }
+      .hero-grid { display: grid; gap: 2rem; align-items: center; }
+      @media (min-width: 720px) { .hero-grid { grid-template-columns: 1fr auto; } }
+      .eyebrow { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin: 0 0 0.9rem; }
+      h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.2rem, 6vw, 3.6rem); line-height: 1.05; letter-spacing: -0.015em; margin: 0 0 1rem; max-width: 16ch; }
+      .lede { color: var(--muted); font-size: 1.15rem; margin: 0 0 1.6rem; max-width: 42ch; }
+      .cta { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+      .btn { position: relative; isolation: isolate; --lg-radius: 999px; --lg-filter: none;
+        display: inline-flex; align-items: center; padding: 0.7rem 1.35rem; border-radius: 999px;
+        font-weight: 600; font-size: 0.95rem; color: var(--fg);
+        box-shadow: 0 6px 16px var(--lg-outer-shadow); transition: transform 0.15s var(--ease); }
+      .btn > * { position: relative; z-index: 2; }
+      .btn::before { content: ""; position: absolute; inset: 0; z-index: 1; border-radius: inherit;
+        box-shadow: inset 0 0 var(--lg-shadow-blur) var(--lg-shadow-spread) var(--lg-shadow-color);
+        background-color: rgba(var(--lg-tint-rgb), var(--lg-tint-opacity)); pointer-events: none; }
+      .btn.lg-refraction::after { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+        backdrop-filter: var(--lg-filter); -webkit-backdrop-filter: var(--lg-filter); pointer-events: none; }
+      .btn.lg-fallback { background-color: rgba(var(--lg-tint-rgb), var(--lg-fallback-tint)); backdrop-filter: blur(12px) saturate(1.5); -webkit-backdrop-filter: blur(12px) saturate(1.5); }
+      .btn-accent { color: #fff; background: var(--accent); box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 40%, transparent); }
+      .btn-accent::before { display: none; }
+
+      .portrait { width: clamp(150px, 32vw, 200px); aspect-ratio: 1; border-radius: 26px; overflow: hidden;
+        flex: none; box-shadow: 0 16px 38px var(--lg-outer-shadow); border: 1px solid var(--panel-brd);
+        transition: transform 0.4s var(--ease); will-change: transform; }
+      .portrait img { width: 100%; height: 100%; object-fit: cover; object-position: 42% 16%; }
+
+      section { padding: clamp(2.25rem, 6vh, 3.5rem) 0; border-top: 1px solid var(--hairline); }
+      h2 { font-family: var(--display); font-style: italic; font-weight: 500; font-size: 1.05rem; color: var(--muted); margin: 0 0 1.5rem; }
+      .about p { margin: 0 0 1rem; max-width: 60ch; }
       .about p:last-child { margin: 0; }
 
-      .stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.25rem; }
+      .stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.5rem; }
       @media (min-width: 560px) { .stats { grid-template-columns: repeat(4,1fr); } }
-      .stats .v { font-size: 1.85rem; font-weight: 700; letter-spacing: -0.02em; }
-      .stats .k { color: var(--muted); font-size: 0.82rem; }
+      .stats .v { font-family: var(--display); font-size: clamp(2rem, 5vw, 2.6rem); font-weight: 500; line-height: 1; }
+      .stats .k { color: var(--muted); font-size: 0.84rem; margin-top: 0.3rem; }
 
-      .timeline { list-style: none; margin: 0; padding: 0; }
-      .timeline li { display: grid; grid-template-columns: 3.4rem 1fr; gap: 1rem; padding: 0.85rem 0; align-items: baseline; }
-      .timeline li + li { border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent); }
-      .timeline .year { color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; }
-      .timeline h3 { font-weight: 600; font-size: 1rem; margin: 0 0 0.15rem; }
-      .timeline p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+      .timeline { list-style: none; margin: 0; padding: 0; position: relative; }
+      .timeline::before { content: ""; position: absolute; left: 0.42rem; top: 0.5rem; bottom: 0.5rem; width: 2px; background: var(--hairline); }
+      .timeline li { position: relative; padding: 0 0 1.4rem 1.9rem; }
+      .timeline li:last-child { padding-bottom: 0; }
+      .timeline li::before { content: ""; position: absolute; left: 0; top: 0.35rem; width: 0.9rem; height: 0.9rem; border-radius: 50%; background: var(--bg); border: 2px solid var(--accent); transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease); }
+      .timeline li:hover::before { transform: scale(1.25); box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 22%, transparent); }
+      .timeline .year { font-family: var(--display); font-weight: 500; color: var(--accent); font-size: 1rem; }
+      .timeline h3 { font-family: var(--display); font-weight: 500; font-size: 1.1rem; margin: 0.1rem 0 0.15rem; }
+      .timeline p { margin: 0; color: var(--muted); font-size: 0.96rem; }
 
-      .rows .row { padding: 0.95rem 0; }
-      .rows .row + .row { border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent); }
-      .row h3 { font-weight: 600; font-size: 1.05rem; margin: 0 0 0.15rem; }
-      .row .when { color: var(--muted); font-size: 0.86rem; margin: 0 0 0.45rem; }
+      .rows .row { padding: 1.1rem 0; border-top: 1px solid var(--hairline); transition: padding-left 0.3s var(--ease); }
+      .rows .row:first-of-type { border-top: none; }
+      .rows .row:hover { padding-left: 0.5rem; }
+      .row h3 { font-family: var(--display); font-weight: 500; font-size: 1.2rem; margin: 0 0 0.15rem; }
+      .row .when { color: var(--accent); font-style: italic; font-size: 0.88rem; margin: 0 0 0.45rem; }
       .row p { margin: 0; color: var(--muted); }
+      .row p a { color: var(--fg); }
 
       .awards { list-style: none; margin: 0; padding: 0; }
-      .awards li { padding: 0.5rem 0; color: var(--muted); }
-      .awards li + li { border-top: 1px solid color-mix(in srgb, var(--fg) 10%, transparent); }
+      .awards li { padding: 0.55rem 0; color: var(--muted); }
+      .awards li + li { border-top: 1px solid var(--hairline); }
 
-      footer { text-align: center; padding: 2.5rem 0 3.5rem; color: var(--muted); font-size: 0.92rem; }
-      footer .fl { display: flex; gap: 1.25rem; justify-content: center; margin: 0.6rem 0; }
+      footer { border-top: 1px solid var(--hairline); padding: 2.5rem 0 3.5rem; color: var(--muted); font-size: 0.95rem; }
+      footer a { color: var(--fg); }
+      footer .fl { display: flex; gap: 1.25rem; margin: 0.75rem 0; }
 
-      .reveal { opacity: 0; transform: translateY(0.9rem); transition: opacity 0.6s ease, transform 0.6s ease; }
+      .reveal { opacity: 0; transform: translateY(0.9rem); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
       .reveal.vis { opacity: 1; transform: none; }
       @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } html { scroll-behavior: auto; } }
     </style>
@@ -145,102 +176,102 @@
   <body>
     <header>
       <div class="wrap">
-        <div class="nav glass">
-          <a class="logo" href="#top">Yan Levin</a>
+        <div class="nav-glass" data-liquid-glass="squircle" data-filter-id="lg-nav">
+          <a class="brand" href="#top">Yan Levin</a>
           <nav>
             <a href="#about">About</a>
             <a href="#timeline">Timeline</a>
             <a href="#work">Work</a>
-            <a href="https://github.com/yl-2010" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a class="pill" href="https://github.com/yl-2010" target="_blank" rel="noopener noreferrer">GitHub</a>
           </nav>
         </div>
       </div>
     </header>
 
-    <main class="wrap">
-      <section class="hero" id="top">
-        <figure class="portrait glass"><img src="../yan-levin.jpg" alt="Yan Levin" width="640" height="640" /></figure>
-        <h1>Building at the edge of math, code, and teaching.</h1>
-        <p class="lede">Junior at Eastside Prep, research intern at UT Austin, math olympiad competitor, and co-founder of SocketHR.</p>
-        <div class="cta">
-          <a class="btn btn-p" href="#work">See work</a>
-          <a class="btn btn-g glass" href="https://github.com/yl-2010" target="_blank" rel="noopener noreferrer">GitHub</a>
+    <div class="amb-orb a" data-liquid-glass="circle" data-filter-id="lg-amb-a" aria-hidden="true"></div>
+    <div class="amb-orb b" data-liquid-glass="circle" data-filter-id="lg-amb-b" aria-hidden="true"></div>
+
+    <main class="wrap" id="top">
+      <section class="hero">
+        <div class="hero-grid">
+          <div>
+            <p class="eyebrow">Yan Levin</p>
+            <h1>Building at the edge of math, code, and teaching.</h1>
+            <p class="lede">Junior at Eastside Prep, research intern at UT Austin, math olympiad competitor, and co-founder of SocketHR.</p>
+            <div class="cta">
+              <a class="btn btn-accent" href="#work">See work</a>
+              <a class="btn" data-liquid-glass="squircle" data-filter-id="lg-btn" href="https://github.com/yl-2010" target="_blank" rel="noopener noreferrer"><span>GitHub</span></a>
+            </div>
+          </div>
+          <figure class="portrait" id="tilt"><img src="../yan-levin.jpg" alt="Yan Levin" width="640" height="640" /></figure>
         </div>
       </section>
 
-      <section id="about" class="reveal">
-        <div class="card glass about">
-          <h2>About</h2>
-          <p>I'm a junior at Eastside Preparatory School in Kirkland, WA. My time goes into competitive math, software research with Professor Milos Gligoric's group at UT Austin, debate, and teaching younger students.</p>
-          <p>Across those worlds I keep asking the same question: how do you make complex ideas clear enough to share?</p>
-        </div>
+      <section id="about" class="about reveal">
+        <h2>About</h2>
+        <p>I'm a junior at Eastside Preparatory School in Kirkland, WA. My time goes into competitive math, software research with Professor Milos Gligoric's group at UT Austin, debate, and teaching younger students.</p>
+        <p>Across those worlds I keep asking the same question: how do you make complex ideas clear enough to share?</p>
       </section>
 
       <section id="academics" class="reveal">
-        <div class="card glass">
-          <h2>Academics</h2>
-          <div class="stats">
-            <div><div class="v">3.98</div><div class="k">GPA</div></div>
-            <div><div class="v">1580</div><div class="k">SAT</div></div>
-            <div><div class="v">5</div><div class="k">AP CS A</div></div>
-            <div><div class="v">5</div><div class="k">AP Calc AB</div></div>
-          </div>
+        <h2>Academics</h2>
+        <div class="stats">
+          <div><div class="v" data-count>3.98</div><div class="k">GPA</div></div>
+          <div><div class="v" data-count>1580</div><div class="k">SAT</div></div>
+          <div><div class="v" data-count>5</div><div class="k">AP CS A</div></div>
+          <div><div class="v" data-count>5</div><div class="k">AP Calc AB</div></div>
         </div>
       </section>
 
       <section id="timeline" class="reveal">
-        <div class="card glass">
-          <h2>Timeline</h2>
-          <ol class="timeline">
-            <li><span class="year">2018</span><div><h3>Math circle foundations</h3><p>Prime Factor and UW Math Circle; Math Kangaroo, up to 3rd nationally.</p></div></li>
-            <li><span class="year">2022</span><div><h3>First UW Math Hour Olympiad</h3><p>5th of ~100 — the start of five straight top-five finishes.</p></div></li>
-            <li><span class="year">2024</span><div><h3>Estore research begins</h3><p>Cypher graph storage in Java, coverage, and CI at the Engineering Software Lab.</p></div></li>
-            <li><span class="year">2025</span><div><h3>UT Austin &amp; SocketHR</h3><p>Summer intern on PLSemanticsBench; co-founded SocketHR as CTO.</p></div></li>
-            <li><span class="year">2026</span><div><h3>Deeper work, new rooms</h3><p>2nd at UW Math Hour, more Estore, and AI coursework at Cambridge.</p></div></li>
-          </ol>
-        </div>
+        <h2>Timeline</h2>
+        <ol class="timeline">
+          <li><span class="year">2018</span><h3>Math circle foundations</h3><p>Prime Factor and UW Math Circle; Math Kangaroo, up to 3rd nationally.</p></li>
+          <li><span class="year">2022</span><h3>First UW Math Hour Olympiad</h3><p>5th of ~100 — the start of five straight top-five finishes.</p></li>
+          <li><span class="year">2024</span><h3>Estore research begins</h3><p>Cypher graph storage in Java, coverage, and CI at the Engineering Software Lab.</p></li>
+          <li><span class="year">2025</span><h3>UT Austin &amp; SocketHR</h3><p>Summer intern on PLSemanticsBench; co-founded SocketHR as CTO.</p></li>
+          <li><span class="year">2026</span><h3>Deeper work, new rooms</h3><p>2nd at UW Math Hour, more Estore, and AI coursework at Cambridge.</p></li>
+        </ol>
       </section>
 
       <section id="work" class="reveal">
-        <div class="card glass rows">
-          <h2>Research</h2>
+        <h2>Research</h2>
+        <div class="rows">
           <div class="row"><h3>PLSemanticsBench</h3><p class="when">Summer Research Intern · 2025</p><p>In-person internship with Professor Gligoric's group, studying the code capabilities of LLMs on <a href="https://github.com/EngineeringSoftware/PLSemanticsBench" target="_blank" rel="noopener noreferrer">PLSemanticsBench</a>.</p></div>
           <div class="row"><h3>Estore</h3><p class="when">Research Project · 2024–2026</p><p>Led improvements to <a href="https://github.com/EngineeringSoftware/estore-internal" target="_blank" rel="noopener noreferrer">Estore</a>: Cypher graph storage in Java, coverage, styling, and CI.</p></div>
         </div>
       </section>
 
-      <section id="building" class="reveal">
-        <div class="card glass rows">
-          <h2>Building</h2>
+      <section class="reveal">
+        <h2>Building</h2>
+        <div class="rows">
           <div class="row"><h3>SocketHR — Co-Founder &amp; CTO</h3><p>Led full-stack development for a startup helping recruiters evaluate applicants when résumés are flooded with AI noise. <a href="https://sockethr.com/" target="_blank" rel="noopener noreferrer">sockethr.com</a></p></div>
         </div>
       </section>
 
-      <section id="math" class="reveal">
-        <div class="card glass rows">
-          <h2>Math &amp; Teaching</h2>
+      <section class="reveal">
+        <h2>Math &amp; Teaching</h2>
+        <div class="rows">
           <div class="row"><h3>UW Math Hour Olympiad</h3><p class="when">5 years · grades 6–10</p><p>Oral, proofs-based contest at UW. Top five every year out of ~100: 5th, 2nd, 4th, 3rd, and 2nd (2022–2026). <a href="https://sites.math.washington.edu/~mathcircle/olympiad/" target="_blank" rel="noopener noreferrer">Contest site</a></p></div>
           <div class="row"><h3>Teaching Assistant</h3><p class="when">Prime Factor · Berkeley Math Circle</p><p>TA at <a href="https://www.pfmathcircle.org/MathCircles.html" target="_blank" rel="noopener noreferrer">Prime Factor</a> and grades 2–3 at the <a href="https://sumizdat.startlogic.com/bmc_elementary/summer-program-p.html" target="_blank" rel="noopener noreferrer">BMC Summer Camp</a>.</p></div>
           <div class="row"><h3>Husky Math Academy</h3><p class="when">Grades 9–10</p><p>Advanced algebra, number theory, combinatorics, and olympiad proof prep through <a href="https://www.huskymath.org/" target="_blank" rel="noopener noreferrer">Husky Math Academy</a>.</p></div>
         </div>
       </section>
 
-      <section id="debate" class="reveal">
-        <div class="card glass">
-          <h2>Debate</h2>
-          <ul class="awards">
-            <li>Open LD Octofinalist, Newport Knights Invitational</li>
-            <li>Open Impromptu Finalist, Newport Knights Invitational</li>
-            <li>Open SPAR Finalist, Auburn Riverside &amp; Puyallup Invitationals</li>
-            <li>Open LD Quarterfinalist, Bellevue School District Invitational</li>
-            <li>Novice LD Semifinalist, Mount Vernon Invitational</li>
-          </ul>
-        </div>
+      <section class="reveal">
+        <h2>Debate</h2>
+        <ul class="awards">
+          <li>Open LD Octofinalist, Newport Knights Invitational</li>
+          <li>Open Impromptu Finalist, Newport Knights Invitational</li>
+          <li>Open SPAR Finalist, Auburn Riverside &amp; Puyallup Invitationals</li>
+          <li>Open LD Quarterfinalist, Bellevue School District Invitational</li>
+          <li>Novice LD Semifinalist, Mount Vernon Invitational</li>
+        </ul>
       </section>
 
-      <section id="more" class="reveal">
-        <div class="card glass rows">
-          <h2>More</h2>
+      <section class="reveal">
+        <h2>More</h2>
+        <div class="rows">
           <div class="row"><h3>Environmental Club Co-Lead</h3><p>Built a program to measure waste-sorting accuracy and drove school-wide adoption via <a href="https://epsort.lovable.app/data" target="_blank" rel="noopener noreferrer">EP Sort</a>.</p></div>
           <div class="row"><h3>South Asian Affinity Group Co-Lead</h3><p>Shaped a more inclusive club agenda and led weekly meetings.</p></div>
           <div class="row"><h3>Volunteering</h3><p><a href="https://www.mathfest26.pfmathcircle.org/" target="_blank" rel="noopener noreferrer">Logic Land Math Festival</a> and classroom tech for refugee students via <a href="https://seattle-envelopes.org/" target="_blank" rel="noopener noreferrer">Seattle Envelopes</a>.</p></div>
@@ -260,11 +291,39 @@
       </div>
     </footer>
 
+    <svg class="liquid-glass-svg" xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false" color-interpolation-filters="sRGB" style="position:absolute;width:0;height:0;overflow:hidden;pointer-events:none;">
+      <defs id="liquid-glass-defs"></defs>
+    </svg>
+
+    <script src="../liquid-glass.js"></script>
     <script>
+      const ease = (t) => 1 - Math.pow(1 - t, 3);
+      const rm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const io = new IntersectionObserver((es) => {
-        es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("vis"); io.unobserve(e.target); } });
-      }, { threshold: 0.12 });
+        es.forEach((e) => { if (!e.isIntersecting) return; e.target.classList.add("vis");
+          e.target.querySelectorAll?.("[data-count]").forEach(countUp); io.unobserve(e.target); });
+      }, { threshold: 0.14 });
       document.querySelectorAll(".reveal").forEach((el) => io.observe(el));
+      function countUp(el) {
+        if (el.dataset.done) return; el.dataset.done = "1";
+        const raw = el.textContent.trim(); const dec = raw.includes("."); const target = Number(raw);
+        if (!isFinite(target) || rm) { el.textContent = raw; return; }
+        const dur = 1000, t0 = performance.now();
+        const tick = (now) => { const t = Math.min(1, (now - t0) / dur); const v = target * ease(t);
+          el.textContent = dec ? v.toFixed(2) : Math.round(v); if (t < 1) requestAnimationFrame(tick); else el.textContent = raw; };
+        el.textContent = dec ? "0.00" : "0"; requestAnimationFrame(tick);
+      }
+      if (!rm) {
+        const tilt = document.getElementById("tilt");
+        if (tilt) { tilt.addEventListener("pointermove", (e) => { const r = tilt.getBoundingClientRect();
+            const x = (e.clientX-r.left)/r.width-0.5, y = (e.clientY-r.top)/r.height-0.5;
+            tilt.style.transform = `perspective(700px) rotateX(${-y*8}deg) rotateY(${x*8}deg) translateY(-2px)`; });
+          tilt.addEventListener("pointerleave", () => tilt.style.transform = ""); }
+        document.querySelectorAll(".btn").forEach((b) => {
+          b.addEventListener("pointermove", (e) => { const r = b.getBoundingClientRect();
+            b.style.transform = `translate(${(e.clientX-r.left-r.width/2)*0.12}px, ${(e.clientY-r.top-r.height/2)*0.18 - 1}px)`; });
+          b.addEventListener("pointerleave", () => b.style.transform = ""); });
+      }
     </script>
   </body>
 </html>
