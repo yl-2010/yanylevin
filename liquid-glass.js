@@ -483,8 +483,11 @@ float surfaceHeight(float t) {
 }
 
 vec3 sampleBg(vec2 screenUV) {
-  screenUV = clamp(screenUV, vec2(0.001), vec2(0.999));
-  return texture2D(uBgTex, screenUV).rgb;
+  // screenUV is CSS/y-down; texture is uploaded with UNPACK_FLIP_Y (v=0 at bottom),
+  // same as archis webgl.html — flip V so content lines up with what's under the glass.
+  vec2 uv = clamp(screenUV, vec2(0.001), vec2(0.999));
+  uv.y = 1.0 - uv.y;
+  return texture2D(uBgTex, uv).rgb;
 }
 
 vec3 sampleBgBlurred(vec2 uv, float radius) {
