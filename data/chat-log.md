@@ -897,3 +897,22 @@ I do not know.
 ```
 
 ---
+
+## 2026-07-22T00:51:50.244Z
+
+- model: openai/gpt-oss-20b
+- ip: 100.31.102.137
+
+### User
+
+```
+is yan a real person?
+```
+
+### Assistant
+
+```
+Yes, Yan is a real person.
+```
+
+---
