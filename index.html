@@ -163,6 +163,7 @@
       .c-bl {
         bottom: var(--corner-pad); left: var(--corner-pad);
         width: 120px; height: 120px; cursor: grab; touch-action: none;
+        user-select: none; -webkit-user-drag: none;
         transition:
           transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
           width 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -744,12 +745,24 @@
       const DOCK_SNAP = 72;
       const HOME_SNAP = 90;
 
+      function withNoTransition(el, fn) {
+        const prev = el.style.transition;
+        el.style.transition = "none";
+        const result = fn();
+        // Flush so later transition:"" animates from the committed styles
+        void el.offsetWidth;
+        el.style.transition = prev;
+        return result;
+      }
       function getHomeRect(el) {
-        const prev = el.style.transform;
-        el.style.transform = "none";
-        const r = el.getBoundingClientRect();
-        el.style.transform = prev;
-        return r;
+        return withNoTransition(el, () => {
+          const prev = el.style.transform;
+          el.style.transform = "none";
+          void el.offsetWidth;
+          const r = el.getBoundingClientRect();
+          el.style.transform = prev;
+          return r;
+        });
       }
       // Missing 2×2 cell: left-aligned with LinkedIn, top-aligned with Mail
       function getYtSlotRect() {
@@ -790,25 +803,31 @@
       function dockOrb(el) {
         const wasDocked = el._docked;
         el._docked = true;
-        el.classList.add("is-docked", "squircle");
-        el.classList.remove("circle");
-        el.setAttribute("data-liquid-glass", "squircle");
-        el.setAttribute("aria-label", "YouTube");
-        el.setAttribute("href", YT_HREF);
-        if (!wasDocked) el.innerHTML = YT_SVG;
+        // Morph to social size at the current center, then spring into the slot
+        withNoTransition(el, () => {
+          el.classList.add("is-docked", "squircle");
+          el.classList.remove("circle");
+          el.setAttribute("data-liquid-glass", "squircle");
+          el.setAttribute("aria-label", "YouTube");
+          el.setAttribute("href", YT_HREF);
+          if (!wasDocked) el.innerHTML = YT_SVG;
+          preserveCenterOffset(el);
+        });
         snapToSlot(el);
         if (!wasDocked) window.reinitLiquidGlass?.();
       }
       function undockOrb(el) {
         if (!el._docked) return;
         el._docked = false;
-        el.classList.remove("is-docked", "squircle");
-        el.classList.add("circle");
-        el.setAttribute("data-liquid-glass", "circle");
-        el.setAttribute("aria-label", "Drag me");
-        el.removeAttribute("href");
-        el.innerHTML = "";
-        preserveCenterOffset(el);
+        withNoTransition(el, () => {
+          el.classList.remove("is-docked", "squircle");
+          el.classList.add("circle");
+          el.setAttribute("data-liquid-glass", "circle");
+          el.setAttribute("aria-label", "Drag me");
+          el.removeAttribute("href");
+          el.innerHTML = "";
+          preserveCenterOffset(el);
+        });
         window.reinitLiquidGlass?.();
       }
       function snapOrbHome(el) {
@@ -825,11 +844,13 @@
         el.addEventListener("click", (e) => {
           if (!el._docked || el._moved) { e.preventDefault(); e.stopPropagation(); }
         });
+        el.addEventListener("dragstart", (e) => e.preventDefault());
         el.addEventListener("pointerdown", (e) => {
           if (e.button != null && e.button !== 0) return;
+          e.preventDefault();
           el._drag = true; el._moved = false;
           el.classList.add("is-dragging");
-          el.setPointerCapture(e.pointerId);
+          try { el.setPointerCapture(e.pointerId); } catch (_) {}
           el._sx = e.clientX - (el._bx || 0); el._sy = e.clientY - (el._by || 0);
           el._mx = 0; el._my = 0;
         });
@@ -851,10 +872,10 @@
           el.classList.remove("is-dragging");
           const visual = el.getBoundingClientRect();
           const slot = getYtSlotRect();
-          const home = getHomeRect(el);
+          // Home snap uses drag offsets (same as original orb) — robust to size morphs
           if (distCenters(visual, slot) < DOCK_SNAP) {
             dockOrb(el);
-          } else if (distCenters(visual, home) < HOME_SNAP) {
+          } else if (Math.hypot(el._bx || 0, el._by || 0) < HOME_SNAP) {
             snapOrbHome(el);
           } else if (el._docked) {
             undockOrb(el);
@@ -862,6 +883,7 @@
         };
         el.addEventListener("pointerup", end);
         el.addEventListener("pointercancel", end);
+        el.addEventListener("lostpointercapture", end);
         addEventListener("resize", () => {
           if (!el._docked || el._drag) return;
           snapToSlot(el);
