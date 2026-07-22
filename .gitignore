@@ -10,6 +10,4 @@ server/.env
 server/.auth-secret
 server/node_modules/
 node_modules/
-# Visitor chat audit trail (local only; may contain PII)
-data/chat-log.md
 

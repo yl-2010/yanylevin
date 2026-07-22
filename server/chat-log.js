@@ -1,14 +1,16 @@
 /**
  * Append every chat turn (user prompt + LLM output) to data/chat-log.md
- * so Yan can audit misuse locally.
+ * and commit + push to main so the audit trail stays on GitHub.
  */
 
 import { appendFile, mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { gitAddCommitPush } from "./git-publish.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const LOG_PATH = join(ROOT, "data", "chat-log.md");
+const LOG_REPO_PATH = "data/chat-log.md";
 
 function lastUserContent(messages) {
   for (let i = messages.length - 1; i >= 0; i--) {
@@ -59,6 +61,14 @@ export async function appendChatTurn({
 
   await mkdir(dirname(LOG_PATH), { recursive: true });
   await appendFile(LOG_PATH, block, "utf8");
+
+  const result = await gitAddCommitPush({
+    paths: [LOG_REPO_PATH],
+    message: `Append chat turn ${when}`,
+  });
+  if (!result.pushed && result.reason && result.reason !== "no changes") {
+    console.error("[chat-log] git publish failed:", result.reason);
+  }
 }
 
 export function getChatLogPath() {

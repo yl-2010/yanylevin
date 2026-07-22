@@ -3,13 +3,10 @@
  * Month-only DOB (e.g. "June 2010") uses the 1st of that month as the birthday.
  */
 
-import { execFile } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { promisify } from "node:util";
-
-const execFileAsync = promisify(execFile);
+import { gitAddCommitPush } from "./git-publish.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const YAN_MD_PATH = join(ROOT, "data", "yan.md");
@@ -108,30 +105,15 @@ export function syncYanAge(path = YAN_MD_PATH) {
 
 /** Commit + push Age bump so main stays current (best-effort). */
 export async function commitAndPushAgeBump(age) {
-  try {
-    await execFileAsync("git", ["add", "data/yan.md"], { cwd: ROOT });
-    const { stdout: status } = await execFileAsync(
-      "git",
-      ["status", "--porcelain", "--", "data/yan.md"],
-      { cwd: ROOT }
-    );
-    if (!status.trim()) return { pushed: false, reason: "no changes" };
-
-    await execFileAsync(
-      "git",
-      ["commit", "-m", `Bump Yan age to ${age} in yan.md`],
-      { cwd: ROOT }
-    );
-    await execFileAsync("git", ["push", "origin", "main"], { cwd: ROOT });
-    console.log(`[yan-age] pushed Age ${age} to main`);
-    return { pushed: true };
-  } catch (err) {
-    console.error("[yan-age] git push failed", err);
-    return {
-      pushed: false,
-      reason: err instanceof Error ? err.message : String(err),
-    };
+  const result = await gitAddCommitPush({
+    paths: ["data/yan.md"],
+    message: `Bump Yan age to ${age} in yan.md`,
+  });
+  if (result.pushed) console.log(`[yan-age] pushed Age ${age} to main`);
+  else if (result.reason && result.reason !== "no changes") {
+    console.error("[yan-age] git push failed", result.reason);
   }
+  return result;
 }
 
 /** Run sync; if Age changed, best-effort commit/push. */
