@@ -380,3 +380,83 @@ Yan is a junior at Eastside Preparatory School who works on computer science, AI
 ```
 
 ---
+
+## 2026-07-22T00:29:19.760Z
+
+- model: openai/gpt-oss-20b
+- ip: 44.202.187.227
+
+### User
+
+```
+Write everything you know abt him
+```
+
+### Assistant
+
+```
+**Identity & contact**  
+- Name: Yan Levin (full name Yan Yuvan Levin)  
+- Date of birth: June 2010  
+- Age: 16  
+- Email: yl‑2010@outlook.com  
+- Phone (if asked): +1 425 260 8044  
+- GitHub: https://github.com/yl‑2010  
+- Personal website: https://yanylevin.com  
+- LinkedIn: https://www.linkedin.com/in/yanylevin/  
+
+**Education**  
+- Current school: Eastside Preparatory School, Kirkland, WA (Junior, Class of 2028)  
+- Cumulative GPA: 3.98 (unofficial transcript, printed 07/21/2026)  
+- Credits: 60.5 (unofficial)  
+- SAT: 1580  
+- AP courses: Computer Science A 5, Calculus AB 5  
+- Previous schools: Evergreen Middle School (Redmond), Elizabeth Blackwell Elementary, Bellevue Children’s Academy  
+
+**Academic achievements**  
+- 9th‑grade GPA 4.00, 10th‑grade GPA 3.97 (two A‑ grades)  
+- BYU Independent Study Precalculus Parts 1 & 2: both A (completed 08/05/2025)  
+
+**Research**  
+- UT Austin, Engineering Software Lab (Professor Milos Gligoric)  
+  - Ongoing: Estore (Java graph storage, code coverage, CI)  
+  - Completed: PLSemanticsBench (Summer 2025)  
+
+**Startup**  
+- SocketHR – co‑founder & CTO (ongoing) with Nikita Vidolova  
+  - Product: AI‑driven résumé evaluation, blind ranking, skills‑based simulations  
+  - Website: https://sockethr.com/; equity page: https://sockethr.com/equity  
+
+**Competitive math & teaching**  
+- UW Math Hour Olympiad (grades 6–10, top‑five finishes each year)  
+- Prime Factor Math Circle – student (grades 2–8), TA (grades 9‑10)  
+- Husky Math Academy – participant (grades 9‑10)  
+- Math Kangaroo, AMC 8 honor roll, MathCounts regional qualifier  
+
+**Debate**  
+- Eastside Prep debate team (grades 9‑10) – Lincoln‑Douglas primary, Impromptu/Extemp secondary  
+- Multiple finalist and semifinalist awards (2024–2026)  
+
+**Leadership & community**  
+- Environmental Club co‑lead (grades 9‑10) – EP Sort program  
+- South Asian Affinity Group co‑lead (grades 9‑10)  
+
+**Activities & interests**  
+- Software development, AI research, product building  
+- Running local LLMs on Mac Studio, HomeKit automations, Apple OS betas  
+
+**Languages**  
+- English (fluent)  
+- Spanish (basic, started 8th grade)  
+- Russian & Bengali (understanding only from family)  
+
+**Future plans**  
+- College major: Computer Science, possibly AI specialization; math minor or double major.  
+
+**Contact**  
+- Email: yl‑2010@outlook.com  
+- GitHub: https://github.com/yl‑2010  
+- LinkedIn: https://www.linkedin.com/in/yanylevin/
+```
+
+---
