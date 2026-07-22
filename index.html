@@ -482,6 +482,51 @@
           -webkit-backdrop-filter: var(--lg-filter) brightness(0.46) saturate(1.1) blur(2px);
         }
       }
+      /*
+       * iOS / mobile WebGL chat (html.lg-mobile-webgl): match Chromium tint + panel blur.
+       * Higher specificity beats injected lg-webgl-styles; WebGL refraction canvas stays.
+       */
+      @media (prefers-color-scheme: light) {
+        html.lg-mobile-webgl .yan-chat-pill.corner,
+        html.lg-mobile-webgl .yan-chat-panel {
+          --lg-tint-rgb: 255, 255, 255;
+          --lg-tint-opacity: 0.88;
+          --lg-fallback-tint: 0.82;
+        }
+        html.lg-mobile-webgl .yan-chat-bubble--assistant {
+          color: #050608;
+          opacity: 1;
+        }
+        html.lg-mobile-webgl .yan-chat-input {
+          color: #050608;
+        }
+      }
+      @media (prefers-color-scheme: dark) {
+        html.lg-mobile-webgl .yan-chat-pill.corner,
+        html.lg-mobile-webgl .yan-chat-panel {
+          --lg-tint-rgb: 8, 11, 14;
+          --lg-tint-opacity: 0.86;
+          --lg-fallback-tint: 0.82;
+        }
+      }
+      html.lg-mobile-webgl .yan-chat-pill[data-liquid-glass].lg-webgl::before,
+      html.lg-mobile-webgl .yan-chat-panel[data-liquid-glass].lg-webgl::before {
+        background-color: rgba(var(--lg-tint-rgb), calc(var(--lg-tint-opacity) * 0.72));
+      }
+      /* Chat window only — small frost blur; pill keeps the default WebGL frost */
+      html.lg-mobile-webgl .yan-chat-panel[data-liquid-glass].lg-webgl {
+        backdrop-filter: blur(12px) saturate(1.45) !important;
+        -webkit-backdrop-filter: blur(12px) saturate(1.45) !important;
+      }
+      html.lg-mobile-webgl.lg-webgl-ready .yan-chat-panel[data-liquid-glass].lg-webgl {
+        background-color: rgba(var(--lg-tint-rgb), calc(var(--lg-fallback-tint) * 0.55)) !important;
+        backdrop-filter: blur(5px) saturate(1.2) !important;
+        -webkit-backdrop-filter: blur(5px) saturate(1.2) !important;
+      }
+      html.lg-mobile-webgl .yan-chat-panel.lg-fallback {
+        backdrop-filter: blur(16px) saturate(1.5);
+        -webkit-backdrop-filter: blur(16px) saturate(1.5);
+      }
       .yan-chat.has-panel .yan-chat-panel {
         pointer-events: auto; opacity: 1; transform: translateY(0) scale(1);
       }
