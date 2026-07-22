@@ -7,8 +7,8 @@
  *   Other    → lucasromerodb turbulence displacement fallback (filter:url)
  *
  * Mobile (only):
- *   WebGL / GLSL refraction (archis webgl.html shader) sampling a page
- *   snapshot — works in iOS Safari / WebKit where SVG backdrop filters don't.
+ *   WebGL / GLSL refraction (archis webgl.html shader) over a page snapshot,
+ *   with progressive CSS frost so the UI never freezes waiting on capture.
  */
 (() => {
   // Defaults from archisvaze/liquid-glass control panel (index.html sliders).
@@ -418,6 +418,8 @@
 
   // ═══════════════════════════════════════════════════════════════════════════
   // Mobile WebGL path — archisvaze/liquid-glass webgl.html shader, live snapshot
+  // Stability: CSS frost first, never hide live DOM, idle/low-cost capture,
+  // event-driven renders (no perpetual rAF), scroll-end snapshots only.
   // ═══════════════════════════════════════════════════════════════════════════
 
   const webgl = {
@@ -431,12 +433,14 @@
     hasBg: false,
     surfaces: [], // { el, canvas, ctx2d, shape }
     captureTimer: 0,
+    scrollIdleTimer: 0,
+    pointerTimer: 0,
     raf: 0,
     capturing: false,
+    captureGen: 0,
     html2canvas: null,
-    lastScrollX: 0,
-    lastScrollY: 0,
-    lastPositions: "",
+    listenersBound: false,
+    scrolling: false,
   };
 
   const WEBGL_VERT = `
@@ -484,30 +488,19 @@ vec3 sampleBg(vec2 screenUV) {
 }
 
 vec3 sampleBgBlurred(vec2 uv, float radius) {
-  if (radius < 0.5) return sampleBg(uv);
+  if (radius < 0.35) return sampleBg(uv);
+  // 8-tap poisson — cheaper/stabler on mobile GPUs than the 16-tap demo
   vec3 sum = vec3(0.0);
-  vec2 px = 1.0 / uResolution;
-  vec2 offsets[16];
-  offsets[0] = vec2(-0.94201, -0.39906);
-  offsets[1] = vec2( 0.94558, -0.76890);
-  offsets[2] = vec2(-0.09418, -0.92938);
-  offsets[3] = vec2( 0.34495, 0.29387);
-  offsets[4] = vec2(-0.91588, -0.45771);
-  offsets[5] = vec2(-0.81544, 0.48568);
-  offsets[6] = vec2(-0.38277, -0.56071);
-  offsets[7] = vec2(-0.12675, 0.84686);
-  offsets[8] = vec2( 0.89642, 0.41254);
-  offsets[9] = vec2( 0.18150, -0.30020);
-  offsets[10] = vec2(-0.01445, -0.16001);
-  offsets[11] = vec2( 0.59614, 0.71118);
-  offsets[12] = vec2( 0.49742, -0.47280);
-  offsets[13] = vec2( 0.80685, 0.04588);
-  offsets[14] = vec2(-0.32490, -0.03965);
-  offsets[15] = vec2(-0.60975, 0.06566);
-  for (int i = 0; i < 16; i++) {
-    sum += sampleBg(uv + offsets[i] * radius * px);
-  }
-  return sum / 16.0;
+  vec2 px = radius / uResolution;
+  sum += sampleBg(uv + vec2(-0.94201, -0.39906) * px);
+  sum += sampleBg(uv + vec2( 0.94558, -0.76890) * px);
+  sum += sampleBg(uv + vec2(-0.09418, -0.92938) * px);
+  sum += sampleBg(uv + vec2( 0.34495,  0.29387) * px);
+  sum += sampleBg(uv + vec2(-0.91588,  0.45771) * px);
+  sum += sampleBg(uv + vec2( 0.81544,  0.48568) * px);
+  sum += sampleBg(uv + vec2(-0.38277, -0.56071) * px);
+  sum += sampleBg(uv + vec2( 0.12675,  0.84686) * px);
+  return sum / 8.0;
 }
 
 void main() {
@@ -552,12 +545,13 @@ void main() {
   vec2 screenUV = screenPx / uResolution;
   vec2 refractedUV = screenUV + offset;
 
-  vec3 color;
-  if (uHasBg > 0.5) {
-    color = sampleBgBlurred(refractedUV, uBlur);
-  } else {
-    color = vec3(0.85);
+  // No background yet → fully transparent (CSS frost shows through)
+  if (uHasBg < 0.5) {
+    gl_FragColor = vec4(0.0);
+    return;
   }
+
+  vec3 color = sampleBgBlurred(refractedUV, uBlur);
 
   vec2 lightDir = normalize(vec2(0.5, -0.7));
   float rimDot = abs(dot(grad, lightDir));
@@ -582,17 +576,23 @@ void main() {
     const style = document.createElement("style");
     style.id = "lg-webgl-styles";
     style.textContent = `
+      /* Progressive: live CSS frost always on; WebGL canvas layers refraction on top */
       html.lg-mobile-webgl [data-liquid-glass].lg-webgl {
-        background: transparent !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
+        background-color: rgba(var(--lg-tint-rgb), var(--lg-fallback-tint)) !important;
+        backdrop-filter: blur(10px) saturate(1.45) !important;
+        -webkit-backdrop-filter: blur(10px) saturate(1.45) !important;
       }
       html.lg-mobile-webgl [data-liquid-glass].lg-webgl::after {
         display: none !important;
       }
       html.lg-mobile-webgl [data-liquid-glass].lg-webgl::before {
-        /* Keep subtle tint/rim; WebGL supplies the refracted fill */
-        background-color: rgba(var(--lg-tint-rgb), calc(var(--lg-tint-opacity) * 0.45));
+        background-color: rgba(var(--lg-tint-rgb), calc(var(--lg-tint-opacity) * 0.55));
+      }
+      html.lg-mobile-webgl.lg-webgl-ready [data-liquid-glass].lg-webgl {
+        /* Once refraction texture is live, dial back milky frost so the lens reads */
+        background-color: rgba(var(--lg-tint-rgb), calc(var(--lg-fallback-tint) * 0.35)) !important;
+        backdrop-filter: blur(3px) saturate(1.2) !important;
+        -webkit-backdrop-filter: blur(3px) saturate(1.2) !important;
       }
       html.lg-mobile-webgl canvas.lg-webgl-surface {
         position: absolute;
@@ -603,10 +603,6 @@ void main() {
         z-index: 0;
         pointer-events: none;
         display: block;
-      }
-      html.lg-mobile-webgl.lg-capturing [data-liquid-glass],
-      html.lg-mobile-webgl.lg-capturing canvas.lg-webgl-surface {
-        visibility: hidden !important;
       }
     `;
     document.head.appendChild(style);
@@ -753,7 +749,7 @@ void main() {
 
   function uploadBgTexture(sourceCanvas) {
     const gl = webgl.gl;
-    if (!gl || !sourceCanvas) return;
+    if (!gl || !sourceCanvas || !sourceCanvas.width || !sourceCanvas.height) return;
     gl.bindTexture(gl.TEXTURE_2D, webgl.bgTex);
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
     gl.texImage2D(
@@ -765,47 +761,134 @@ void main() {
       sourceCanvas
     );
     webgl.hasBg = true;
+    document.documentElement.classList.add("lg-webgl-ready");
+  }
+
+  /** Instant, non-blocking backdrop so the first frame never freezes waiting on html2canvas. */
+  function paintFastBackdrop() {
+    const w = Math.max(2, window.innerWidth);
+    const h = Math.max(2, window.innerHeight);
+    const c = document.createElement("canvas");
+    c.width = w;
+    c.height = h;
+    const ctx = c.getContext("2d");
+    const root = getComputedStyle(document.documentElement);
+    const foam = root.getPropertyValue("--foam").trim() || "#f7f9f8";
+    const mist = root.getPropertyValue("--mist").trim() || "#eef2f0";
+    const mistDeep = root.getPropertyValue("--mist-deep").trim() || "#dce5e1";
+    const lake = root.getPropertyValue("--bg-lake-glow").trim() || "rgba(47,95,90,0.12)";
+    const burg = root.getPropertyValue("--bg-burgundy-glow").trim() || "rgba(122,36,50,0.08)";
+
+    const base = ctx.createLinearGradient(0, 0, 0, h);
+    base.addColorStop(0, foam);
+    base.addColorStop(0.45, mist);
+    base.addColorStop(1, mistDeep);
+    ctx.fillStyle = base;
+    ctx.fillRect(0, 0, w, h);
+
+    const g1 = ctx.createRadialGradient(w * 0.1, 0, 0, w * 0.1, 0, Math.max(w, h) * 0.7);
+    g1.addColorStop(0, lake);
+    g1.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g1;
+    ctx.fillRect(0, 0, w, h);
+
+    const g2 = ctx.createRadialGradient(w, h * 0.2, 0, w, h * 0.2, Math.max(w, h) * 0.55);
+    g2.addColorStop(0, burg);
+    g2.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g2;
+    ctx.fillRect(0, 0, w, h);
+
+    // Draw in-view same-origin images (portrait, etc.) for richer first-frame refraction
+    document.querySelectorAll("img").forEach((img) => {
+      if (!img.complete || !img.naturalWidth) return;
+      const r = img.getBoundingClientRect();
+      if (r.width < 8 || r.height < 8) return;
+      if (r.bottom < 0 || r.right < 0 || r.top > h || r.left > w) return;
+      try {
+        ctx.drawImage(img, r.left, r.top, r.width, r.height);
+      } catch (_) {
+        /* tainted / not ready */
+      }
+    });
+    return c;
+  }
+
+  function withTimeout(promise, ms) {
+    return new Promise((resolve, reject) => {
+      const t = setTimeout(() => reject(new Error("capture timeout")), ms);
+      promise.then(
+        (v) => {
+          clearTimeout(t);
+          resolve(v);
+        },
+        (e) => {
+          clearTimeout(t);
+          reject(e);
+        }
+      );
+    });
   }
 
   async function captureBackdrop() {
-    if (!webgl.active || webgl.capturing) return;
+    if (!webgl.active || webgl.capturing || webgl.scrolling) return;
     webgl.capturing = true;
-    document.documentElement.classList.add("lg-capturing");
+    const gen = ++webgl.captureGen;
     try {
       const h2c = await loadHtml2Canvas();
-      const scale = Math.min(1.5, window.devicePixelRatio || 1);
-      const snap = await h2c(document.body, {
-        scale,
-        width: window.innerWidth,
-        height: window.innerHeight,
-        windowWidth: window.innerWidth,
-        windowHeight: window.innerHeight,
-        x: window.scrollX,
-        y: window.scrollY,
-        scrollX: -window.scrollX,
-        scrollY: -window.scrollY,
-        backgroundColor: null,
-        useCORS: true,
-        allowTaint: false,
-        logging: false,
-        imageTimeout: 2000,
-        ignoreElements: (el) => {
-          if (!el || !el.tagName) return false;
-          // Keep [data-liquid-glass] in layout (visibility:hidden via .lg-capturing)
-          // so in-flow tiles don't collapse; only skip WebGL canvases.
-          if (el.id === "lg-webgl-master") return true;
-          if (el.classList && el.classList.contains("lg-webgl-surface")) return true;
-          return false;
-        },
-      });
-      uploadBgTexture(snap);
-      webgl.lastScrollX = window.scrollX;
-      webgl.lastScrollY = window.scrollY;
-      renderAllWebGL();
+      if (!webgl.active || gen !== webgl.captureGen) return;
+
+      // Low scale keeps iOS main-thread work bounded
+      const scale = Math.min(1, window.devicePixelRatio || 1);
+      const snap = await withTimeout(
+        h2c(document.body, {
+          scale,
+          width: window.innerWidth,
+          height: window.innerHeight,
+          windowWidth: window.innerWidth,
+          windowHeight: window.innerHeight,
+          x: window.scrollX,
+          y: window.scrollY,
+          scrollX: -window.scrollX,
+          scrollY: -window.scrollY,
+          backgroundColor: null,
+          useCORS: true,
+          allowTaint: false,
+          logging: false,
+          imageTimeout: 1200,
+          foreignObjectRendering: false,
+          removeContainer: true,
+          // Never touch the live DOM — only hide glass inside the clone
+          onclone: (doc) => {
+            doc
+              .querySelectorAll(
+                "[data-liquid-glass], canvas.lg-webgl-surface, #lg-webgl-master"
+              )
+              .forEach((el) => {
+                el.style.visibility = "hidden";
+              });
+          },
+          ignoreElements: (el) => {
+            if (!el || !el.tagName) return false;
+            if (el.id === "lg-webgl-master") return true;
+            if (el.classList && el.classList.contains("lg-webgl-surface")) return true;
+            return false;
+          },
+        }),
+        2500
+      );
+
+      if (!webgl.active || gen !== webgl.captureGen) return;
+      if (snap && snap.width > 1 && snap.height > 1) {
+        uploadBgTexture(snap);
+        scheduleRender();
+      }
     } catch (err) {
-      console.warn("[liquid-glass] backdrop capture failed", err);
+      // Keep fast backdrop / CSS frost — do not tear down the whole path
+      if (!webgl.hasBg) {
+        uploadBgTexture(paintFastBackdrop());
+        scheduleRender();
+      }
     } finally {
-      document.documentElement.classList.remove("lg-capturing");
       webgl.capturing = false;
     }
   }
@@ -813,8 +896,23 @@ void main() {
   function scheduleCapture(delay) {
     clearTimeout(webgl.captureTimer);
     webgl.captureTimer = setTimeout(() => {
-      captureBackdrop();
-    }, delay == null ? 120 : delay);
+      const run = () => {
+        if (typeof requestIdleCallback === "function") {
+          requestIdleCallback(() => captureBackdrop(), { timeout: 600 });
+        } else {
+          captureBackdrop();
+        }
+      };
+      run();
+    }, delay == null ? 280 : delay);
+  }
+
+  function scheduleRender() {
+    if (webgl.raf) return;
+    webgl.raf = requestAnimationFrame(() => {
+      webgl.raf = 0;
+      renderAllWebGL();
+    });
   }
 
   function tintUniforms() {
@@ -834,24 +932,36 @@ void main() {
     };
   }
 
+  function clearSurface(surface) {
+    const c = surface.canvas;
+    if (!c.width || !c.height) return;
+    surface.ctx2d.clearRect(0, 0, c.width, c.height);
+  }
+
   function renderOrbWebGL(surface) {
     const gl = webgl.gl;
     const el = surface.el;
     if (!gl || !el.isConnected) return;
-    if (el.hidden || el.getAttribute("aria-hidden") === "true") {
-      const c = surface.canvas;
-      if (c.width && c.height) {
-        surface.ctx2d.clearRect(0, 0, c.width, c.height);
-      }
+
+    if (
+      el.hidden ||
+      el.getAttribute("aria-hidden") === "true" ||
+      !webgl.hasBg
+    ) {
+      clearSurface(surface);
       return;
     }
 
     const rect = el.getBoundingClientRect();
     const wCss = Math.max(2, Math.round(rect.width));
     const hCss = Math.max(2, Math.round(rect.height));
-    if (wCss < 2 || hCss < 2) return;
+    if (wCss < 2 || hCss < 2 || rect.bottom < -2 || rect.top > window.innerHeight + 2) {
+      clearSurface(surface);
+      return;
+    }
 
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    // Cap DPR to keep mobile GPU / readback cost predictable
+    const dpr = Math.min(1.5, window.devicePixelRatio || 1);
     const w = Math.max(2, Math.round(wCss * dpr));
     const h = Math.max(2, Math.round(hCss * dpr));
 
@@ -872,7 +982,7 @@ void main() {
     const specular =
       tune.specOpacity * (dark ? DARK_GLASS.specOpacityMul : 1) *
       (shape === "circle" ? 0.95 : 1.1);
-    const blur = dark ? WEBGL_LOOK.blur * 1.15 : WEBGL_LOOK.blur;
+    const blur = dark ? WEBGL_LOOK.blur * 1.05 : WEBGL_LOOK.blur * 0.9;
 
     const glCanvas = webgl.glCanvas;
     if (glCanvas.width !== w || glCanvas.height !== h) {
@@ -903,7 +1013,7 @@ void main() {
     gl.uniform1f(u.uTint, tint);
     gl.uniform3f(u.uTintColor, tintColor[0], tintColor[1], tintColor[2]);
     gl.uniform1f(u.uShadow, WEBGL_LOOK.shadow);
-    gl.uniform1f(u.uHasBg, webgl.hasBg ? 1 : 0);
+    gl.uniform1f(u.uHasBg, 1);
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, webgl.bgTex);
@@ -924,35 +1034,12 @@ void main() {
   function renderAllWebGL() {
     if (!webgl.active || !webgl.gl) return;
     for (let i = 0; i < webgl.surfaces.length; i++) {
-      renderOrbWebGL(webgl.surfaces[i]);
-    }
-  }
-
-  function positionsKey() {
-    let key = `${window.innerWidth}x${window.innerHeight}|`;
-    for (let i = 0; i < webgl.surfaces.length; i++) {
-      const el = webgl.surfaces[i].el;
-      if (!el.isConnected) continue;
-      const r = el.getBoundingClientRect();
-      key += `${Math.round(r.left)},${Math.round(r.top)},${Math.round(r.width)},${Math.round(r.height)};`;
-    }
-    return key;
-  }
-
-  function webglTick() {
-    if (!webgl.active) return;
-    const sx = window.scrollX;
-    const sy = window.scrollY;
-    if (sx !== webgl.lastScrollX || sy !== webgl.lastScrollY) {
-      scheduleCapture(100);
-    } else {
-      const key = positionsKey();
-      if (key !== webgl.lastPositions) {
-        webgl.lastPositions = key;
-        renderAllWebGL();
+      try {
+        renderOrbWebGL(webgl.surfaces[i]);
+      } catch (_) {
+        /* keep going — one bad orb must not freeze the rest */
       }
     }
-    webgl.raf = requestAnimationFrame(webglTick);
   }
 
   function detachWebGLSurfaces() {
@@ -975,18 +1062,96 @@ void main() {
       canvas.setAttribute("aria-hidden", "true");
       el.insertBefore(canvas, el.firstChild);
     }
-    const ctx2d = canvas.getContext("2d");
+    const ctx2d = canvas.getContext("2d", { alpha: true });
     const shape = el.getAttribute("data-liquid-glass") || "circle";
     webgl.surfaces.push({ el, canvas, ctx2d, shape });
   }
 
+  function syncWebGLSurfaces(orbs) {
+    const keep = new Set();
+    const byEl = new Map(webgl.surfaces.map((s) => [s.el, s]));
+    const next = [];
+    orbs.forEach((el) => {
+      const w = Math.max(2, Math.round(el.offsetWidth));
+      const h = Math.max(2, Math.round(el.offsetHeight));
+      const shape = el.getAttribute("data-liquid-glass") || "circle";
+      const radius = resolveCornerRadius(el, shape, w, h);
+      el.style.setProperty("--lg-radius", `${radius}px`);
+
+      let surface = byEl.get(el);
+      if (surface) {
+        el.classList.add("lg-webgl");
+        el.classList.remove("lg-fallback", "lg-refraction");
+        next.push(surface);
+      } else {
+        attachWebGLSurface(el);
+        surface = webgl.surfaces[webgl.surfaces.length - 1];
+        // attach pushed onto webgl.surfaces — move into next
+        webgl.surfaces.pop();
+        next.push(surface);
+      }
+      keep.add(el);
+    });
+    webgl.surfaces.forEach((s) => {
+      if (keep.has(s.el)) return;
+      s.el.classList.remove("lg-webgl");
+      if (s.canvas && s.canvas.parentNode) s.canvas.parentNode.removeChild(s.canvas);
+    });
+    webgl.surfaces = next;
+  }
+
+  function onWebGLScroll() {
+    if (!webgl.active) return;
+    webgl.scrolling = true;
+    // During scroll: keep last refraction frame; CSS frost stays live underneath.
+    // Invalidate in-flight captures so they can't apply a mismatched snapshot mid-fling.
+    webgl.captureGen++;
+    clearTimeout(webgl.scrollIdleTimer);
+    webgl.scrollIdleTimer = setTimeout(() => {
+      webgl.scrolling = false;
+      scheduleCapture(60);
+    }, 180);
+  }
+
+  function onWebGLPointer() {
+    if (!webgl.active) return;
+    // Coalesce drag/magnetic moves — avoid a GL readback storm on every touch event
+    clearTimeout(webgl.pointerTimer);
+    webgl.pointerTimer = setTimeout(scheduleRender, 32);
+  }
+
+  function bindWebGLListeners() {
+    if (webgl.listenersBound) return;
+    webgl.listenersBound = true;
+    window.addEventListener("scroll", onWebGLScroll, { passive: true });
+    window.addEventListener("pointermove", onWebGLPointer, { passive: true });
+    window.addEventListener("pointerup", onWebGLPointer, { passive: true });
+  }
+
+  function unbindWebGLListeners() {
+    if (!webgl.listenersBound) return;
+    webgl.listenersBound = false;
+    window.removeEventListener("scroll", onWebGLScroll);
+    window.removeEventListener("pointermove", onWebGLPointer);
+    window.removeEventListener("pointerup", onWebGLPointer);
+  }
+
   function teardownWebGL() {
     webgl.active = false;
+    webgl.captureGen++;
     cancelAnimationFrame(webgl.raf);
     webgl.raf = 0;
     clearTimeout(webgl.captureTimer);
+    clearTimeout(webgl.scrollIdleTimer);
+    clearTimeout(webgl.pointerTimer);
+    unbindWebGLListeners();
     detachWebGLSurfaces();
-    document.documentElement.classList.remove("lg-mobile-webgl", "lg-capturing");
+    webgl.hasBg = false;
+    document.documentElement.classList.remove(
+      "lg-mobile-webgl",
+      "lg-webgl-ready",
+      "lg-capturing"
+    );
   }
 
   function fallbackMobileToLucas(orbs) {
@@ -1012,27 +1177,20 @@ void main() {
       return;
     }
 
-    detachWebGLSurfaces();
-    orbs.forEach((el) => {
-      const w = Math.max(2, Math.round(el.offsetWidth));
-      const h = Math.max(2, Math.round(el.offsetHeight));
-      const shape = el.getAttribute("data-liquid-glass") || "circle";
-      const radius = resolveCornerRadius(el, shape, w, h);
-      el.style.setProperty("--lg-radius", `${radius}px`);
-      attachWebGLSurface(el);
-    });
-
+    const already = webgl.active;
+    // Soft sync reuses existing canvases — no GL teardown / flash on reinit
+    syncWebGLSurfaces(orbs);
     webgl.active = true;
-    webgl.lastPositions = "";
-    webgl.lastScrollX = window.scrollX;
-    webgl.lastScrollY = window.scrollY;
+    bindWebGLListeners();
 
-    // First paint with placeholder, then real snapshot
-    renderAllWebGL();
-    scheduleCapture(0);
+    // Instant first frame: cheap painted backdrop (never blocks on html2canvas)
+    if (!webgl.hasBg) {
+      uploadBgTexture(paintFastBackdrop());
+    }
+    scheduleRender();
 
-    cancelAnimationFrame(webgl.raf);
-    webgl.raf = requestAnimationFrame(webglTick);
+    // Richer DOM snapshot when idle — scroll-end also refreshes
+    scheduleCapture(already ? 220 : 450);
   }
 
   function initAll() {
