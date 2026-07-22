@@ -46,12 +46,16 @@
 
   /** @param {ThemePreference} preference @returns {ResolvedTheme} */
   function applyTheme(preference) {
+    if (!isThemePreference(preference)) return resolveTheme(themePreference);
     themePreference = preference;
     const resolved = resolveTheme(preference);
     const html = document.documentElement;
-    html.dataset.theme = preference;
-    html.dataset.resolvedTheme = resolved;
+    // setAttribute is more reliable than dataset for immediate CSS attribute selectors.
+    html.setAttribute("data-theme", preference);
+    html.setAttribute("data-resolved-theme", resolved);
     html.style.colorScheme = resolved;
+    // Nudge computed-style refresh for stubborn engines.
+    void html.offsetHeight;
     return resolved;
   }
 
@@ -59,6 +63,95 @@
     if (typeof window.reinitLiquidGlass === "function") {
       window.reinitLiquidGlass();
     }
+  }
+
+  /** Mirror of server theme intent — UI must not depend only on themeUpdate. */
+  function extractExplicitTheme(text) {
+    const t = String(text || "").trim();
+    if (!t) return null;
+    if (/^(?:theme\s*[:=]\s*)?(light|dark|system)$/i.test(t)) {
+      return t.replace(/^theme\s*[:=]\s*/i, "").toLowerCase();
+    }
+    if (/\bdark\s+mode\b/i.test(t)) return "dark";
+    if (/\blight\s+mode\b/i.test(t)) return "light";
+    if (/\bsystem\s+(?:theme|mode)\b/i.test(t)) return "system";
+    const patterns = [
+      /\b(?:switch|set|change|make|use|enable|apply)\b[\s\S]{0,48}\b(?:to\s+)?(light|dark|system)(?:\s+(?:theme|mode))?\b/i,
+      /\b(?:theme|mode)\b[\s\S]{0,24}\b(light|dark|system)\b/i,
+      /\b(light|dark|system)\s+(?:theme|mode)\b/i,
+    ];
+    for (const pattern of patterns) {
+      const match = t.match(pattern);
+      if (match && isThemePreference(match[1].toLowerCase())) {
+        return match[1].toLowerCase();
+      }
+    }
+    return null;
+  }
+
+  function recentThemeTalk(messages) {
+    return messages.slice(-8).some((m) =>
+      /\btheme\b|\blight\b|\bdark\b|\bsystem\b/i.test(m?.content || "")
+    );
+  }
+
+  function pickThemeToggleOrDefault() {
+    if (themePreference === "dark") return "light";
+    if (themePreference === "light") return "dark";
+    return resolveTheme("system") === "dark" ? "light" : "dark";
+  }
+
+  /**
+   * @param {string} userText
+   * @param {{role: string, content: string}[]} messages including the new user turn
+   * @returns {ThemePreference | null}
+   */
+  function detectClientThemeIntent(userText, messages) {
+    const explicit = extractExplicitTheme(userText);
+    if (explicit) return explicit;
+
+    const prevAssistant = [...messages]
+      .reverse()
+      .find((m) => m.role === "assistant")?.content || "";
+
+    if (
+      /^(do\s+it|go\s+ahead|yes|yep|yeah|please\s+do|confirm|ok|okay|sure)[.!]?\s*$/i.test(
+        userText.trim()
+      )
+    ) {
+      const m = prevAssistant.match(
+        /\b(?:set|setting|change|changing|switch|switching)\b[\s\S]{0,48}\b(?:to\s+)?(light|dark|system)\b/i
+      );
+      if (m && isThemePreference(m[1].toLowerCase())) return m[1].toLowerCase();
+    }
+
+    if (
+      /\b(you\s+choose|your\s+choice|pick\s+(one|for\s+me)|choose\s+for\s+me)\b/i.test(
+        userText
+      ) &&
+      (recentThemeTalk(messages) || /\btheme\b/i.test(prevAssistant))
+    ) {
+      return "dark";
+    }
+
+    const vague =
+      /\b(?:change|switch|set|update|toggle)\b[\s\S]{0,24}\btheme\b/i.test(userText) ||
+      /\btheme\s+change\b/i.test(userText) ||
+      /\bdo\s+(?:the\s+)?theme\b/i.test(userText) ||
+      /^(do\s+that(?:\s+last)?(?:\s+(?:part|thing|one))?|that\s+last\s+(?:part|thing|one)|the\s+last\s+(?:part|thing|one))[.!]?\s*$/i.test(
+        userText.trim()
+      );
+
+    if (
+      vague &&
+      (recentThemeTalk(messages) ||
+        /\btheme\b/i.test(userText) ||
+        /\btheme\b/i.test(prevAssistant))
+    ) {
+      return pickThemeToggleOrDefault();
+    }
+
+    return null;
   }
 
   // Bootstrap already set system; keep JS state in sync.
@@ -224,6 +317,14 @@
     appendBubble("user", text);
     history.push({ role: "user", content: text });
     if (input) input.value = "";
+
+    // Apply theme from the user message immediately — do not wait on the model/API.
+    const localTheme = detectClientThemeIntent(text, history);
+    if (localTheme) {
+      applyTheme(localTheme);
+      refreshGlass();
+    }
+
     setBusy(true);
 
     try {
@@ -273,8 +374,13 @@
       history.push({ role: "assistant", content: reply });
       appendBubble("assistant", reply);
 
+      // Server themeUpdate is authoritative when present (covers edge cases).
       if (isThemePreference(data.themeUpdate?.theme)) {
         applyTheme(data.themeUpdate.theme);
+        refreshGlass();
+      } else if (localTheme) {
+        // Keep the optimistic local apply even if the API omitted themeUpdate.
+        applyTheme(localTheme);
         refreshGlass();
       }
 

@@ -131,4 +131,21 @@ describe("theme phrasing extras", () => {
       "dark"
     );
   });
+
+  it("resolves do that last part after theme abilities", () => {
+    assert.equal(
+      detectThemeIntent(
+        [
+          {
+            role: "assistant",
+            content:
+              "GPT-OSS:20b can answer factual questions about Yan, change the site theme to light, dark, or system",
+          },
+          { role: "user", content: "do that last part" },
+        ],
+        { theme: "system", resolvedTheme: "light" }
+      ),
+      "dark"
+    );
+  });
 });

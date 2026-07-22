@@ -211,6 +211,13 @@ function isConfirmRequest(text) {
   );
 }
 
+/** “do that last part” after the assistant mentioned theme abilities. */
+function isThemeAbilityFollowUp(text) {
+  return /^(do\s+that(?:\s+last)?(?:\s+(?:part|thing|one))?|that\s+last\s+(?:part|thing|one)|the\s+last\s+(?:part|thing|one)|do\s+the\s+last\s+(?:part|thing|one))[.!]?\s*$/i.test(
+    String(text || "").trim()
+  );
+}
+
 function recentThemeConversation(messages) {
   return messages.slice(-8).some((m) => {
     const c = typeof m?.content === "string" ? m.content : "";
@@ -263,7 +270,7 @@ export function detectThemeIntent(messages, uiContext) {
   }
 
   if (
-    isVagueThemeRequest(userText) &&
+    (isVagueThemeRequest(userText) || isThemeAbilityFollowUp(userText)) &&
     (recentThemeConversation(messages) ||
       /\btheme\b/i.test(userText) ||
       /\b(light|dark|system|theme)\b/i.test(prevAssistant))
