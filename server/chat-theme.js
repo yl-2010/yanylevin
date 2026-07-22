@@ -137,6 +137,10 @@ export function extractExplicitTheme(text) {
   const exact = t.match(/^(?:theme\s*[:=]\s*)?(light|dark|system)$/i);
   if (exact) return normalizeTheme(exact[1]);
 
+  if (/\bdark\s+mode\b/i.test(t)) return "dark";
+  if (/\blight\s+mode\b/i.test(t)) return "light";
+  if (/\bsystem\s+(?:theme|mode)\b/i.test(t)) return "system";
+
   const patterns = [
     /\b(?:switch|set|change|make|use|enable|apply)\b[\s\S]{0,48}\b(?:to\s+)?(light|dark|system)(?:\s+(?:theme|mode))?\b/i,
     /\b(?:theme|mode)\b[\s\S]{0,24}\b(light|dark|system)\b/i,
@@ -147,6 +151,33 @@ export function extractExplicitTheme(text) {
     if (match) return normalizeTheme(match[1]);
   }
   return null;
+}
+
+/** Vague “change the theme” / “do the theme thing” without light|dark|system. */
+export function isVagueThemeRequest(text) {
+  const t = String(text || "");
+  if (extractExplicitTheme(t)) return false;
+  return (
+    /\b(?:change|switch|set|update|toggle)\b[\s\S]{0,24}\btheme\b/i.test(t) ||
+    /\btheme\s+change\b/i.test(t) ||
+    /\bdo\s+(?:the\s+)?theme\b/i.test(t) ||
+    /\btheme\s+change\s+thing\b/i.test(t)
+  );
+}
+
+/**
+ * @param {Record<string, unknown> | null | undefined} uiContext
+ * @returns {ThemePreference}
+ */
+export function pickThemeToggleOrDefault(uiContext) {
+  const ui = uiContext && typeof uiContext === "object" ? uiContext : {};
+  const current =
+    normalizeTheme(ui.theme) ||
+    normalizeTheme(ui.themePreference) ||
+    normalizeTheme(ui.resolvedTheme);
+  if (current === "dark") return "light";
+  if (current === "light") return "dark";
+  return "dark";
 }
 
 /**
@@ -191,9 +222,10 @@ function recentThemeConversation(messages) {
  * Detect theme change from the latest user turn (+ short prior context).
  * This is the primary path — do not rely on the model emitting JSON.
  * @param {Array<{role: string, content: string}>} messages
+ * @param {Record<string, unknown> | null | undefined} [uiContext]
  * @returns {ThemePreference | null}
  */
-export function detectThemeIntent(messages) {
+export function detectThemeIntent(messages, uiContext) {
   if (!Array.isArray(messages) || !messages.length) return null;
 
   let lastUserIdx = -1;
@@ -230,7 +262,25 @@ export function detectThemeIntent(messages) {
     return "dark";
   }
 
+  if (
+    isVagueThemeRequest(userText) &&
+    (recentThemeConversation(messages) ||
+      /\btheme\b/i.test(userText) ||
+      /\b(light|dark|system|theme)\b/i.test(prevAssistant))
+  ) {
+    return pickThemeToggleOrDefault(uiContext);
+  }
+
   return null;
+}
+
+/**
+ * @param {string} text
+ */
+function looksLikeThemeDenial(text) {
+  return /\b(unable|can'?t|cannot|do not|don't|not able|no ability|lack(?:s)? the ability)\b[\s\S]{0,80}\btheme\b/i.test(
+    String(text || "")
+  );
 }
 
 /**
@@ -248,7 +298,7 @@ export function finalizeChatTheme({ rawContent, themeFromUser = null }) {
   const theme = normalizeTheme(themeFromUser) || fromModel?.theme || null;
 
   let content = stripped.trim();
-  if (!content && theme) {
+  if (theme && (!content || looksLikeThemeDenial(content))) {
     content = `Site theme set to ${theme}`;
   }
   if (!content) {
@@ -283,7 +333,7 @@ export function formatThemeContext(uiContext) {
   const applied = normalizeTheme(ui.themeApplied);
   if (applied) {
     lines.push(
-      `THEME UPDATE APPLIED: ${applied} — briefly confirm; the site applies the change itself`
+      `THEME UPDATE APPLIED: ${applied} — the site already changed the theme to ${applied}. Confirm briefly. Do not deny the change.`
     );
   }
 

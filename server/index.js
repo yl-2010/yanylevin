@@ -12,7 +12,7 @@ import { probeLmStudio, chatCompletions, getLmStudioConfig } from "./lmstudio.js
 import {
   buildYanSystemPrompt,
   invalidateYanMarkdownCache,
-  loadYanMarkdown,
+  getKnowledgeStats,
 } from "./yan-kb.js";
 import { syncYanAgeAndPublish } from "./yan-age.js";
 import { appendChatTurn } from "./chat-log.js";
@@ -75,16 +75,13 @@ app.use(express.json({ limit: "2mb" }));
 app.get("/health", async (_req, res) => {
   const lm = await probeLmStudio();
   const { issuer, audience } = getAuthConfig();
-  const kb = loadYanMarkdown();
+  const kb = getKnowledgeStats();
   res.json({
     ok: true,
     service: "yanylevin-server",
     authConfigured: authConfigured(),
     jwt: { issuer, audience },
-    knowledgeBase: {
-      loaded: Boolean(kb && kb.trim()),
-      bytes: kb ? Buffer.byteLength(kb, "utf8") : 0,
-    },
+    knowledgeBase: kb,
     lmStudio: {
       ok: lm.ok,
       baseUrl: lm.baseUrl,
@@ -131,7 +128,7 @@ app.get("/api/visitor-token", async (req, res) => {
 
 /**
  * Free-form chat against GPT-OSS for the site chatbot.
- * Requires Bearer JWT. Always injects yan.md as the system prompt.
+ * Requires Bearer JWT. Slim system prompt + per-turn yan.md section retrieval.
  */
 app.post("/api/chat", requireAuth, async (req, res) => {
   try {
@@ -164,18 +161,27 @@ app.post("/api/chat", requireAuth, async (req, res) => {
       return;
     }
 
-    // Theme side-effects come from the user message (deterministic), not model JSON.
-    const themeFromUser = detectThemeIntent(conversation);
     const baseUi =
       req.body?.uiContext && typeof req.body.uiContext === "object"
         ? req.body.uiContext
         : {};
+
+    // Theme side-effects come from the user message (deterministic), not model JSON.
+    const themeFromUser = detectThemeIntent(conversation, baseUi);
     const uiContext = themeFromUser
       ? { ...baseUi, themeApplied: themeFromUser }
       : baseUi;
 
+    const lastUser = [...conversation]
+      .reverse()
+      .find((m) => m.role === "user");
+    const query = typeof lastUser?.content === "string" ? lastUser.content : "";
+
     const grounded = [
-      { role: "system", content: buildYanSystemPrompt(uiContext) },
+      {
+        role: "system",
+        content: buildYanSystemPrompt(uiContext, { query }),
+      },
       ...conversation,
     ];
 

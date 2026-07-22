@@ -99,4 +99,36 @@ describe("stripHarmonyTokens / finalizeChatTheme", () => {
     });
     assert.deepEqual(result.themeUpdate, { theme: "system" });
   });
+
+  it("overrides model theme denials when a theme was applied", () => {
+    const result = finalizeChatTheme({
+      rawContent: "I'm unable to change the site theme.",
+      themeFromUser: "dark",
+    });
+    assert.deepEqual(result.themeUpdate, { theme: "dark" });
+    assert.match(result.content, /Site theme set to dark/i);
+  });
+});
+
+describe("theme phrasing extras", () => {
+  it("parses dark mode / light mode", () => {
+    assert.equal(extractExplicitTheme("make it dark mode"), "dark");
+    assert.equal(extractExplicitTheme("switch to light mode"), "light");
+  });
+
+  it("resolves vague theme change requests", () => {
+    assert.equal(
+      detectThemeIntent(
+        [
+          {
+            role: "assistant",
+            content: "I can confirm site-wide settings such as theme changes.",
+          },
+          { role: "user", content: "do the theme change thing" },
+        ],
+        { theme: "system", resolvedTheme: "light" }
+      ),
+      "dark"
+    );
+  });
 });

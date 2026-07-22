@@ -1,5 +1,6 @@
 /**
- * Load data/yan.md as the grounded knowledge base for the site chatbot.
+ * Load data/yan.md and build a slim always-on system prompt.
+ * Detail sections are retrieved per turn (NoteLMs-style lexical RAG) — not stuffed whole.
  */
 
 import { readFileSync } from "node:fs";
@@ -7,6 +8,12 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { commitAndPushAgeBump, syncYanAge } from "./yan-age.js";
 import { formatThemeContext } from "./chat-theme.js";
+import {
+  buildCompactAboutYan,
+  formatRetrievedKnowledge,
+  parseMarkdownSections,
+  retrieveYanSections,
+} from "./yan-retrieve.js";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const YAN_MD_PATH = join(ROOT, "data", "yan.md");
@@ -65,34 +72,60 @@ export function formatExactNow(date = new Date()) {
   return `${pretty} (ISO ${date.toISOString()})`;
 }
 
-/** System prompt prepended on every chat request. */
-export function buildYanSystemPrompt(uiContext) {
+/**
+ * Slim system prompt: persona + abilities + compact about + theme + retrieved sections.
+ * @param {Record<string, unknown> | null | undefined} uiContext
+ * @param {{ query?: string }} [opts]
+ */
+export function buildYanSystemPrompt(uiContext, opts = {}) {
   const kb = loadYanMarkdown().trim();
   const now = formatExactNow();
   const themeLine = formatThemeContext(uiContext);
+  const query = typeof opts.query === "string" ? opts.query : "";
+  const retrieved = kb ? retrieveYanSections(kb, query) : [];
+  const about = kb
+    ? buildCompactAboutYan(kb)
+    : "ABOUT YAN: (knowledge base unavailable)";
+
   const lines = [
     "You are GPT-OSS:20b, a formal assistant answering questions about Yan.",
     "You run on Yan’s local Mac Studio. Always refer to yourself as GPT-OSS:20b.",
     `Today's exact date and time is: ${now}.`,
-    "Use that date when answering questions about the current day, deadlines, or anything time-sensitive.",
-    "For Yan’s age, use the **Age** field in the knowledge base exactly — do not recompute age from the birth year alone.",
-    "Refer to him as Yan (not Yan Levin or his full name) in the third person. Keep answers very formal — no jokes, slang, emoji, or banter.",
-    "Be very concise. Prefer short, direct answers; avoid filler and unnecessary preamble.",
-    "If the entire reply is only one phrase or one sentence, do not end it with a period (no trailing “.”).",
-    "For open-ended questions like “Who is he?” or “Who is Yan?”, answer in one short sentence only.",
-    "Do not volunteer personal-life information (languages, heritage, date of birth, hobbies, family, etc.) unless the user directly asks for that category.",
-    "Use only the knowledge base below. If a fact is not covered, say you do not know rather than inventing details.",
+    "Use that date for current-day / time-sensitive questions.",
     "",
-    "Site theme: the site applies theme changes itself (light, dark, or system). Use SITE THEME below for the current preference. If THEME UPDATE APPLIED is present, briefly confirm that change. Do not emit JSON, control tokens, or action markup.",
+    "TONE:",
+    "- Very formal — no jokes, slang, emoji, or banter",
+    "- Very concise — short direct answers; no filler",
+    "- Refer to him as Yan in the third person (not Yan Levin / full name)",
+    "- One phrase or one sentence replies: do not end with a period",
+    "- “Who is he?” / “Who is Yan?” → one short sentence only",
+    "- Do not volunteer personal-life details (languages, heritage, DOB, hobbies, family, phone, YouTube) unless directly asked",
+    "",
+    "SITE ABILITIES (you have these on this website):",
+    "- Answer factual questions about Yan using ABOUT YAN and RETRIEVED KNOWLEDGE",
+    "- Change the overall site theme when the user asks: light, dark, or system (follow the OS)",
+    "- Theme changes are applied by the site for you. When THEME UPDATE APPLIED is present, the change already happened — briefly confirm it",
+    "- Never say you cannot change the theme, that only the platform can, or that you lack that ability",
+    "- Do not emit JSON, control tokens, or action markup",
+    "",
+    about,
   ];
+
   if (themeLine) {
-    lines.push(themeLine);
+    lines.push("", themeLine);
   }
-  lines.push(
-    "",
-    "--- KNOWLEDGE BASE (yan.md) ---",
-    kb || "(knowledge base unavailable)",
-    "--- END KNOWLEDGE BASE ---"
-  );
+
+  lines.push("", formatRetrievedKnowledge(retrieved));
   return lines.join("\n");
+}
+
+/** Knowledge-base stats for /health. */
+export function getKnowledgeStats() {
+  const kb = loadYanMarkdown();
+  const sections = kb ? parseMarkdownSections(kb) : [];
+  return {
+    loaded: Boolean(kb && kb.trim()),
+    bytes: kb ? Buffer.byteLength(kb, "utf8") : 0,
+    sections: sections.length,
+  };
 }
