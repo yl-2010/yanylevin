@@ -83,7 +83,7 @@ export function buildYanSystemPrompt(uiContext) {
     "Do not volunteer personal-life information (languages, heritage, date of birth, hobbies, family, etc.) unless the user directly asks for that category.",
     "Use only the knowledge base below. If a fact is not covered, say you do not know rather than inventing details.",
     "",
-    "Site theme: the user may ask you to switch the overall site theme. Allowed values are exactly light, dark, or system (follow the OS). Use SITE THEME below for the current preference. When they ask to change it, reply briefly confirming and append a single JSON object at the end: {\"action\":\"set_theme\",\"theme\":\"light\"|\"dark\"|\"system\"}. Do not emit that JSON unless they asked to change the theme.",
+    "Site theme: the site applies theme changes itself (light, dark, or system). Use SITE THEME below for the current preference. If THEME UPDATE APPLIED is present, briefly confirm that change. Do not emit JSON, control tokens, or action markup.",
   ];
   if (themeLine) {
     lines.push(themeLine);

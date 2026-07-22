@@ -17,7 +17,7 @@ import {
 import { syncYanAgeAndPublish } from "./yan-age.js";
 import { appendChatTurn } from "./chat-log.js";
 import { mintVisitorToken } from "./mint.js";
-import { applySetThemeAction } from "./chat-theme.js";
+import { detectThemeIntent, finalizeChatTheme } from "./chat-theme.js";
 
 const PORT = Number(process.env.PORT || 3004);
 const HOST = process.env.HOST || "0.0.0.0";
@@ -164,8 +164,18 @@ app.post("/api/chat", requireAuth, async (req, res) => {
       return;
     }
 
+    // Theme side-effects come from the user message (deterministic), not model JSON.
+    const themeFromUser = detectThemeIntent(conversation);
+    const baseUi =
+      req.body?.uiContext && typeof req.body.uiContext === "object"
+        ? req.body.uiContext
+        : {};
+    const uiContext = themeFromUser
+      ? { ...baseUi, themeApplied: themeFromUser }
+      : baseUi;
+
     const grounded = [
-      { role: "system", content: buildYanSystemPrompt(req.body?.uiContext) },
+      { role: "system", content: buildYanSystemPrompt(uiContext) },
       ...conversation,
     ];
 
@@ -177,7 +187,10 @@ app.post("/api/chat", requireAuth, async (req, res) => {
         typeof req.body?.maxTokens === "number" ? req.body.maxTokens : 2048,
     });
 
-    const applied = applySetThemeAction(result.content);
+    const applied = finalizeChatTheme({
+      rawContent: result.content,
+      themeFromUser,
+    });
 
     // Audit trail: every user prompt + model reply → data/chat-log.md
     appendChatTurn({
