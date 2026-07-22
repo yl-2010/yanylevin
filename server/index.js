@@ -17,6 +17,7 @@ import {
 import { syncYanAgeAndPublish } from "./yan-age.js";
 import { appendChatTurn } from "./chat-log.js";
 import { mintVisitorToken } from "./mint.js";
+import { applySetThemeAction } from "./chat-theme.js";
 
 const PORT = Number(process.env.PORT || 3004);
 const HOST = process.env.HOST || "0.0.0.0";
@@ -164,7 +165,7 @@ app.post("/api/chat", requireAuth, async (req, res) => {
     }
 
     const grounded = [
-      { role: "system", content: buildYanSystemPrompt() },
+      { role: "system", content: buildYanSystemPrompt(req.body?.uiContext) },
       ...conversation,
     ];
 
@@ -176,21 +177,28 @@ app.post("/api/chat", requireAuth, async (req, res) => {
         typeof req.body?.maxTokens === "number" ? req.body.maxTokens : 2048,
     });
 
+    const applied = applySetThemeAction(result.content);
+
     // Audit trail: every user prompt + model reply → data/chat-log.md
     appendChatTurn({
       messages: conversation,
-      assistantContent: result.content,
+      assistantContent: applied.content,
       model: result.model,
       ip: req.ip || req.socket?.remoteAddress || "",
     }).catch((err) => console.error("[chat-log]", err));
 
-    res.json({
+    /** @type {Record<string, unknown>} */
+    const payload = {
       ok: true,
-      content: result.content,
+      content: applied.content,
       model: result.model,
       usage: result.usage,
       lmStudio: getLmStudioConfig(),
-    });
+    };
+    if (applied.themeUpdate) {
+      payload.themeUpdate = applied.themeUpdate;
+    }
+    res.json(payload);
   } catch (err) {
     console.error("[/api/chat]", err);
     res.status(502).json({ ok: false, error: err.message || "chat failed" });

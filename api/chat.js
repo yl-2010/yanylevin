@@ -54,6 +54,7 @@ module.exports = async function handler(req, res) {
         messages: body.messages,
         temperature: body.temperature,
         maxTokens: body.maxTokens,
+        uiContext: body.uiContext,
       }),
       signal: AbortSignal.timeout(120_000),
     });

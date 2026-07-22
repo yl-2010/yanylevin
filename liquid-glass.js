@@ -52,6 +52,9 @@
   };
 
   function isDarkMode() {
+    const resolved = document.documentElement.dataset.resolvedTheme;
+    if (resolved === "dark") return true;
+    if (resolved === "light") return false;
     return window.matchMedia("(prefers-color-scheme: dark)").matches;
   }
 

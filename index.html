@@ -4,6 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="color-scheme" content="light dark" />
+    <script>
+      (function () {
+        try {
+          var dark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          var r = document.documentElement;
+          r.dataset.theme = "system";
+          r.dataset.resolvedTheme = dark ? "dark" : "light";
+          r.style.colorScheme = dark ? "dark" : "light";
+        } catch (e) {}
+      })();
+    </script>
     <title>Yan Levin</title>
     <meta
       name="description"
@@ -48,8 +59,9 @@
         --pointer-x: 50%;
         --pointer-y: 30%;
       }
+      /* Dark tokens: OS preference (unless forced light) or explicit resolved dark */
       @media (prefers-color-scheme: dark) {
-        :root {
+        :root:not([data-resolved-theme="light"]) {
           --bg-0: #0b0e11;
           --bg-1: #0f141a;
           --fg: #e9eef2;
@@ -73,6 +85,54 @@
           --lg-fallback-tint: 0.14;
           --lg-fallback-shine: rgba(255, 255, 255, 0.3);
         }
+      }
+      html[data-resolved-theme="dark"] {
+        --bg-0: #0b0e11;
+        --bg-1: #0f141a;
+        --fg: #e9eef2;
+        --muted: #98a2ad;
+        --accent: #71c4c2;
+        --hairline: rgba(233, 238, 242, 0.12);
+        --panel-bg: rgba(26, 31, 37, 0.45);
+        --panel-brd: rgba(255, 255, 255, 0.1);
+        --rim: rgba(255, 255, 255, 0.16);
+        --glow: rgba(200, 214, 224, 0.05);
+        --bloom-a: rgba(58, 150, 152, 0.2);
+        --bloom-b: rgba(150, 120, 70, 0.15);
+        --bloom-c: rgba(66, 104, 168, 0.17);
+        --lg-tint-rgb: 18, 24, 22;
+        --lg-tint-opacity: 0.28;
+        --lg-shadow-blur: 22px;
+        --lg-shadow-spread: -4px;
+        --lg-shadow-color: rgba(255, 255, 255, 0.28);
+        --lg-outer-shadow-blur: 28px;
+        --lg-outer-shadow: rgba(0, 0, 0, 0.5);
+        --lg-fallback-tint: 0.14;
+        --lg-fallback-shine: rgba(255, 255, 255, 0.3);
+      }
+      html[data-resolved-theme="light"] {
+        --bg-0: #e8edf2;
+        --bg-1: #dde5ec;
+        --fg: #14181d;
+        --muted: #5a6470;
+        --accent: #1b7d8a;
+        --hairline: rgba(20, 24, 29, 0.12);
+        --panel-bg: rgba(255, 255, 255, 0.5);
+        --panel-brd: rgba(255, 255, 255, 0.6);
+        --rim: rgba(255, 255, 255, 0.75);
+        --glow: rgba(255, 255, 255, 0.14);
+        --bloom-a: rgba(24, 125, 145, 0.22);
+        --bloom-b: rgba(206, 176, 122, 0.16);
+        --bloom-c: rgba(70, 120, 200, 0.18);
+        --lg-tint-rgb: 255, 255, 255;
+        --lg-tint-opacity: 0.06;
+        --lg-shadow-blur: 20px;
+        --lg-shadow-spread: -5px;
+        --lg-shadow-color: rgba(255, 255, 255, 0.45);
+        --lg-outer-shadow-blur: 24px;
+        --lg-outer-shadow: rgba(0, 0, 0, 0.18);
+        --lg-fallback-tint: 0.2;
+        --lg-fallback-shine: rgba(255, 255, 255, 0.5);
       }
       * { box-sizing: border-box; }
       html { scroll-behavior: smooth; }
@@ -126,11 +186,22 @@
         backdrop-filter: blur(10px) saturate(1.5); -webkit-backdrop-filter: blur(10px) saturate(1.5);
       }
       @media (prefers-color-scheme: dark) {
-        .corner.lg-refraction::after, .stat-tile.lg-refraction::after, .portrait-glass.lg-refraction::after,
-        .yan-chat-close.lg-refraction::after, .yan-chat-send.lg-refraction::after {
+        html:not([data-resolved-theme="light"]) .corner.lg-refraction::after,
+        html:not([data-resolved-theme="light"]) .stat-tile.lg-refraction::after,
+        html:not([data-resolved-theme="light"]) .portrait-glass.lg-refraction::after,
+        html:not([data-resolved-theme="light"]) .yan-chat-close.lg-refraction::after,
+        html:not([data-resolved-theme="light"]) .yan-chat-send.lg-refraction::after {
           backdrop-filter: var(--lg-filter) brightness(0.92) saturate(1.15);
           -webkit-backdrop-filter: var(--lg-filter) brightness(0.92) saturate(1.15);
         }
+      }
+      html[data-resolved-theme="dark"] .corner.lg-refraction::after,
+      html[data-resolved-theme="dark"] .stat-tile.lg-refraction::after,
+      html[data-resolved-theme="dark"] .portrait-glass.lg-refraction::after,
+      html[data-resolved-theme="dark"] .yan-chat-close.lg-refraction::after,
+      html[data-resolved-theme="dark"] .yan-chat-send.lg-refraction::after {
+        backdrop-filter: var(--lg-filter) brightness(0.92) saturate(1.15);
+        -webkit-backdrop-filter: var(--lg-filter) brightness(0.92) saturate(1.15);
       }
       .corner svg, .yan-chat-close svg, .yan-chat-send svg {
         position: relative; z-index: 2; width: 52%; height: 52%;
@@ -205,7 +276,17 @@
         box-shadow: 0 14px 36px var(--lg-outer-shadow);
         transition: transform 0.4s var(--ease); will-change: transform;
       }
-      @media (prefers-color-scheme: dark) { .portrait-glass { --lg-tint-rgb: 244, 104, 16; --lg-tint-opacity: 0.36; } }
+      @media (prefers-color-scheme: dark) {
+        html:not([data-resolved-theme="light"]) .portrait-glass {
+          --lg-tint-rgb: 244, 104, 16; --lg-tint-opacity: 0.36;
+        }
+      }
+      html[data-resolved-theme="dark"] .portrait-glass {
+        --lg-tint-rgb: 244, 104, 16; --lg-tint-opacity: 0.36;
+      }
+      html[data-resolved-theme="light"] .portrait-glass {
+        --lg-tint-rgb: 253, 88, 2; --lg-tint-opacity: 0.34;
+      }
       .portrait-glass > * { position: relative; z-index: 2; }
       /* Photo: exact same size and corner radius as before, square */
       .portrait {
@@ -286,7 +367,15 @@
         position: fixed; inset: 0; z-index: 90; pointer-events: none;
       }
       @media (prefers-color-scheme: dark) {
-        .yan-chat { --chat-orange: #f46810; --chat-orange-rgb: 244, 104, 16; }
+        html:not([data-resolved-theme="light"]) .yan-chat {
+          --chat-orange: #f46810; --chat-orange-rgb: 244, 104, 16;
+        }
+      }
+      html[data-resolved-theme="dark"] .yan-chat {
+        --chat-orange: #f46810; --chat-orange-rgb: 244, 104, 16;
+      }
+      html[data-resolved-theme="light"] .yan-chat {
+        --chat-orange: #fd5802; --chat-orange-rgb: 253, 88, 2;
       }
       @media (max-width: 900px) {
         .yan-chat { --chat-circle: 96px; --chat-top-orb: 96px; }
@@ -375,8 +464,9 @@
         transition: opacity 0.2s, box-shadow 0.3s var(--ease), filter 0.25s var(--ease);
       }
       @media (prefers-color-scheme: dark) {
-        .yan-chat-send { --lg-tint-opacity: 0.4; }
+        html:not([data-resolved-theme="light"]) .yan-chat-send { --lg-tint-opacity: 0.4; }
       }
+      html[data-resolved-theme="dark"] .yan-chat-send { --lg-tint-opacity: 0.4; }
       .yan-chat-send svg {
         width: 42%; height: 42%; display: block;
         transition: transform 0.25s var(--chat-spring);
@@ -445,45 +535,80 @@
        * Applied only when the pill is expanded (is-open); collapsed circle stays normal glass.
        */
       @media (prefers-color-scheme: light) {
-        html.lg-chrome .yan-chat.is-open .yan-chat-pill.corner,
-        html.lg-chrome .yan-chat-panel {
+        html:not([data-resolved-theme="dark"]).lg-chrome .yan-chat.is-open .yan-chat-pill.corner,
+        html:not([data-resolved-theme="dark"]).lg-chrome .yan-chat-panel {
           --lg-tint-rgb: 255, 255, 255;
           --lg-tint-opacity: 0.88;
         }
-        html.lg-chrome .yan-chat.is-open .yan-chat-pill.corner.lg-refraction::after {
+        html:not([data-resolved-theme="dark"]).lg-chrome .yan-chat.is-open .yan-chat-pill.corner.lg-refraction::after {
           backdrop-filter: var(--lg-filter) brightness(1.34) saturate(1.02);
           -webkit-backdrop-filter: var(--lg-filter) brightness(1.34) saturate(1.02);
         }
         /* Chat window only — tiny blur for legibility; pill stays unblurred */
-        html.lg-chrome .yan-chat-panel.lg-refraction::after {
+        html:not([data-resolved-theme="dark"]).lg-chrome .yan-chat-panel.lg-refraction::after {
           backdrop-filter: var(--lg-filter) brightness(1.34) saturate(1.02) blur(2px);
           -webkit-backdrop-filter: var(--lg-filter) brightness(1.34) saturate(1.02) blur(2px);
         }
-        html.lg-chrome .yan-chat-bubble--assistant {
+        html:not([data-resolved-theme="dark"]).lg-chrome .yan-chat-bubble--assistant {
           color: #050608;
           opacity: 1;
         }
-        html.lg-chrome .yan-chat-input {
+        html:not([data-resolved-theme="dark"]).lg-chrome .yan-chat-input {
           color: #050608;
         }
       }
+      html[data-resolved-theme="light"].lg-chrome .yan-chat.is-open .yan-chat-pill.corner,
+      html[data-resolved-theme="light"].lg-chrome .yan-chat-panel {
+        --lg-tint-rgb: 255, 255, 255;
+        --lg-tint-opacity: 0.88;
+      }
+      html[data-resolved-theme="light"].lg-chrome .yan-chat.is-open .yan-chat-pill.corner.lg-refraction::after {
+        backdrop-filter: var(--lg-filter) brightness(1.34) saturate(1.02);
+        -webkit-backdrop-filter: var(--lg-filter) brightness(1.34) saturate(1.02);
+      }
+      html[data-resolved-theme="light"].lg-chrome .yan-chat-panel.lg-refraction::after {
+        backdrop-filter: var(--lg-filter) brightness(1.34) saturate(1.02) blur(2px);
+        -webkit-backdrop-filter: var(--lg-filter) brightness(1.34) saturate(1.02) blur(2px);
+      }
+      html[data-resolved-theme="light"].lg-chrome .yan-chat-bubble--assistant {
+        color: #050608;
+        opacity: 1;
+      }
+      html[data-resolved-theme="light"].lg-chrome .yan-chat-input {
+        color: #050608;
+      }
       @media (prefers-color-scheme: dark) {
-        .yan-chat.is-open .yan-chat-pill.corner,
-        .yan-chat-panel {
+        html:not([data-resolved-theme="light"]) .yan-chat.is-open .yan-chat-pill.corner,
+        html:not([data-resolved-theme="light"]) .yan-chat-panel {
           --lg-tint-rgb: 8, 11, 14;
           --lg-tint-opacity: 0.8;
           --lg-fallback-tint: 0.7;
         }
-        .yan-chat.is-open .yan-chat-pill.corner.lg-refraction::after,
-        .yan-chat-panel.lg-refraction::after {
+        html:not([data-resolved-theme="light"]) .yan-chat.is-open .yan-chat-pill.corner.lg-refraction::after,
+        html:not([data-resolved-theme="light"]) .yan-chat-panel.lg-refraction::after {
           backdrop-filter: var(--lg-filter) brightness(0.46) saturate(1.1);
           -webkit-backdrop-filter: var(--lg-filter) brightness(0.46) saturate(1.1);
         }
         /* Chromium dark: same tiny panel-only blur (pill unchanged) */
-        html.lg-chrome .yan-chat-panel.lg-refraction::after {
+        html:not([data-resolved-theme="light"]).lg-chrome .yan-chat-panel.lg-refraction::after {
           backdrop-filter: var(--lg-filter) brightness(0.46) saturate(1.1) blur(2px);
           -webkit-backdrop-filter: var(--lg-filter) brightness(0.46) saturate(1.1) blur(2px);
         }
+      }
+      html[data-resolved-theme="dark"] .yan-chat.is-open .yan-chat-pill.corner,
+      html[data-resolved-theme="dark"] .yan-chat-panel {
+        --lg-tint-rgb: 8, 11, 14;
+        --lg-tint-opacity: 0.8;
+        --lg-fallback-tint: 0.7;
+      }
+      html[data-resolved-theme="dark"] .yan-chat.is-open .yan-chat-pill.corner.lg-refraction::after,
+      html[data-resolved-theme="dark"] .yan-chat-panel.lg-refraction::after {
+        backdrop-filter: var(--lg-filter) brightness(0.46) saturate(1.1);
+        -webkit-backdrop-filter: var(--lg-filter) brightness(0.46) saturate(1.1);
+      }
+      html[data-resolved-theme="dark"].lg-chrome .yan-chat-panel.lg-refraction::after {
+        backdrop-filter: var(--lg-filter) brightness(0.46) saturate(1.1) blur(2px);
+        -webkit-backdrop-filter: var(--lg-filter) brightness(0.46) saturate(1.1) blur(2px);
       }
       /*
        * Non-Chromium chat: classic frosted glass for now (Safari / iOS WebGL).
@@ -498,12 +623,24 @@
         --lg-fallback-tint: 0.42;
       }
       @media (prefers-color-scheme: dark) {
-        html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat.is-open .yan-chat-pill.corner,
-        html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel {
+        html:not([data-resolved-theme="light"]):not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat.is-open .yan-chat-pill.corner,
+        html:not([data-resolved-theme="light"]):not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel {
           --lg-tint-rgb: 18, 24, 22;
           --lg-tint-opacity: 0.28;
           --lg-fallback-tint: 0.48;
         }
+      }
+      html[data-resolved-theme="dark"]:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat.is-open .yan-chat-pill.corner,
+      html[data-resolved-theme="dark"]:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel {
+        --lg-tint-rgb: 18, 24, 22;
+        --lg-tint-opacity: 0.28;
+        --lg-fallback-tint: 0.48;
+      }
+      html[data-resolved-theme="light"]:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat.is-open .yan-chat-pill.corner,
+      html[data-resolved-theme="light"]:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel {
+        --lg-tint-rgb: 255, 255, 255;
+        --lg-tint-opacity: 0.18;
+        --lg-fallback-tint: 0.42;
       }
       html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat.is-open .yan-chat-pill[data-liquid-glass],
       html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel[data-liquid-glass],
@@ -527,27 +664,46 @@
        * Kept for later; re-enable by adding class "lg-chat-ios-readability" on <html>.
        */
       @media (prefers-color-scheme: light) {
-        html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat.is-open .yan-chat-pill.corner,
-        html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-panel {
+        html:not([data-resolved-theme="dark"]).lg-chat-ios-readability.lg-mobile-webgl .yan-chat.is-open .yan-chat-pill.corner,
+        html:not([data-resolved-theme="dark"]).lg-chat-ios-readability.lg-mobile-webgl .yan-chat-panel {
           --lg-tint-rgb: 255, 255, 255;
           --lg-tint-opacity: 0.88;
           --lg-fallback-tint: 0.82;
         }
-        html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-bubble--assistant {
+        html:not([data-resolved-theme="dark"]).lg-chat-ios-readability.lg-mobile-webgl .yan-chat-bubble--assistant {
           color: #050608;
           opacity: 1;
         }
-        html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-input {
+        html:not([data-resolved-theme="dark"]).lg-chat-ios-readability.lg-mobile-webgl .yan-chat-input {
           color: #050608;
         }
       }
+      html[data-resolved-theme="light"].lg-chat-ios-readability.lg-mobile-webgl .yan-chat.is-open .yan-chat-pill.corner,
+      html[data-resolved-theme="light"].lg-chat-ios-readability.lg-mobile-webgl .yan-chat-panel {
+        --lg-tint-rgb: 255, 255, 255;
+        --lg-tint-opacity: 0.88;
+        --lg-fallback-tint: 0.82;
+      }
+      html[data-resolved-theme="light"].lg-chat-ios-readability.lg-mobile-webgl .yan-chat-bubble--assistant {
+        color: #050608;
+        opacity: 1;
+      }
+      html[data-resolved-theme="light"].lg-chat-ios-readability.lg-mobile-webgl .yan-chat-input {
+        color: #050608;
+      }
       @media (prefers-color-scheme: dark) {
-        html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat.is-open .yan-chat-pill.corner,
-        html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-panel {
+        html:not([data-resolved-theme="light"]).lg-chat-ios-readability.lg-mobile-webgl .yan-chat.is-open .yan-chat-pill.corner,
+        html:not([data-resolved-theme="light"]).lg-chat-ios-readability.lg-mobile-webgl .yan-chat-panel {
           --lg-tint-rgb: 8, 11, 14;
           --lg-tint-opacity: 0.86;
           --lg-fallback-tint: 0.82;
         }
+      }
+      html[data-resolved-theme="dark"].lg-chat-ios-readability.lg-mobile-webgl .yan-chat.is-open .yan-chat-pill.corner,
+      html[data-resolved-theme="dark"].lg-chat-ios-readability.lg-mobile-webgl .yan-chat-panel {
+        --lg-tint-rgb: 8, 11, 14;
+        --lg-tint-opacity: 0.86;
+        --lg-fallback-tint: 0.82;
       }
       html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat.is-open .yan-chat-pill[data-liquid-glass].lg-webgl::before,
       html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-panel[data-liquid-glass].lg-webgl::before {

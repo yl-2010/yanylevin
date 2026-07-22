@@ -2,6 +2,7 @@
  * Yan Levin site chatbot — liquid-glass pill + response panel.
  * Talks to Mac Studio GPT-OSS via same-origin /api/chat (prod)
  * or local apiBase + /api/visitor-token (dev).
+ * Theme preference is session-only (resets to system on refresh).
  */
 (() => {
   const root = document.getElementById("yan-chat");
@@ -21,6 +22,59 @@
   let sending = false;
   let configPromise = null;
   let tokenCache = { token: "", expiresAt: 0 };
+
+  /** @typedef {"light"|"dark"|"system"} ThemePreference */
+  /** @typedef {"light"|"dark"} ResolvedTheme */
+
+  /** Session-only; never written to localStorage. */
+  /** @type {ThemePreference} */
+  let themePreference = "system";
+
+  /** @param {unknown} value @returns {value is ThemePreference} */
+  function isThemePreference(value) {
+    return value === "light" || value === "dark" || value === "system";
+  }
+
+  /** @param {ThemePreference} preference @returns {ResolvedTheme} */
+  function resolveTheme(preference) {
+    if (preference === "dark") return "dark";
+    if (preference === "light") return "light";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+
+  /** @param {ThemePreference} preference @returns {ResolvedTheme} */
+  function applyTheme(preference) {
+    themePreference = preference;
+    const resolved = resolveTheme(preference);
+    const html = document.documentElement;
+    html.dataset.theme = preference;
+    html.dataset.resolvedTheme = resolved;
+    html.style.colorScheme = resolved;
+    return resolved;
+  }
+
+  function refreshGlass() {
+    if (typeof window.reinitLiquidGlass === "function") {
+      window.reinitLiquidGlass();
+    }
+  }
+
+  // Bootstrap already set system; keep JS state in sync.
+  applyTheme("system");
+
+  const schemeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  const onSchemeChange = () => {
+    if (themePreference !== "system") return;
+    applyTheme("system");
+    refreshGlass();
+  };
+  if (typeof schemeQuery.addEventListener === "function") {
+    schemeQuery.addEventListener("change", onSchemeChange);
+  } else if (typeof schemeQuery.addListener === "function") {
+    schemeQuery.addListener(onSchemeChange);
+  }
 
   function state() {
     return root.dataset.state || "closed";
@@ -61,9 +115,7 @@
   function scheduleGlassRefresh() {
     window.clearTimeout(glassTimer);
     glassTimer = window.setTimeout(() => {
-      if (typeof window.reinitLiquidGlass === "function") {
-        window.reinitLiquidGlass();
-      }
+      refreshGlass();
     }, reduceMotion ? 0 : 480);
   }
 
@@ -152,6 +204,18 @@
     if (state() !== "panel") setState("panel");
   }
 
+  function chatBody() {
+    return {
+      messages: history,
+      temperature: 0.4,
+      maxTokens: 2048,
+      uiContext: {
+        theme: themePreference,
+        resolvedTheme: resolveTheme(themePreference),
+      },
+    };
+  }
+
   async function sendMessage(raw) {
     const text = String(raw || "").trim();
     if (!text || sending) return;
@@ -171,11 +235,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "same-origin",
-          body: JSON.stringify({
-            messages: history,
-            temperature: 0.4,
-            maxTokens: 2048,
-          }),
+          body: JSON.stringify(chatBody()),
         });
       } else {
         const token = await getBearerToken(cfg.apiBase);
@@ -185,11 +245,7 @@
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            messages: history,
-            temperature: 0.4,
-            maxTokens: 2048,
-          }),
+          body: JSON.stringify(chatBody()),
         });
       }
 
@@ -216,6 +272,12 @@
           : "No response was returned.";
       history.push({ role: "assistant", content: reply });
       appendBubble("assistant", reply);
+
+      if (isThemePreference(data.themeUpdate?.theme)) {
+        applyTheme(data.themeUpdate.theme);
+        refreshGlass();
+      }
+
       setState("panel");
     } catch (err) {
       console.error("[yan-chat]", err);
