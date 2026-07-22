@@ -707,3 +707,22 @@ Yes; the UW Math Hour Olympiad is a real, proof‑based contest hosted by the Un
 ```
 
 ---
+
+## 2026-07-22T00:44:28.722Z
+
+- model: openai/gpt-oss-20b
+- ip: 3.87.172.154
+
+### User
+
+```
+what is 2+2
+```
+
+### Assistant
+
+```
+4
+```
+
+---
