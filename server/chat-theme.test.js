@@ -1,151 +1,69 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
 import {
-  detectThemeIntent,
-  extractExplicitTheme,
+  extractThemeMarker,
   finalizeChatTheme,
   stripHarmonyTokens,
 } from "./chat-theme.js";
 
-describe("extractExplicitTheme", () => {
-  it("parses common theme commands", () => {
-    assert.equal(extractExplicitTheme("make it dark"), "dark");
-    assert.equal(extractExplicitTheme("Please switch the site theme to light."), "light");
-    assert.equal(extractExplicitTheme("set theme to system"), "system");
-    assert.equal(extractExplicitTheme("dark"), "dark");
-    assert.equal(extractExplicitTheme("theme: light"), "light");
-  });
-
-  it("ignores unrelated text", () => {
-    assert.equal(extractExplicitTheme("what else can you do"), null);
-    assert.equal(extractExplicitTheme("who are you"), null);
+describe("extractThemeMarker", () => {
+  it("parses [[set_theme:…]] markers", () => {
+    assert.equal(extractThemeMarker("Done.\n[[set_theme:dark]]"), "dark");
+    assert.equal(extractThemeMarker("[[set_theme: light ]]"), "light");
+    assert.equal(extractThemeMarker("no marker here"), null);
   });
 });
 
-describe("detectThemeIntent", () => {
-  it("uses explicit user commands", () => {
-    assert.equal(
-      detectThemeIntent([{ role: "user", content: "make it light" }]),
-      "light"
-    );
+describe("finalizeChatTheme (LLM action only)", () => {
+  it("applies theme from marker and hides it from content", () => {
+    const result = finalizeChatTheme("Theme set to dark\n[[set_theme:dark]]");
+    assert.deepEqual(result.themeUpdate, { theme: "dark" });
+    assert.equal(result.content, "Theme set to dark");
+    assert.doesNotMatch(result.content, /\[\[/);
   });
 
-  it("resolves you choose in a theme conversation", () => {
-    assert.equal(
-      detectThemeIntent([
-        {
-          role: "assistant",
-          content:
-            "I can confirm a theme change if you let me know which one—light, dark, or system.",
-        },
-        { role: "user", content: "you choose" },
-      ]),
-      "dark"
+  it("applies theme from trailing JSON", () => {
+    const result = finalizeChatTheme(
+      'Changing to light.\n{"action":"set_theme","theme":"light"}'
     );
+    assert.deepEqual(result.themeUpdate, { theme: "light" });
+    assert.equal(result.content, "Changing to light.");
   });
 
-  it("resolves do it after an assistant commitment", () => {
-    assert.equal(
-      detectThemeIntent([
-        { role: "assistant", content: "I will set the theme to dark." },
-        { role: "user", content: "do it" },
-      ]),
-      "dark"
-    );
+  it("does not invent a theme from prose alone", () => {
+    const result = finalizeChatTheme("Theme change applied as requested");
+    assert.equal(result.themeUpdate, undefined);
+    assert.equal(result.content, "Theme change applied as requested");
   });
 
-  it("does not invent a theme for unrelated confirms", () => {
-    assert.equal(
-      detectThemeIntent([
-        { role: "assistant", content: "Yan is 16" },
-        { role: "user", content: "do it" },
-      ]),
-      null
+  it("strips harmony scaffolding and still reads a marker", () => {
+    const result = finalizeChatTheme(
+      "<|channel|>final<|message|>Done\n[[set_theme:system]]"
     );
+    assert.deepEqual(result.themeUpdate, { theme: "system" });
+    assert.match(result.content, /Done/i);
+  });
+
+  it("harmony-only junk yields no themeUpdate", () => {
+    const result = finalizeChatTheme(
+      "<|channel|>final <|constrain|>json<|message|>"
+    );
+    assert.equal(result.themeUpdate, undefined);
+  });
+
+  it("marker wins over conflicting JSON", () => {
+    const result = finalizeChatTheme(
+      '[[set_theme:dark]]\n{"action":"set_theme","theme":"light"}'
+    );
+    assert.deepEqual(result.themeUpdate, { theme: "dark" });
   });
 });
 
-describe("stripHarmonyTokens / finalizeChatTheme", () => {
+describe("stripHarmonyTokens", () => {
   it("strips harmony scaffolding to empty", () => {
     assert.equal(
       stripHarmonyTokens("<|channel|>final <|constrain|>json<|message|>"),
       ""
-    );
-  });
-
-  it("applies user theme even when model emits junk", () => {
-    const result = finalizeChatTheme({
-      rawContent: "<|channel|>final <|constrain|>json<|message|>",
-      themeFromUser: "dark",
-    });
-    assert.deepEqual(result.themeUpdate, { theme: "dark" });
-    assert.match(result.content, /dark/i);
-    assert.doesNotMatch(result.content, /<\|/);
-  });
-
-  it("still accepts trailing model JSON as a bonus", () => {
-    const result = finalizeChatTheme({
-      rawContent: 'Done.\n{"action":"set_theme","theme":"light"}',
-      themeFromUser: null,
-    });
-    assert.deepEqual(result.themeUpdate, { theme: "light" });
-    assert.equal(result.content, "Done.");
-  });
-
-  it("lets user intent win over model JSON", () => {
-    const result = finalizeChatTheme({
-      rawContent: '{"action":"set_theme","theme":"light"}',
-      themeFromUser: "system",
-    });
-    assert.deepEqual(result.themeUpdate, { theme: "system" });
-  });
-
-  it("overrides model theme denials when a theme was applied", () => {
-    const result = finalizeChatTheme({
-      rawContent: "I'm unable to change the site theme.",
-      themeFromUser: "dark",
-    });
-    assert.deepEqual(result.themeUpdate, { theme: "dark" });
-    assert.match(result.content, /Site theme set to dark/i);
-  });
-});
-
-describe("theme phrasing extras", () => {
-  it("parses dark mode / light mode", () => {
-    assert.equal(extractExplicitTheme("make it dark mode"), "dark");
-    assert.equal(extractExplicitTheme("switch to light mode"), "light");
-  });
-
-  it("resolves vague theme change requests", () => {
-    assert.equal(
-      detectThemeIntent(
-        [
-          {
-            role: "assistant",
-            content: "I can confirm site-wide settings such as theme changes.",
-          },
-          { role: "user", content: "do the theme change thing" },
-        ],
-        { theme: "system", resolvedTheme: "light" }
-      ),
-      "dark"
-    );
-  });
-
-  it("resolves do that last part after theme abilities", () => {
-    assert.equal(
-      detectThemeIntent(
-        [
-          {
-            role: "assistant",
-            content:
-              "GPT-OSS:20b can answer factual questions about Yan, change the site theme to light, dark, or system",
-          },
-          { role: "user", content: "do that last part" },
-        ],
-        { theme: "system", resolvedTheme: "light" }
-      ),
-      "dark"
     );
   });
 });

@@ -17,7 +17,7 @@ import {
 import { syncYanAgeAndPublish } from "./yan-age.js";
 import { appendChatTurn } from "./chat-log.js";
 import { mintVisitorToken } from "./mint.js";
-import { detectThemeIntent, finalizeChatTheme } from "./chat-theme.js";
+import { finalizeChatTheme } from "./chat-theme.js";
 
 const PORT = Number(process.env.PORT || 3004);
 const HOST = process.env.HOST || "0.0.0.0";
@@ -166,12 +166,6 @@ app.post("/api/chat", requireAuth, async (req, res) => {
         ? req.body.uiContext
         : {};
 
-    // Theme side-effects come from the user message (deterministic), not model JSON.
-    const themeFromUser = detectThemeIntent(conversation, baseUi);
-    const uiContext = themeFromUser
-      ? { ...baseUi, themeApplied: themeFromUser }
-      : baseUi;
-
     const lastUser = [...conversation]
       .reverse()
       .find((m) => m.role === "user");
@@ -180,7 +174,7 @@ app.post("/api/chat", requireAuth, async (req, res) => {
     const grounded = [
       {
         role: "system",
-        content: buildYanSystemPrompt(uiContext, { query }),
+        content: buildYanSystemPrompt(baseUi, { query }),
       },
       ...conversation,
     ];
@@ -193,10 +187,8 @@ app.post("/api/chat", requireAuth, async (req, res) => {
         typeof req.body?.maxTokens === "number" ? req.body.maxTokens : 2048,
     });
 
-    const applied = finalizeChatTheme({
-      rawContent: result.content,
-      themeFromUser,
-    });
+    // Theme updates only when the model emits [[set_theme:…]] (or compatible JSON).
+    const applied = finalizeChatTheme(result.content);
 
     // Audit trail: every user prompt + model reply → data/chat-log.md
     appendChatTurn({

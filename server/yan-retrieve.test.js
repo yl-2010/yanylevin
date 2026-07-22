@@ -55,7 +55,7 @@ describe("buildYanSystemPrompt", () => {
       { query: "What is Yan GPA?" }
     );
     assert.ok(prompt.includes("SITE ABILITIES"));
-    assert.ok(prompt.includes("Never say you cannot change the theme"));
+    assert.ok(prompt.includes("[[set_theme:"));
     assert.ok(prompt.includes("ABOUT YAN"));
     assert.ok(prompt.includes("RETRIEVED KNOWLEDGE"));
     assert.ok(!prompt.includes("--- KNOWLEDGE BASE (yan.md) ---"));
@@ -63,11 +63,13 @@ describe("buildYanSystemPrompt", () => {
     assert.ok(prompt.length < yanMd.length * 0.75);
   });
 
-  it("surfaces THEME UPDATE APPLIED when a theme was just set", () => {
+  it("surfaces theme ability instructions and current SITE THEME", () => {
     const prompt = buildYanSystemPrompt(
-      { theme: "light", resolvedTheme: "light", themeApplied: "dark" },
+      { theme: "light", resolvedTheme: "light" },
       { query: "make it dark mode" }
     );
-    assert.ok(prompt.includes("THEME UPDATE APPLIED: dark"));
+    assert.ok(prompt.includes("[[set_theme:"));
+    assert.ok(prompt.includes("SITE THEME preference: light"));
+    assert.ok(!prompt.includes("THEME UPDATE APPLIED"));
   });
 });
