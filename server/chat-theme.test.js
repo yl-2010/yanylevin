@@ -41,7 +41,21 @@ describe("finalizeChatTheme (LLM action only)", () => {
       "<|channel|>final<|message|>Done\n[[set_theme:system]]"
     );
     assert.deepEqual(result.themeUpdate, { theme: "system" });
-    assert.match(result.content, /Done/i);
+    assert.equal(result.content, "Site theme set to system");
+  });
+
+  it("keeps theme marker from final channel when analysis is present", () => {
+    const result = finalizeChatTheme(
+      [
+        "<|channel|>analysis<|message|>User wants dark. Done.",
+        "<|end|><|start|>assistant",
+        "<|channel|>final<|message|>Site theme set to dark",
+        "[[set_theme:dark]]",
+      ].join("")
+    );
+    assert.deepEqual(result.themeUpdate, { theme: "dark" });
+    assert.equal(result.content, "Site theme set to dark");
+    assert.doesNotMatch(result.content, /Done|analysis|User wants/i);
   });
 
   it("harmony-only junk yields no themeUpdate", () => {
@@ -64,6 +78,49 @@ describe("stripHarmonyTokens", () => {
     assert.equal(
       stripHarmonyTokens("<|channel|>final <|constrain|>json<|message|>"),
       ""
+    );
+  });
+
+  it("keeps only the final channel body", () => {
+    const raw = [
+      "<|channel|>analysis<|message|>Draft about Yan. Done.",
+      "<|end|><|start|>assistant",
+      "<|channel|>final<|message|>Yan is a junior at Eastside Preparatory School",
+    ].join("");
+    assert.equal(
+      stripHarmonyTokens(raw),
+      "Yan is a junior at Eastside Preparatory School"
+    );
+  });
+
+  it("does not leak analysis when there is no final channel", () => {
+    assert.equal(
+      stripHarmonyTokens(
+        "<|channel|>analysis<|message|>Internal thoughts only. Done."
+      ),
+      ""
+    );
+  });
+
+  it("unglues duplicated answer around Done. (token-stripped artifact)", () => {
+    const answer =
+      "Yan is a 16-year-old junior at Eastside Preparatory School, specializing in computer science, AI research, and co-founding the startup SocketHR";
+    assert.equal(stripHarmonyTokens(`${answer}Done.${answer}`), answer);
+  });
+
+  it("unglues duplicated answer around We followed guidelines.", () => {
+    const answer =
+      "Yan is a 16-year-old student at Eastside Preparatory School who works on computer science, AI research, and co-founded the startup SocketHR";
+    assert.equal(
+      stripHarmonyTokens(`${answer}We followed guidelines.${answer}`),
+      answer
+    );
+  });
+
+  it("unglues meta on its own line between two blocks", () => {
+    assert.equal(
+      stripHarmonyTokens("Draft answer\nDone.\nFinal answer"),
+      "Final answer"
     );
   });
 });

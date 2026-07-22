@@ -10,6 +10,11 @@
 const THEME_MARKER_RE =
   /\[\[\s*set_theme\s*:\s*(light|dark|system)\s*\]\]/gi;
 
+const HARMONY_TOKEN_RE = /<\|[^|>]{1,120}\|>/g;
+
+/** Analysis/meta closers gpt-oss sometimes emits before the final channel. */
+const HARMONY_META_CLOSER_RE = /Done\.|We followed guidelines\./i;
+
 /**
  * @param {unknown} raw
  * @returns {ThemePreference | null}
@@ -23,21 +28,101 @@ function normalizeTheme(raw) {
 }
 
 /**
- * Strip gpt-oss / Harmony control tokens from model text.
+ * @param {string} text
+ */
+function tidyProse(text) {
+  return String(text || "")
+    .replace(HARMONY_TOKEN_RE, "")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+/**
+ * @param {string} text
+ */
+function isBareHarmonyLabel(text) {
+  return /^(?:final|analysis|commentary|json|message)(?:\s+(?:final|analysis|commentary|json|message))*$/i.test(
+    text
+  );
+}
+
+/**
+ * Parse Harmony channel bodies when special tokens are still present.
+ * @param {string} text
+ * @returns {{ channel: string, body: string }[]}
+ */
+export function extractHarmonyChannels(text) {
+  const raw = String(text || "");
+  /** @type {{ channel: string, body: string }[]} */
+  const channels = [];
+  const re =
+    /<\|channel\|>\s*([a-zA-Z]+)\s*(?:<\|constrain\|>\s*[a-zA-Z]+\s*)?<\|message\|>([\s\S]*?)(?=<\|end\|>|<\|start\|>|<\|return\|>|<\|call\|>|<\|channel\|>|$)/gi;
+  let match;
+  while ((match = re.exec(raw)) !== null) {
+    channels.push({
+      channel: match[1].toLowerCase(),
+      body: match[2],
+    });
+  }
+  return channels;
+}
+
+/**
+ * When LM Studio strips Harmony tokens, analysis + final can glue into one string
+ * (e.g. "…SocketHRDone.Yan is…" or two copies separated by "We followed guidelines.").
+ * @param {string} text
+ */
+function unglueHarmonyMeta(text) {
+  const raw = String(text || "");
+  if (!HARMONY_META_CLOSER_RE.test(raw)) return raw;
+
+  // Exact duplicate around a meta closer → keep one copy.
+  const dup = raw.match(
+    /^(.*?)\s*(?:Done\.|We followed guidelines\.)\s*\1\s*$/is
+  );
+  if (dup) return dup[1].trim();
+
+  // Glued meta with no whitespace on either side (token-strip artifact).
+  const glued = raw.match(
+    /^(.*)(?<=\S)(?:Done\.|We followed guidelines\.)(?=\S)(.*)$/is
+  );
+  if (glued && glued[2].trim()) return glued[2].trim();
+
+  // Meta alone between two blocks → prefer the final (last) block.
+  const lined = raw.match(
+    /^(.*?)\n\s*(?:Done\.?|We followed guidelines\.)\s*\n([\s\S]+)$/i
+  );
+  if (lined && lined[1].trim() && lined[2].trim()) {
+    return lined[2].trim();
+  }
+
+  return raw;
+}
+
+/**
+ * Keep only user-facing gpt-oss / Harmony text (final channel).
  * @param {string} text
  */
 export function stripHarmonyTokens(text) {
-  let s = String(text || "").replace(/<\|[^|>]{1,120}\|>/g, "");
-  s = s.replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
-  // Bare channel/constraint labels left after token removal (no real prose).
-  if (
-    /^(?:final|analysis|commentary|json|message)(?:\s+(?:final|analysis|commentary|json|message))*$/i.test(
-      s
-    )
-  ) {
-    return "";
+  const raw = String(text || "");
+  const channels = extractHarmonyChannels(raw);
+
+  if (channels.length) {
+    const finals = channels.filter((c) => c.channel === "final");
+    if (!finals.length) {
+      // Never leak analysis / commentary when channels are explicit.
+      return "";
+    }
+    let body = tidyProse(finals[finals.length - 1].body);
+    if (isBareHarmonyLabel(body)) return "";
+    return unglueHarmonyMeta(body).trim();
   }
-  return s;
+
+  let s = tidyProse(raw);
+  if (isBareHarmonyLabel(s)) return "";
+  s = unglueHarmonyMeta(s);
+  return s.trim();
 }
 
 /**
@@ -156,6 +241,18 @@ export function parseSetThemeAction(parsed) {
 }
 
 /**
+ * @param {string} content
+ * @param {ThemePreference | null} theme
+ */
+function normalizeThemeConfirmation(content, theme) {
+  if (!theme) return content;
+  if (/^done\.?$/i.test(content) || /^we followed guidelines\.?$/i.test(content)) {
+    return `Site theme set to ${theme}`;
+  }
+  return content;
+}
+
+/**
  * Parse theme action from model reply only (marker preferred, JSON accepted).
  * @param {string} rawContent
  * @returns {{ content: string, themeUpdate?: { theme: ThemePreference } }}
@@ -169,7 +266,7 @@ export function finalizeChatTheme(rawContent) {
   const stripped = stripTrailingJsonObject(withoutMarkers);
   const theme = fromMarker || fromJson?.theme || null;
 
-  let content = stripped.trim();
+  let content = normalizeThemeConfirmation(stripped.trim(), theme);
   if (!content) {
     content = theme ? `Site theme set to ${theme}` : "…";
   }
