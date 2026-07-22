@@ -1258,3 +1258,22 @@ I’m here to answer questions about Yan’s academic and extracurricular activi
 ```
 
 ---
+
+## 2026-07-22T01:12:04.472Z
+
+- model: openai/gpt-oss-20b
+- ip: 3.83.185.27
+
+### User
+
+```
+Which clubs are you in
+```
+
+### Assistant
+
+```
+Yan participates in the following clubs and organizations: Prime Factor Math Circle (TA), Husky Math Academy, National Speech & Debate Association debate team, Environmental Club (co‑lead), and South Asian Affinity Group (co‑lead)
+```
+
+---
