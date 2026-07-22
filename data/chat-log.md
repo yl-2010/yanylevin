@@ -1372,3 +1372,22 @@ gptoss20b, running on Yan’s local Mac Studio. How may I assist you?
 ```
 
 ---
+
+## 2026-07-22T09:56:21.810Z
+
+- model: openai/gpt-oss-20b
+- ip: 54.237.241.26
+
+### User
+
+```
+how old
+```
+
+### Assistant
+
+```
+Yan is 16
+```
+
+---
