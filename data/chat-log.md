@@ -821,3 +821,22 @@ I do not know.
 ```
 
 ---
+
+## 2026-07-22T00:47:22.760Z
+
+- model: openai/gpt-oss-20b
+- ip: 3.87.8.60
+
+### User
+
+```
+who is lamine yamal?
+```
+
+### Assistant
+
+```
+I do not know.
+```
+
+---
