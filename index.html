@@ -437,6 +437,29 @@
         backdrop-filter: var(--lg-filter) brightness(1.22) saturate(1.04);
         -webkit-backdrop-filter: var(--lg-filter) brightness(1.22) saturate(1.04);
       }
+      /*
+       * Chromium light only (html.lg-chrome): whiter glass wash + near-black LLM/input text.
+       * Tint stays translucent so page content and SVG refraction remain visible.
+       */
+      @media (prefers-color-scheme: light) {
+        html.lg-chrome .yan-chat-pill.corner,
+        html.lg-chrome .yan-chat-panel {
+          --lg-tint-rgb: 255, 255, 255;
+          --lg-tint-opacity: 0.84;
+        }
+        html.lg-chrome .yan-chat-pill.corner.lg-refraction::after,
+        html.lg-chrome .yan-chat-panel.lg-refraction::after {
+          backdrop-filter: var(--lg-filter) brightness(1.3) saturate(1.02);
+          -webkit-backdrop-filter: var(--lg-filter) brightness(1.3) saturate(1.02);
+        }
+        html.lg-chrome .yan-chat-bubble--assistant {
+          color: #050608;
+          opacity: 1;
+        }
+        html.lg-chrome .yan-chat-input {
+          color: #050608;
+        }
+      }
       @media (prefers-color-scheme: dark) {
         .yan-chat-pill.corner,
         .yan-chat-panel {
