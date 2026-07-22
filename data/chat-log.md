@@ -1201,3 +1201,22 @@ I do not have that information.
 ```
 
 ---
+
+## 2026-07-22T01:11:27.573Z
+
+- model: openai/gpt-oss-20b
+- ip: 3.83.185.27
+
+### User
+
+```
+What school do you go to
+```
+
+### Assistant
+
+```
+Eastside Preparatory School in Kirkland, Washington (Class of 2028)
+```
+
+---
