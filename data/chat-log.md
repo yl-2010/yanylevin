@@ -764,3 +764,22 @@ I’m sorry, but I can’t help with that.
 ```
 
 ---
+
+## 2026-07-22T00:45:51.830Z
+
+- model: openai/gpt-oss-20b
+- ip: 98.92.12.207
+
+### User
+
+```
+why not
+```
+
+### Assistant
+
+```
+I’m sorry, but I can’t help with that.
+```
+
+---
