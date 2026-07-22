@@ -422,17 +422,19 @@
         backdrop-filter: blur(14px) saturate(1.5); -webkit-backdrop-filter: blur(14px) saturate(1.5);
       }
       /*
-       * Chat pill + response panel: stronger liquid-glass tint for LLM readability.
-       * Keep url(#filter) refraction — only raise/lower the tint wash (no frosted blur).
+       * Chat input pill (when open) + response panel: stronger liquid-glass tint for
+       * LLM readability. Collapsed Chromium plus-circle keeps root liquid-glass vars
+       * so it matches the other corner shapes. Keep url(#filter) refraction — only
+       * raise/lower the tint wash (no frosted blur on Chromium).
        * Light: brighter wash so page content fades. Dark: deeper dim so page content recedes.
        */
-      .yan-chat-pill.corner,
+      .yan-chat.is-open .yan-chat-pill.corner,
       .yan-chat-panel {
         --lg-tint-rgb: 248, 251, 253;
         --lg-tint-opacity: 0.78;
         --lg-fallback-tint: 0.68;
       }
-      .yan-chat-pill.corner.lg-refraction::after,
+      .yan-chat.is-open .yan-chat-pill.corner.lg-refraction::after,
       .yan-chat-panel.lg-refraction::after {
         backdrop-filter: var(--lg-filter) brightness(1.26) saturate(1.04);
         -webkit-backdrop-filter: var(--lg-filter) brightness(1.26) saturate(1.04);
@@ -440,14 +442,15 @@
       /*
        * Chromium light only (html.lg-chrome): whiter glass wash + near-black LLM/input text.
        * Tint stays translucent so page content and SVG refraction remain visible.
+       * Applied only when the pill is expanded (is-open); collapsed circle stays normal glass.
        */
       @media (prefers-color-scheme: light) {
-        html.lg-chrome .yan-chat-pill.corner,
+        html.lg-chrome .yan-chat.is-open .yan-chat-pill.corner,
         html.lg-chrome .yan-chat-panel {
           --lg-tint-rgb: 255, 255, 255;
           --lg-tint-opacity: 0.88;
         }
-        html.lg-chrome .yan-chat-pill.corner.lg-refraction::after {
+        html.lg-chrome .yan-chat.is-open .yan-chat-pill.corner.lg-refraction::after {
           backdrop-filter: var(--lg-filter) brightness(1.34) saturate(1.02);
           -webkit-backdrop-filter: var(--lg-filter) brightness(1.34) saturate(1.02);
         }
@@ -465,13 +468,13 @@
         }
       }
       @media (prefers-color-scheme: dark) {
-        .yan-chat-pill.corner,
+        .yan-chat.is-open .yan-chat-pill.corner,
         .yan-chat-panel {
           --lg-tint-rgb: 8, 11, 14;
           --lg-tint-opacity: 0.8;
           --lg-fallback-tint: 0.7;
         }
-        .yan-chat-pill.corner.lg-refraction::after,
+        .yan-chat.is-open .yan-chat-pill.corner.lg-refraction::after,
         .yan-chat-panel.lg-refraction::after {
           backdrop-filter: var(--lg-filter) brightness(0.46) saturate(1.1);
           -webkit-backdrop-filter: var(--lg-filter) brightness(0.46) saturate(1.1);
@@ -485,35 +488,36 @@
       /*
        * Non-Chromium chat: classic frosted glass for now (Safari / iOS WebGL).
        * Chromium keeps full liquid-glass refraction + readability tint/blur above.
+       * Pill frosted wash only when expanded; collapsed plus-circle matches other glass.
        * Auto-off when html.lg-chat-ios-readability is re-enabled (see gated block below).
        */
-      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-pill.corner,
+      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat.is-open .yan-chat-pill.corner,
       html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel {
         --lg-tint-rgb: 255, 255, 255;
         --lg-tint-opacity: 0.18;
         --lg-fallback-tint: 0.42;
       }
       @media (prefers-color-scheme: dark) {
-        html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-pill.corner,
+        html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat.is-open .yan-chat-pill.corner,
         html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel {
           --lg-tint-rgb: 18, 24, 22;
           --lg-tint-opacity: 0.28;
           --lg-fallback-tint: 0.48;
         }
       }
-      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-pill[data-liquid-glass],
+      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat.is-open .yan-chat-pill[data-liquid-glass],
       html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel[data-liquid-glass],
-      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-pill.lg-fallback,
+      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat.is-open .yan-chat-pill.lg-fallback,
       html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel.lg-fallback,
-      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-pill.lg-webgl,
+      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat.is-open .yan-chat-pill.lg-webgl,
       html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel.lg-webgl,
-      html.lg-mobile-webgl.lg-webgl-ready:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-pill[data-liquid-glass].lg-webgl,
+      html.lg-mobile-webgl.lg-webgl-ready:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat.is-open .yan-chat-pill[data-liquid-glass].lg-webgl,
       html.lg-mobile-webgl.lg-webgl-ready:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel[data-liquid-glass].lg-webgl {
         background-color: rgba(var(--lg-tint-rgb), var(--lg-fallback-tint)) !important;
         backdrop-filter: blur(14px) saturate(1.5) !important;
         -webkit-backdrop-filter: blur(14px) saturate(1.5) !important;
       }
-      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-pill canvas.lg-webgl-surface,
+      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat.is-open .yan-chat-pill canvas.lg-webgl-surface,
       html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel canvas.lg-webgl-surface {
         display: none !important;
       }
@@ -523,7 +527,7 @@
        * Kept for later; re-enable by adding class "lg-chat-ios-readability" on <html>.
        */
       @media (prefers-color-scheme: light) {
-        html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-pill.corner,
+        html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat.is-open .yan-chat-pill.corner,
         html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-panel {
           --lg-tint-rgb: 255, 255, 255;
           --lg-tint-opacity: 0.88;
@@ -538,14 +542,14 @@
         }
       }
       @media (prefers-color-scheme: dark) {
-        html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-pill.corner,
+        html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat.is-open .yan-chat-pill.corner,
         html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-panel {
           --lg-tint-rgb: 8, 11, 14;
           --lg-tint-opacity: 0.86;
           --lg-fallback-tint: 0.82;
         }
       }
-      html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-pill[data-liquid-glass].lg-webgl::before,
+      html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat.is-open .yan-chat-pill[data-liquid-glass].lg-webgl::before,
       html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-panel[data-liquid-glass].lg-webgl::before {
         background-color: rgba(var(--lg-tint-rgb), calc(var(--lg-tint-opacity) * 0.72));
       }
