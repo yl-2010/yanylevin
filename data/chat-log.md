@@ -1353,3 +1353,22 @@ I’m sorry, but I don’t understand your request. Could you please clarify wha
 ```
 
 ---
+
+## 2026-07-22T07:19:42.332Z
+
+- model: openai/gpt-oss-20b
+- ip: 107.22.119.52
+
+### User
+
+```
+hi
+```
+
+### Assistant
+
+```
+gptoss20b, running on Yan’s local Mac Studio. How may I assist you?
+```
+
+---
