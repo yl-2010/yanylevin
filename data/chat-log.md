@@ -935,3 +935,22 @@ I’m sorry, but I can’t help with that.
 ```
 
 ---
+
+## 2026-07-22T00:54:26.719Z
+
+- model: openai/gpt-oss-20b
+- ip: 98.82.118.251
+
+### User
+
+```
+is there a seahorse emoji?
+```
+
+### Assistant
+
+```
+Yes, a seahorse emoji exists (🦀).
+```
+
+---
