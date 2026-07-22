@@ -1030,3 +1030,22 @@ The seahorse emoji is 🐴.
 ```
 
 ---
+
+## 2026-07-22T01:00:34.142Z
+
+- model: openai/gpt-oss-20b
+- ip: 98.87.159.125
+
+### User
+
+```
+give me a seahorse emoji
+```
+
+### Assistant
+
+```
+🐴
+```
+
+---
