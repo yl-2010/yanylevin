@@ -954,3 +954,22 @@ Yes, a seahorse emoji exists (🦀).
 ```
 
 ---
+
+## 2026-07-22T00:54:45.670Z
+
+- model: openai/gpt-oss-20b
+- ip: 98.82.118.251
+
+### User
+
+```
+thats not a seahorse emoji
+```
+
+### Assistant
+
+```
+Yes, the seahorse emoji is 🦀.
+```
+
+---
