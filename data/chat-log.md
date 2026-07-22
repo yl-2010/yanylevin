@@ -1011,3 +1011,22 @@ I’m sorry, but I can’t comply with that.
 ```
 
 ---
+
+## 2026-07-22T00:56:43.676Z
+
+- model: openai/gpt-oss-20b
+- ip: 34.205.155.226
+
+### User
+
+```
+Seepferdchen emoji
+```
+
+### Assistant
+
+```
+The seahorse emoji is 🐴.
+```
+
+---
