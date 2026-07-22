@@ -483,47 +483,82 @@
         }
       }
       /*
-       * iOS / mobile WebGL chat (html.lg-mobile-webgl): match Chromium tint + panel blur.
-       * Higher specificity beats injected lg-webgl-styles; WebGL refraction canvas stays.
+       * Non-Chromium chat: classic frosted glass for now (Safari / iOS WebGL).
+       * Chromium keeps full liquid-glass refraction + readability tint/blur above.
+       * Auto-off when html.lg-chat-ios-readability is re-enabled (see gated block below).
+       */
+      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-pill.corner,
+      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel {
+        --lg-tint-rgb: 255, 255, 255;
+        --lg-tint-opacity: 0.18;
+        --lg-fallback-tint: 0.42;
+      }
+      @media (prefers-color-scheme: dark) {
+        html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-pill.corner,
+        html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel {
+          --lg-tint-rgb: 18, 24, 22;
+          --lg-tint-opacity: 0.28;
+          --lg-fallback-tint: 0.48;
+        }
+      }
+      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-pill[data-liquid-glass],
+      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel[data-liquid-glass],
+      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-pill.lg-fallback,
+      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel.lg-fallback,
+      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-pill.lg-webgl,
+      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel.lg-webgl,
+      html.lg-mobile-webgl.lg-webgl-ready:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-pill[data-liquid-glass].lg-webgl,
+      html.lg-mobile-webgl.lg-webgl-ready:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel[data-liquid-glass].lg-webgl {
+        background-color: rgba(var(--lg-tint-rgb), var(--lg-fallback-tint)) !important;
+        backdrop-filter: blur(14px) saturate(1.5) !important;
+        -webkit-backdrop-filter: blur(14px) saturate(1.5) !important;
+      }
+      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-pill canvas.lg-webgl-surface,
+      html:not(.lg-chrome):not(.lg-chat-ios-readability) .yan-chat-panel canvas.lg-webgl-surface {
+        display: none !important;
+      }
+
+      /*
+       * iOS / mobile WebGL chat readability — TEMPORARILY DISABLED.
+       * Kept for later; re-enable by adding class "lg-chat-ios-readability" on <html>.
        */
       @media (prefers-color-scheme: light) {
-        html.lg-mobile-webgl .yan-chat-pill.corner,
-        html.lg-mobile-webgl .yan-chat-panel {
+        html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-pill.corner,
+        html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-panel {
           --lg-tint-rgb: 255, 255, 255;
           --lg-tint-opacity: 0.88;
           --lg-fallback-tint: 0.82;
         }
-        html.lg-mobile-webgl .yan-chat-bubble--assistant {
+        html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-bubble--assistant {
           color: #050608;
           opacity: 1;
         }
-        html.lg-mobile-webgl .yan-chat-input {
+        html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-input {
           color: #050608;
         }
       }
       @media (prefers-color-scheme: dark) {
-        html.lg-mobile-webgl .yan-chat-pill.corner,
-        html.lg-mobile-webgl .yan-chat-panel {
+        html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-pill.corner,
+        html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-panel {
           --lg-tint-rgb: 8, 11, 14;
           --lg-tint-opacity: 0.86;
           --lg-fallback-tint: 0.82;
         }
       }
-      html.lg-mobile-webgl .yan-chat-pill[data-liquid-glass].lg-webgl::before,
-      html.lg-mobile-webgl .yan-chat-panel[data-liquid-glass].lg-webgl::before {
+      html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-pill[data-liquid-glass].lg-webgl::before,
+      html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-panel[data-liquid-glass].lg-webgl::before {
         background-color: rgba(var(--lg-tint-rgb), calc(var(--lg-tint-opacity) * 0.72));
       }
-      /* Chat window only — small frost blur; pill keeps the default WebGL frost */
-      html.lg-mobile-webgl .yan-chat-panel[data-liquid-glass].lg-webgl {
+      html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-panel[data-liquid-glass].lg-webgl {
         backdrop-filter: blur(12px) saturate(1.45) !important;
         -webkit-backdrop-filter: blur(12px) saturate(1.45) !important;
       }
-      html.lg-mobile-webgl.lg-webgl-ready .yan-chat-panel[data-liquid-glass].lg-webgl {
+      html.lg-chat-ios-readability.lg-mobile-webgl.lg-webgl-ready .yan-chat-panel[data-liquid-glass].lg-webgl {
         background-color: rgba(var(--lg-tint-rgb), calc(var(--lg-fallback-tint) * 0.55)) !important;
         backdrop-filter: blur(5px) saturate(1.2) !important;
         -webkit-backdrop-filter: blur(5px) saturate(1.2) !important;
       }
-      html.lg-mobile-webgl .yan-chat-panel.lg-fallback {
+      html.lg-chat-ios-readability.lg-mobile-webgl .yan-chat-panel.lg-fallback {
         backdrop-filter: blur(16px) saturate(1.5);
         -webkit-backdrop-filter: blur(16px) saturate(1.5);
       }
