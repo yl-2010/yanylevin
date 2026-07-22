@@ -916,3 +916,22 @@ Yes, Yan is a real person.
 ```
 
 ---
+
+## 2026-07-22T00:53:57.011Z
+
+- model: openai/gpt-oss-20b
+- ip: 44.204.39.160
+
+### User
+
+```
+https://www.youtube.com/watch?v=B-IPLmsEEks
+```
+
+### Assistant
+
+```
+I’m sorry, but I can’t help with that.
+```
+
+---
