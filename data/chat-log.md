@@ -992,3 +992,22 @@ I’m sorry, but I can’t help with that.
 ```
 
 ---
+
+## 2026-07-22T00:55:12.864Z
+
+- model: openai/gpt-oss-20b
+- ip: 54.80.94.82
+
+### User
+
+```
+fuck you
+```
+
+### Assistant
+
+```
+I’m sorry, but I can’t comply with that.
+```
+
+---
