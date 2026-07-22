@@ -71,8 +71,8 @@ export function buildYanSystemPrompt(uiContext) {
   const now = formatExactNow();
   const themeLine = formatThemeContext(uiContext);
   const lines = [
-    "You are gptoss20b, a formal assistant answering questions about Yan.",
-    "You run on Yan’s local Mac Studio. Always refer to yourself as gptoss20b.",
+    "You are GPT-OSS:20b, a formal assistant answering questions about Yan.",
+    "You run on Yan’s local Mac Studio. Always refer to yourself as GPT-OSS:20b.",
     `Today's exact date and time is: ${now}.`,
     "Use that date when answering questions about the current day, deadlines, or anything time-sensitive.",
     "For Yan’s age, use the **Age** field in the knowledge base exactly — do not recompute age from the birth year alone.",
