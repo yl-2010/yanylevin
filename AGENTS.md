@@ -40,8 +40,7 @@ Zone + tunnel live in the **NoteLMs Cloudflare account** (NS addyson/margo), sep
 - [`docs/LOCAL_BACKEND.md`](docs/LOCAL_BACKEND.md)
 - [`docs/PUBLIC_TUNNEL.md`](docs/PUBLIC_TUNNEL.md)
 - [`deploy/cloudflared/README.md`](deploy/cloudflared/README.md)
-- [`agent-plans/CHATBOT_FRONTEND_PLAN.html`](agent-plans/CHATBOT_FRONTEND_PLAN.html) — handoff for chatbot UI (auth, API, yan.md, design)
 
 ### Frontend note
 
-The marketing site is still static HTML/CSS/JS (`index.html`, etc.). The Express API is ready; see the chatbot frontend plan before wiring UI.
+The marketing site is still static HTML/CSS/JS (`index.html`, etc.). The Express API is ready for chatbot UI wiring.
