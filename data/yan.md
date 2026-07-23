@@ -152,7 +152,7 @@ Source: activities spreadsheet used for college applications. Years are grade le
 | Husky Math Academy | 9–10 | Husky Math Academy | School year | 30 | 3 | Advanced algebra/geometry, number theory, combinatorics, olympiad proof prep with UW professors |
 | Debate Team | 9–10 | NSDA / Eastside Prep | School year | 30 | 6 | LD primary; Impromptu or Extemp secondary |
 | UW Math Hour Olympiad | 6–10 | UW Math Hour Olympiad | — | 52 | 3 | Top-five finishes every year (see Math) |
-| Environmental Club | 9–10 | Eastside Prep | School year | 40 | 2 | Co-Lead; epsort waste-sorting data program |
+| Environmental Club | 9–10 | Eastside Prep | School year | 40 | 2 | Co-Lead; EPSort waste-sorting data program |
 | South Asian Affinity Group | 9–10 | Eastside Prep | School year | 40 | 2 | Co-Lead |
 | TA, BMC Summer Camp | 10–11 | Berkeley Math Circle | Summer | 1 | 18 | Grades 2–3, 3 hrs/day for a week |
 | Summer Research Intern (PLSemanticsBench) | 10 | UT Austin | Summer | 12 | 20 | Completed Summer 2025; in-person with Prof. Gligoric’s group |
@@ -271,7 +271,7 @@ On Eastside Prep’s team in the National Speech & Debate Association (grades 9�
 ### Environmental Club Co-Lead
 
 - Eastside Prep, grades 9–10; ~40 weeks × 2 hrs/week
-- Built a program to measure waste-bin sorting accuracy, presented findings to the school, and drove school-wide adoption via epsort: https://epsort.lovable.app/data
+- Built a program to measure waste-bin sorting accuracy, presented findings to the school, and drove school-wide adoption via EPSort: https://epsort.lovable.app/data
 
 ### South Asian Affinity Group Co-Lead
 
